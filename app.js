@@ -248,67 +248,128 @@ function renderImport(sec, file, result) {
   const ext  = file.name.split('.').pop().toLowerCase();
   const name = file.name;
 
-  // Build a preview card
-  let previewHTML = '';
+  // Remove any existing preview for this section first
+  removeImportPreview(sec);
+
+  // Build preview element directly (not via innerHTML to avoid XSS with data URLs)
+  const wrap = document.createElement('div');
+  wrap.id = 'import-preview-' + sec;
+  wrap.style.cssText = 'background:var(--bg);border:1.5px solid rgba(139,114,216,.4);border-radius:12px;padding:16px;margin-bottom:16px';
+
+  // Header row
+  const header = document.createElement('div');
+  header.style.cssText = 'display:flex;align-items:center;justify-content:space-between;margin-bottom:10px';
+  header.innerHTML = `
+    <span style="font-size:10px;font-weight:700;color:#8B72D8;text-transform:uppercase;letter-spacing:.6px">↑ Imported</span>
+    <span style="font-size:10px;color:#9C9FAF;font-family:monospace">${name}</span>
+    <button onclick="removeImportPreview('${sec}')" style="background:none;border:none;cursor:pointer;color:#9C9FAF;font-size:16px;line-height:1;padding:0 2px">✕</button>
+  `;
+  wrap.appendChild(header);
 
   if (['png','jpg','jpeg','gif','webp','svg'].includes(ext)) {
-    // Image / SVG — show as visual preview
-    previewHTML = `
-      <div id="import-preview-${sec}" style="
-        background:var(--bg);border:1px solid rgba(139,114,216,.35);
-        border-radius:var(--r12);padding:16px;margin-bottom:16px;
-        animation:fi .2s ease;
-      ">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-          <div style="font-size:11px;font-weight:700;color:var(--logo);text-transform:uppercase;letter-spacing:.5px">
-            ↑ Imported
-          </div>
-          <div style="font-size:10.5px;color:var(--text4);font-family:var(--mono)">${name}</div>
-          <button onclick="removeImportPreview('${sec}')" style="
-            background:none;border:none;cursor:pointer;color:var(--text4);
-            font-size:14px;padding:0 4px;line-height:1;
-          ">✕</button>
-        </div>
-        <div style="background:var(--bg2);border-radius:var(--r8);padding:20px;text-align:center;min-height:120px;display:flex;align-items:center;justify-content:center">
-          <img src="${result}" alt="${name}" style="max-width:100%;max-height:220px;border-radius:var(--r6);object-fit:contain" />
-        </div>
-        <div style="font-size:10.5px;color:var(--text4);margin-top:8px;text-align:center">${(file.size/1024).toFixed(1)} KB · ${ext.toUpperCase()}</div>
-      </div>`;
-  } else if (['json','css','txt','html','ts'].includes(ext)) {
-    // Text file — show code preview
-    const preview = result.length > 600 ? result.slice(0, 600) + '\n…' : result;
-    previewHTML = `
-      <div id="import-preview-${sec}" style="
-        background:var(--bg);border:1px solid rgba(139,114,216,.35);
-        border-radius:var(--r12);padding:16px;margin-bottom:16px;
-        animation:fi .2s ease;
-      ">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-          <div style="font-size:11px;font-weight:700;color:var(--logo);text-transform:uppercase;letter-spacing:.5px">
-            ↑ Imported
-          </div>
-          <div style="font-size:10.5px;color:var(--text4);font-family:var(--mono)">${name}</div>
-          <button onclick="removeImportPreview('${sec}')" style="
-            background:none;border:none;cursor:pointer;color:var(--text4);
-            font-size:14px;padding:0 4px;line-height:1;
-          ">✕</button>
-        </div>
-        <pre style="
-          background:var(--g900);color:#C9BDF5;font-family:var(--mono);
-          font-size:11px;line-height:1.6;padding:14px;border-radius:var(--r8);
-          overflow-x:auto;white-space:pre-wrap;word-break:break-all;max-height:220px;overflow-y:auto;
-          margin:0;
-        ">${escapeHTML(preview)}</pre>
-        <div style="font-size:10.5px;color:var(--text4);margin-top:8px;text-align:center">${(file.size/1024).toFixed(1)} KB · ${ext.toUpperCase()}</div>
-      </div>`;
+    // Image preview
+    const imgWrap = document.createElement('div');
+    imgWrap.style.cssText = 'background:#F9FAFB;border-radius:8px;padding:20px;text-align:center;min-height:120px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px';
 
-    // If it's a JSON token file, also apply the tokens live
-    if (ext === 'json') {
-      try {
-        applyImportedTokens(JSON.parse(result));
-      } catch(e) { /* not a token file, ignore */ }
+    const img = document.createElement('img');
+    img.src = result;
+    img.alt = name;
+    img.style.cssText = 'max-width:100%;max-height:240px;border-radius:6px;object-fit:contain;display:block';
+    imgWrap.appendChild(img);
+
+    // Export buttons for the imported image
+    const btnRow = document.createElement('div');
+    btnRow.style.cssText = 'display:flex;gap:6px;justify-content:center;flex-wrap:wrap';
+
+    // Save as SVG (only if SVG)
+    if (ext === 'svg') {
+      const btnSVG = document.createElement('button');
+      btnSVG.textContent = '↓ Save SVG';
+      btnSVG.style.cssText = 'font-size:11px;font-weight:700;padding:5px 12px;border-radius:6px;border:1px solid rgba(139,114,216,.4);background:rgba(139,114,216,.08);color:#8B72D8;cursor:pointer;font-family:inherit';
+      btnSVG.onclick = function() {
+        // result is a data URL — convert back to blob and download
+        const byteStr = atob(result.split(',')[1]);
+        const arr = new Uint8Array(byteStr.length);
+        for (let i = 0; i < byteStr.length; i++) arr[i] = byteStr.charCodeAt(i);
+        const blob = new Blob([arr], { type: 'image/svg+xml' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href = url; a.download = name;
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+        window.toast('✓ SVG saved!');
+      };
+      btnRow.appendChild(btnSVG);
     }
-    // If it's a CSS file, inject it
+
+    // Save as PNG (always available)
+    const btnPNG = document.createElement('button');
+    btnPNG.textContent = '↓ Save PNG';
+    btnPNG.style.cssText = 'font-size:11px;font-weight:700;padding:5px 12px;border-radius:6px;border:1px solid rgba(139,114,216,.4);background:rgba(139,114,216,.08);color:#8B72D8;cursor:pointer;font-family:inherit';
+    btnPNG.onclick = function() {
+      const canvas = document.createElement('canvas');
+      const tempImg = new Image();
+      tempImg.onload = function() {
+        canvas.width  = tempImg.naturalWidth  || 800;
+        canvas.height = tempImg.naturalHeight || 600;
+        canvas.getContext('2d').drawImage(tempImg, 0, 0);
+        const a = document.createElement('a');
+        a.href = canvas.toDataURL('image/png');
+        a.download = name.replace(/\.[^.]+$/, '') + '.png';
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        window.toast('✓ PNG saved!');
+      };
+      tempImg.src = result;
+    };
+    btnRow.appendChild(btnPNG);
+
+    // Save as JPG
+    const btnJPG = document.createElement('button');
+    btnJPG.textContent = '↓ Save JPG';
+    btnJPG.style.cssText = 'font-size:11px;font-weight:700;padding:5px 12px;border-radius:6px;border:1px solid #D1D3DB;background:#F3F3F6;color:#4B5063;cursor:pointer;font-family:inherit';
+    btnJPG.onclick = function() {
+      const canvas = document.createElement('canvas');
+      const tempImg = new Image();
+      tempImg.onload = function() {
+        canvas.width  = tempImg.naturalWidth  || 800;
+        canvas.height = tempImg.naturalHeight || 600;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(tempImg, 0, 0);
+        const a = document.createElement('a');
+        a.href = canvas.toDataURL('image/jpeg', 0.92);
+        a.download = name.replace(/\.[^.]+$/, '') + '.jpg';
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        window.toast('✓ JPG saved!');
+      };
+      tempImg.src = result;
+    };
+    btnRow.appendChild(btnJPG);
+
+    imgWrap.appendChild(btnRow);
+
+    const meta = document.createElement('div');
+    meta.style.cssText = 'font-size:10px;color:#9C9FAF;margin-top:4px';
+    meta.textContent = (file.size/1024).toFixed(1) + ' KB · ' + ext.toUpperCase();
+    imgWrap.appendChild(meta);
+
+    wrap.appendChild(imgWrap);
+
+  } else if (['json','css','txt','html','ts'].includes(ext)) {
+    const preview = result.length > 800 ? result.slice(0, 800) + '\n…' : result;
+    const pre = document.createElement('pre');
+    pre.style.cssText = 'background:#111427;color:#C9BDF5;font-family:monospace;font-size:11px;line-height:1.6;padding:14px;border-radius:8px;overflow:auto;white-space:pre-wrap;word-break:break-all;max-height:200px;margin:0';
+    pre.textContent = preview;
+    wrap.appendChild(pre);
+
+    const meta = document.createElement('div');
+    meta.style.cssText = 'font-size:10px;color:#9C9FAF;margin-top:8px;text-align:center';
+    meta.textContent = (file.size/1024).toFixed(1) + ' KB · ' + ext.toUpperCase();
+    wrap.appendChild(meta);
+
+    if (ext === 'json') {
+      try { applyImportedTokens(JSON.parse(result)); } catch(e) {}
+    }
     if (ext === 'css') {
       const style = document.createElement('style');
       style.id = 'imported-css-' + sec;
@@ -316,34 +377,25 @@ function renderImport(sec, file, result) {
       document.head.appendChild(style);
     }
   } else {
-    previewHTML = `
-      <div id="import-preview-${sec}" style="
-        background:var(--bg);border:1px solid rgba(139,114,216,.35);
-        border-radius:var(--r12);padding:16px;margin-bottom:16px;
-        animation:fi .2s ease;
-      ">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-          <div style="font-size:11px;font-weight:700;color:var(--logo)">↑ Imported</div>
-          <button onclick="removeImportPreview('${sec}')" style="background:none;border:none;cursor:pointer;color:var(--text4);font-size:14px;padding:0 4px">✕</button>
-        </div>
-        <div style="font-size:12px;color:var(--text3)">${name} · ${(file.size/1024).toFixed(1)} KB</div>
-      </div>`;
+    const info = document.createElement('div');
+    info.style.cssText = 'font-size:12px;color:#73768A;padding:8px 0';
+    info.textContent = name + ' · ' + (file.size/1024).toFixed(1) + ' KB';
+    wrap.appendChild(info);
   }
 
-  // Inject preview at the top of the target section (after .sa bar)
+  // Inject into the section — make sure section is visible first
   const secEl = document.getElementById(sec);
   if (!secEl) return;
 
-  // Remove any existing preview for this section
-  removeImportPreview(sec);
+  // Navigate to the section so user can see the preview
+  const navBtn = document.querySelector(`.nv[onclick*="go('${sec}"]`);
+  window.go(sec, navBtn);
 
   const sa = secEl.querySelector('.sa');
-  const wrapper = document.createElement('div');
-  wrapper.innerHTML = previewHTML;
   if (sa) {
-    sa.insertAdjacentElement('afterend', wrapper.firstElementChild);
+    sa.insertAdjacentElement('afterend', wrap);
   } else {
-    secEl.insertAdjacentElement('afterbegin', wrapper.firstElementChild);
+    secEl.insertAdjacentElement('afterbegin', wrap);
   }
 }
 
@@ -454,41 +506,77 @@ window.exportTS = function() {
   window.toast('✓ TypeScript tokens exported!');
 };
 
-/* ── Export Logo SVG ── */
+/* ── Export Logo SVG — grabs from DOM or falls back to hardcoded ── */
 window.exportLogoSVG = function(variant) {
-  const svgs = {
-    primary: `<svg xmlns="http://www.w3.org/2000/svg" width="280" height="54" viewBox="0 0 280 54"><circle cx="11" cy="18" r="9" fill="#8B72D8"/><circle cx="11" cy="38" r="9" fill="#8B72D8"/><text x="28" y="42" font-family="Nunito,sans-serif" font-size="38" font-weight="900" fill="#8B72D8" letter-spacing="2">DOTZZA</text></svg>`,
-    inverted: `<svg xmlns="http://www.w3.org/2000/svg" width="280" height="54" viewBox="0 0 280 54"><rect width="280" height="54" fill="#1A1025"/><circle cx="11" cy="18" r="9" fill="white"/><circle cx="11" cy="38" r="9" fill="white"/><text x="28" y="42" font-family="Nunito,sans-serif" font-size="38" font-weight="900" fill="white" letter-spacing="2">DOTZZA</text></svg>`,
-    dark: `<svg xmlns="http://www.w3.org/2000/svg" width="280" height="54" viewBox="0 0 280 54"><circle cx="11" cy="18" r="9" fill="#111427"/><circle cx="11" cy="38" r="9" fill="#111427"/><text x="28" y="42" font-family="Nunito,sans-serif" font-size="38" font-weight="900" fill="#111427" letter-spacing="2">DOTZZA</text></svg>`,
-    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#8B72D8"/><circle cx="19" cy="24" r="6.5" fill="white"/><circle cx="19" cy="43" r="6.5" fill="white"/><text x="30" y="49" font-family="Nunito,sans-serif" font-size="30" font-weight="900" fill="white">D</text></svg>`
-  };
-  const v = variant || 'primary';
-  const svgStr = svgs[v] || svgs.primary;
-  downloadFile(`dotzza-logo-${v}.svg`, svgStr, 'image/svg+xml');
-  window.toast('✓ Logo SVG exported!');
+  // Try to grab the actual rendered SVG from the page
+  const svgEl = findLogoSVG(variant);
+  let svgStr;
+  if (svgEl) {
+    // Clone and serialize the live DOM SVG
+    const clone = svgEl.cloneNode(true);
+    clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+    svgStr = new XMLSerializer().serializeToString(clone);
+  } else {
+    // Fallback hardcoded
+    svgStr = getLogoSVGString(variant);
+  }
+  downloadFile('dotzza-logo-' + variant + '.svg', svgStr, 'image/svg+xml');
+  window.toast('✓ SVG downloaded!');
 };
 
-/* ── Export Logo as PNG (via Canvas) ── */
+/* ── Export Logo PNG — rasterize via Canvas ── */
 window.exportLogoPNG = function(variant, w, h) {
-  const svgs = {
-    primary: `<svg xmlns="http://www.w3.org/2000/svg" width="${w||560}" height="${h||108}" viewBox="0 0 280 54"><circle cx="11" cy="18" r="9" fill="#8B72D8"/><circle cx="11" cy="38" r="9" fill="#8B72D8"/><text x="28" y="42" font-family="Nunito,sans-serif" font-size="38" font-weight="900" fill="#8B72D8" letter-spacing="2">DOTZZA</text></svg>`,
-    inverted: `<svg xmlns="http://www.w3.org/2000/svg" width="${w||560}" height="${h||108}" viewBox="0 0 280 54"><rect width="280" height="54" fill="#1A1025"/><circle cx="11" cy="18" r="9" fill="white"/><circle cx="11" cy="38" r="9" fill="white"/><text x="28" y="42" font-family="Nunito,sans-serif" font-size="38" font-weight="900" fill="white" letter-spacing="2">DOTZZA</text></svg>`,
-    dark: `<svg xmlns="http://www.w3.org/2000/svg" width="${w||560}" height="${h||108}" viewBox="0 0 280 54"><circle cx="11" cy="18" r="9" fill="#111427"/><circle cx="11" cy="38" r="9" fill="#111427"/><text x="28" y="42" font-family="Nunito,sans-serif" font-size="38" font-weight="900" fill="#111427" letter-spacing="2">DOTZZA</text></svg>`,
-    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="${w||256}" height="${h||256}" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#8B72D8"/><circle cx="19" cy="24" r="6.5" fill="white"/><circle cx="19" cy="43" r="6.5" fill="white"/><text x="30" y="49" font-family="Nunito,sans-serif" font-size="30" font-weight="900" fill="white">D</text></svg>`
-  };
-  const v = variant || 'primary';
-  const svgStr = svgs[v] || svgs.primary;
-  const width  = w || (v === 'icon' ? 256 : 560);
-  const height = h || (v === 'icon' ? 256 : 108);
+  const svgEl = findLogoSVG(variant);
+  let svgStr;
+  if (svgEl) {
+    const clone = svgEl.cloneNode(true);
+    clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+    // Ensure explicit width/height for canvas rendering
+    const vb = clone.getAttribute('viewBox');
+    if (vb) {
+      const parts = vb.split(/\s+/);
+      if (!clone.getAttribute('width'))  clone.setAttribute('width',  parts[2] || '280');
+      if (!clone.getAttribute('height')) clone.setAttribute('height', parts[3] || '54');
+    }
+    svgStr = new XMLSerializer().serializeToString(clone);
+  } else {
+    svgStr = getLogoSVGString(variant);
+  }
 
-  svgToPNG(svgStr, width, height, function(pngUrl) {
+  const scale  = 3; // 3× for crisp PNG
+  const width  = w || (variant === 'icon' ? 64  : 280);
+  const height = h || (variant === 'icon' ? 64  : 54);
+
+  svgToPNG(svgStr, width * scale, height * scale, function(pngUrl) {
     const a = document.createElement('a');
     a.href = pngUrl;
-    a.download = `dotzza-logo-${v}.png`;
+    a.download = 'dotzza-logo-' + variant + '.png';
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
-    window.toast('✓ Logo PNG exported!');
+    window.toast('✓ PNG downloaded!');
   });
 };
+
+/* ── Find the best matching SVG in the logo section ── */
+function findLogoSVG(variant) {
+  const logoSec = document.getElementById('logo');
+  if (!logoSec) return null;
+  const svgs = logoSec.querySelectorAll('svg');
+  // Pick by index based on variant order: primary=0, inverted=1, dark=2, icon=3
+  const map = { primary: 1, inverted: 2, dark: 3, icon: 4 };
+  const idx = map[variant] || 1;
+  return svgs[idx] || svgs[0] || null;
+}
+
+/* ── Hardcoded fallback SVG strings ── */
+function getLogoSVGString(variant) {
+  const svgs = {
+    primary:  '<svg xmlns="http://www.w3.org/2000/svg" width="280" height="54" viewBox="0 0 280 54"><circle cx="11" cy="18" r="9" fill="#8B72D8"/><circle cx="11" cy="38" r="9" fill="#8B72D8"/><text x="28" y="42" font-family="Nunito,sans-serif" font-size="38" font-weight="900" fill="#8B72D8" letter-spacing="2">DOTZZA</text></svg>',
+    inverted: '<svg xmlns="http://www.w3.org/2000/svg" width="280" height="54" viewBox="0 0 280 54"><rect width="280" height="54" fill="#1A1025"/><circle cx="11" cy="18" r="9" fill="white"/><circle cx="11" cy="38" r="9" fill="white"/><text x="28" y="42" font-family="Nunito,sans-serif" font-size="38" font-weight="900" fill="white" letter-spacing="2">DOTZZA</text></svg>',
+    dark:     '<svg xmlns="http://www.w3.org/2000/svg" width="280" height="54" viewBox="0 0 280 54"><circle cx="11" cy="18" r="9" fill="#111427"/><circle cx="11" cy="38" r="9" fill="#111427"/><text x="28" y="42" font-family="Nunito,sans-serif" font-size="38" font-weight="900" fill="#111427" letter-spacing="2">DOTZZA</text></svg>',
+    icon:     '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#8B72D8"/><circle cx="19" cy="24" r="6.5" fill="white"/><circle cx="19" cy="43" r="6.5" fill="white"/><text x="30" y="49" font-family="Nunito,sans-serif" font-size="30" font-weight="900" fill="white">D</text></svg>'
+  };
+  return svgs[variant] || svgs.primary;
+}
 
 /* ── SVG → PNG via Canvas ── */
 function svgToPNG(svgStr, width, height, callback) {
@@ -497,26 +585,23 @@ function svgToPNG(svgStr, width, height, callback) {
   canvas.height = height;
   const ctx = canvas.getContext('2d');
   const img = new Image();
-  const blob = new Blob([svgStr], { type: 'image/svg+xml;charset=utf-8' });
-  const url  = URL.createObjectURL(blob);
+  // Use base64 encoding to avoid CORS/blob issues
+  const b64 = btoa(unescape(encodeURIComponent(svgStr)));
   img.onload = function() {
     ctx.drawImage(img, 0, 0, width, height);
-    URL.revokeObjectURL(url);
     callback(canvas.toDataURL('image/png'));
   };
   img.onerror = function() {
-    URL.revokeObjectURL(url);
     window.toast('PNG export failed — try SVG instead.');
   };
-  img.src = url;
+  img.src = 'data:image/svg+xml;base64,' + b64;
 }
 
 /* ── Export Logo Package (all SVGs) ── */
 window.exportLogoPackage = function() {
-  // Export primary SVG as representative; in a real app this would be a ZIP
   window.exportLogoSVG('primary');
-  setTimeout(() => window.exportLogoSVG('inverted'), 300);
-  setTimeout(() => window.exportLogoSVG('icon'), 600);
+  setTimeout(() => window.exportLogoSVG('inverted'), 400);
+  setTimeout(() => window.exportLogoSVG('icon'), 800);
   window.toast('✓ Logo SVG package exported (3 files)!');
 };
 
