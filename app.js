@@ -185,6 +185,11 @@ function setFile(f) {
 }
 
 window.runImport = function() {
+  if (!_selFile) {
+    window.toast('Please select a file first.');
+    return;
+  }
+
   const goBtn = document.getElementById('im-go');
   if (goBtn) { goBtn.textContent = 'Importing…'; goBtn.disabled = true; }
 
@@ -194,23 +199,180 @@ window.runImport = function() {
   const fn   = document.getElementById('im-fname');
 
   if (prog) prog.style.display = 'block';
-  if (fn)   fn.textContent = _selFile ? _selFile.name : 'dotzza-' + _curSec + '.' + (_selType||'json').toLowerCase();
+  if (fn)   fn.textContent = _selFile.name;
 
+  // Animate progress bar while reading
   let p = 0;
   const iv = setInterval(() => {
-    p += Math.random() * 18 + 4;
-    if (p >= 100) {
-      p = 100;
-      clearInterval(iv);
-      setTimeout(() => {
-        window.closeImport();
-        window.toast('✓ ' + (SEC_NAMES[_curSec] || _curSec) + ' imported successfully!');
-      }, 350);
-    }
+    p += Math.random() * 22 + 6;
+    if (p >= 90) { p = 90; clearInterval(iv); }
     if (bar) bar.style.width = p + '%';
     if (pct) pct.textContent = Math.round(p) + '%';
-  }, 100);
+  }, 80);
+
+  const reader = new FileReader();
+
+  reader.onload = function(e) {
+    clearInterval(iv);
+    if (bar) bar.style.width = '100%';
+    if (pct) pct.textContent = '100%';
+
+    const result = e.target.result;
+    const file   = _selFile;
+    const sec    = _curSec;
+
+    setTimeout(() => {
+      window.closeImport();
+      renderImport(sec, file, result);
+      window.toast('✓ ' + (SEC_NAMES[sec] || sec) + ' imported!');
+    }, 300);
+  };
+
+  reader.onerror = function() {
+    clearInterval(iv);
+    window.closeImport();
+    window.toast('Import failed — could not read file.');
+  };
+
+  // Read as data URL for images/SVG, text for JSON/CSS/TXT/HTML
+  const ext = _selFile.name.split('.').pop().toLowerCase();
+  if (['png','jpg','jpeg','gif','webp','svg'].includes(ext)) {
+    reader.readAsDataURL(_selFile);
+  } else {
+    reader.readAsText(_selFile);
+  }
 };
+
+/* ── Render imported file into the correct section ── */
+function renderImport(sec, file, result) {
+  const ext  = file.name.split('.').pop().toLowerCase();
+  const name = file.name;
+
+  // Build a preview card
+  let previewHTML = '';
+
+  if (['png','jpg','jpeg','gif','webp','svg'].includes(ext)) {
+    // Image / SVG — show as visual preview
+    previewHTML = `
+      <div id="import-preview-${sec}" style="
+        background:var(--bg);border:1px solid rgba(139,114,216,.35);
+        border-radius:var(--r12);padding:16px;margin-bottom:16px;
+        animation:fi .2s ease;
+      ">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <div style="font-size:11px;font-weight:700;color:var(--logo);text-transform:uppercase;letter-spacing:.5px">
+            ↑ Imported
+          </div>
+          <div style="font-size:10.5px;color:var(--text4);font-family:var(--mono)">${name}</div>
+          <button onclick="removeImportPreview('${sec}')" style="
+            background:none;border:none;cursor:pointer;color:var(--text4);
+            font-size:14px;padding:0 4px;line-height:1;
+          ">✕</button>
+        </div>
+        <div style="background:var(--bg2);border-radius:var(--r8);padding:20px;text-align:center;min-height:120px;display:flex;align-items:center;justify-content:center">
+          <img src="${result}" alt="${name}" style="max-width:100%;max-height:220px;border-radius:var(--r6);object-fit:contain" />
+        </div>
+        <div style="font-size:10.5px;color:var(--text4);margin-top:8px;text-align:center">${(file.size/1024).toFixed(1)} KB · ${ext.toUpperCase()}</div>
+      </div>`;
+  } else if (['json','css','txt','html','ts'].includes(ext)) {
+    // Text file — show code preview
+    const preview = result.length > 600 ? result.slice(0, 600) + '\n…' : result;
+    previewHTML = `
+      <div id="import-preview-${sec}" style="
+        background:var(--bg);border:1px solid rgba(139,114,216,.35);
+        border-radius:var(--r12);padding:16px;margin-bottom:16px;
+        animation:fi .2s ease;
+      ">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <div style="font-size:11px;font-weight:700;color:var(--logo);text-transform:uppercase;letter-spacing:.5px">
+            ↑ Imported
+          </div>
+          <div style="font-size:10.5px;color:var(--text4);font-family:var(--mono)">${name}</div>
+          <button onclick="removeImportPreview('${sec}')" style="
+            background:none;border:none;cursor:pointer;color:var(--text4);
+            font-size:14px;padding:0 4px;line-height:1;
+          ">✕</button>
+        </div>
+        <pre style="
+          background:var(--g900);color:#C9BDF5;font-family:var(--mono);
+          font-size:11px;line-height:1.6;padding:14px;border-radius:var(--r8);
+          overflow-x:auto;white-space:pre-wrap;word-break:break-all;max-height:220px;overflow-y:auto;
+          margin:0;
+        ">${escapeHTML(preview)}</pre>
+        <div style="font-size:10.5px;color:var(--text4);margin-top:8px;text-align:center">${(file.size/1024).toFixed(1)} KB · ${ext.toUpperCase()}</div>
+      </div>`;
+
+    // If it's a JSON token file, also apply the tokens live
+    if (ext === 'json') {
+      try {
+        applyImportedTokens(JSON.parse(result));
+      } catch(e) { /* not a token file, ignore */ }
+    }
+    // If it's a CSS file, inject it
+    if (ext === 'css') {
+      const style = document.createElement('style');
+      style.id = 'imported-css-' + sec;
+      style.textContent = result;
+      document.head.appendChild(style);
+    }
+  } else {
+    previewHTML = `
+      <div id="import-preview-${sec}" style="
+        background:var(--bg);border:1px solid rgba(139,114,216,.35);
+        border-radius:var(--r12);padding:16px;margin-bottom:16px;
+        animation:fi .2s ease;
+      ">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <div style="font-size:11px;font-weight:700;color:var(--logo)">↑ Imported</div>
+          <button onclick="removeImportPreview('${sec}')" style="background:none;border:none;cursor:pointer;color:var(--text4);font-size:14px;padding:0 4px">✕</button>
+        </div>
+        <div style="font-size:12px;color:var(--text3)">${name} · ${(file.size/1024).toFixed(1)} KB</div>
+      </div>`;
+  }
+
+  // Inject preview at the top of the target section (after .sa bar)
+  const secEl = document.getElementById(sec);
+  if (!secEl) return;
+
+  // Remove any existing preview for this section
+  removeImportPreview(sec);
+
+  const sa = secEl.querySelector('.sa');
+  const wrapper = document.createElement('div');
+  wrapper.innerHTML = previewHTML;
+  if (sa) {
+    sa.insertAdjacentElement('afterend', wrapper.firstElementChild);
+  } else {
+    secEl.insertAdjacentElement('afterbegin', wrapper.firstElementChild);
+  }
+}
+
+window.removeImportPreview = function(sec) {
+  const existing = document.getElementById('import-preview-' + sec);
+  if (existing) existing.remove();
+  const injectedCSS = document.getElementById('imported-css-' + sec);
+  if (injectedCSS) injectedCSS.remove();
+};
+
+function escapeHTML(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+/* ── Apply imported JSON tokens live ── */
+function applyImportedTokens(json) {
+  const root = document.documentElement;
+  function walk(obj, path) {
+    for (const [k, v] of Object.entries(obj)) {
+      if (v && typeof v === 'object' && '$value' in v) {
+        const cssVar = TOKEN_CSS_MAP[path + k] || TOKEN_CSS_MAP[k];
+        if (cssVar) root.style.setProperty(cssVar, v.$value);
+      } else if (v && typeof v === 'object') {
+        walk(v, path + k + '/');
+      }
+    }
+  }
+  walk(json, '');
+}
 
 /* ═══════════════════════════════════════════════════════════════
    EXPORT FUNCTIONS
@@ -296,14 +458,58 @@ window.exportTS = function() {
 window.exportLogoSVG = function(variant) {
   const svgs = {
     primary: `<svg xmlns="http://www.w3.org/2000/svg" width="280" height="54" viewBox="0 0 280 54"><circle cx="11" cy="18" r="9" fill="#8B72D8"/><circle cx="11" cy="38" r="9" fill="#8B72D8"/><text x="28" y="42" font-family="Nunito,sans-serif" font-size="38" font-weight="900" fill="#8B72D8" letter-spacing="2">DOTZZA</text></svg>`,
-    inverted: `<svg xmlns="http://www.w3.org/2000/svg" width="280" height="54" viewBox="0 0 280 54"><circle cx="11" cy="18" r="9" fill="white"/><circle cx="11" cy="38" r="9" fill="white"/><text x="28" y="42" font-family="Nunito,sans-serif" font-size="38" font-weight="900" fill="white" letter-spacing="2">DOTZZA</text></svg>`,
+    inverted: `<svg xmlns="http://www.w3.org/2000/svg" width="280" height="54" viewBox="0 0 280 54"><rect width="280" height="54" fill="#1A1025"/><circle cx="11" cy="18" r="9" fill="white"/><circle cx="11" cy="38" r="9" fill="white"/><text x="28" y="42" font-family="Nunito,sans-serif" font-size="38" font-weight="900" fill="white" letter-spacing="2">DOTZZA</text></svg>`,
     dark: `<svg xmlns="http://www.w3.org/2000/svg" width="280" height="54" viewBox="0 0 280 54"><circle cx="11" cy="18" r="9" fill="#111427"/><circle cx="11" cy="38" r="9" fill="#111427"/><text x="28" y="42" font-family="Nunito,sans-serif" font-size="38" font-weight="900" fill="#111427" letter-spacing="2">DOTZZA</text></svg>`,
     icon: `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#8B72D8"/><circle cx="19" cy="24" r="6.5" fill="white"/><circle cx="19" cy="43" r="6.5" fill="white"/><text x="30" y="49" font-family="Nunito,sans-serif" font-size="30" font-weight="900" fill="white">D</text></svg>`
   };
   const v = variant || 'primary';
-  downloadFile(`dotzza-logo-${v}.svg`, svgs[v] || svgs.primary, 'image/svg+xml');
+  const svgStr = svgs[v] || svgs.primary;
+  downloadFile(`dotzza-logo-${v}.svg`, svgStr, 'image/svg+xml');
   window.toast('✓ Logo SVG exported!');
 };
+
+/* ── Export Logo as PNG (via Canvas) ── */
+window.exportLogoPNG = function(variant, w, h) {
+  const svgs = {
+    primary: `<svg xmlns="http://www.w3.org/2000/svg" width="${w||560}" height="${h||108}" viewBox="0 0 280 54"><circle cx="11" cy="18" r="9" fill="#8B72D8"/><circle cx="11" cy="38" r="9" fill="#8B72D8"/><text x="28" y="42" font-family="Nunito,sans-serif" font-size="38" font-weight="900" fill="#8B72D8" letter-spacing="2">DOTZZA</text></svg>`,
+    inverted: `<svg xmlns="http://www.w3.org/2000/svg" width="${w||560}" height="${h||108}" viewBox="0 0 280 54"><rect width="280" height="54" fill="#1A1025"/><circle cx="11" cy="18" r="9" fill="white"/><circle cx="11" cy="38" r="9" fill="white"/><text x="28" y="42" font-family="Nunito,sans-serif" font-size="38" font-weight="900" fill="white" letter-spacing="2">DOTZZA</text></svg>`,
+    dark: `<svg xmlns="http://www.w3.org/2000/svg" width="${w||560}" height="${h||108}" viewBox="0 0 280 54"><circle cx="11" cy="18" r="9" fill="#111427"/><circle cx="11" cy="38" r="9" fill="#111427"/><text x="28" y="42" font-family="Nunito,sans-serif" font-size="38" font-weight="900" fill="#111427" letter-spacing="2">DOTZZA</text></svg>`,
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="${w||256}" height="${h||256}" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#8B72D8"/><circle cx="19" cy="24" r="6.5" fill="white"/><circle cx="19" cy="43" r="6.5" fill="white"/><text x="30" y="49" font-family="Nunito,sans-serif" font-size="30" font-weight="900" fill="white">D</text></svg>`
+  };
+  const v = variant || 'primary';
+  const svgStr = svgs[v] || svgs.primary;
+  const width  = w || (v === 'icon' ? 256 : 560);
+  const height = h || (v === 'icon' ? 256 : 108);
+
+  svgToPNG(svgStr, width, height, function(pngUrl) {
+    const a = document.createElement('a');
+    a.href = pngUrl;
+    a.download = `dotzza-logo-${v}.png`;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    window.toast('✓ Logo PNG exported!');
+  });
+};
+
+/* ── SVG → PNG via Canvas ── */
+function svgToPNG(svgStr, width, height, callback) {
+  const canvas = document.createElement('canvas');
+  canvas.width  = width;
+  canvas.height = height;
+  const ctx = canvas.getContext('2d');
+  const img = new Image();
+  const blob = new Blob([svgStr], { type: 'image/svg+xml;charset=utf-8' });
+  const url  = URL.createObjectURL(blob);
+  img.onload = function() {
+    ctx.drawImage(img, 0, 0, width, height);
+    URL.revokeObjectURL(url);
+    callback(canvas.toDataURL('image/png'));
+  };
+  img.onerror = function() {
+    URL.revokeObjectURL(url);
+    window.toast('PNG export failed — try SVG instead.');
+  };
+  img.src = url;
+}
 
 /* ── Export Logo Package (all SVGs) ── */
 window.exportLogoPackage = function() {

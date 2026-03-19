@@ -491,24 +491,7 @@ body{font-family:var(--font);background:var(--bg2);color:var(--text);display:fle
           <div class="lf-row"><div class="lf-name">Lockup — Primary</div></div>
           <div style="font-size:10.5px;color:var(--text4);margin-bottom:8px">For light backgrounds</div>
           <div class="lf-actions">
-            <div class="lf-fmts"><span class="fc" onclick="exportLogoSVG('primary')">SVG</span><span class="fc" onclick="toast('PNG export coming soon!')">PNG</span><span class="fc" onclick="toast('PDF export coming soon!')">PDF</span></div>
-            <button class="lf-imp" onclick="openImport('logo')">&#8593; Import</button>
-          </div>
-        </div>
-      </div>
-      <div class="lc">
-        <div class="lp lp-dark">
-          <svg width="165" height="40" viewBox="0 0 165 40" fill="none">
-            <circle cx="9" cy="14" r="7.5" fill="white"/>
-            <circle cx="9" cy="28" r="7.5" fill="white"/>
-            <text x="22" y="31" font-family="Nunito,sans-serif" font-size="26" font-weight="900" fill="white" letter-spacing="1.2">DOTZZA</text>
-          </svg>
-        </div>
-        <div class="lf">
-          <div class="lf-row"><div class="lf-name">Lockup — Inverted</div></div>
-          <div style="font-size:10.5px;color:var(--text4);margin-bottom:8px">For dark backgrounds</div>
-          <div class="lf-actions">
-            <div class="lf-fmts"><span class="fc" onclick="exportLogoSVG('inverted')">SVG</span><span class="fc" onclick="toast('PNG export coming soon!')">PNG</span><span class="fc" onclick="toast('PDF export coming soon!')">PDF</span></div>
+            <div class="lf-fmts"><span class="fc" onclick="exportLogoSVG('primary')">SVG</span><span class="fc" onclick="exportLogoPNG('primary')">PNG</span><span class="fc" onclick="toast('PDF export coming soon!')">PDF</span></div>
             <button class="lf-imp" onclick="openImport('logo')">&#8593; Import</button>
           </div>
         </div>
@@ -525,7 +508,7 @@ body{font-family:var(--font);background:var(--bg2);color:var(--text);display:fle
           <div class="lf-row"><div class="lf-name">Lockup — Dark</div></div>
           <div style="font-size:10.5px;color:var(--text4);margin-bottom:8px">Monochrome / print</div>
           <div class="lf-actions">
-            <div class="lf-fmts"><span class="fc" onclick="exportLogoSVG('dark')">SVG</span><span class="fc" onclick="toast('PNG export coming soon!')">PNG</span><span class="fc" onclick="toast('PDF export coming soon!')">PDF</span></div>
+            <div class="lf-fmts"><span class="fc" onclick="exportLogoSVG('dark')">SVG</span><span class="fc" onclick="exportLogoPNG('dark')">PNG</span><span class="fc" onclick="toast('PDF export coming soon!')">PDF</span></div>
             <button class="lf-imp" onclick="openImport('logo')">&#8593; Import</button>
           </div>
         </div>
@@ -548,7 +531,7 @@ body{font-family:var(--font);background:var(--bg2);color:var(--text);display:fle
           <div class="lf-row"><div class="lf-name">Logomark — Primary</div></div>
           <div style="font-size:10.5px;color:var(--text4);margin-bottom:8px">Full color, default usage</div>
           <div class="lf-actions">
-            <div class="lf-fmts"><span class="fc" onclick="exportLogoSVG('icon')">SVG</span><span class="fc" onclick="toast('PNG export coming soon!')">PNG</span></div>
+            <div class="lf-fmts"><span class="fc" onclick="exportLogoSVG('icon')">SVG</span><span class="fc" onclick="exportLogoPNG('icon')">PNG</span></div>
             <button class="lf-imp" onclick="openImport('logo')">&#8593; Import</button>
           </div>
         </div>
@@ -566,7 +549,7 @@ body{font-family:var(--font);background:var(--bg2);color:var(--text);display:fle
           <div class="lf-row"><div class="lf-name">Logomark — Monochrome</div></div>
           <div style="font-size:10.5px;color:var(--text4);margin-bottom:8px">Black, for light backgrounds</div>
           <div class="lf-actions">
-            <div class="lf-fmts"><span class="fc" onclick="exportLogoSVG('dark')">SVG</span><span class="fc" onclick="toast('PNG export coming soon!')">PNG</span></div>
+            <div class="lf-fmts"><span class="fc" onclick="exportLogoSVG('dark')">SVG</span><span class="fc" onclick="exportLogoPNG('dark')">PNG</span></div>
             <button class="lf-imp" onclick="openImport('logo')">&#8593; Import</button>
           </div>
         </div>
@@ -584,7 +567,7 @@ body{font-family:var(--font);background:var(--bg2);color:var(--text);display:fle
           <div class="lf-row"><div class="lf-name">Logomark — Inverted</div></div>
           <div style="font-size:10.5px;color:var(--text4);margin-bottom:8px">White, for dark surfaces</div>
           <div class="lf-actions">
-            <div class="lf-fmts"><span class="fc" onclick="exportLogoSVG('inverted')">SVG</span><span class="fc" onclick="toast('PNG export coming soon!')">PNG</span></div>
+            <div class="lf-fmts"><span class="fc" onclick="exportLogoSVG('inverted')">SVG</span><span class="fc" onclick="exportLogoPNG('inverted')">PNG</span></div>
             <button class="lf-imp" onclick="openImport('logo')">&#8593; Import</button>
           </div>
         </div>
@@ -604,7 +587,7 @@ body{font-family:var(--font);background:var(--bg2);color:var(--text);display:fle
           <div class="lf-row"><div class="lf-name">Wordmark — Primary</div></div>
           <div style="font-size:10.5px;color:var(--text4);margin-bottom:8px">Purple, light backgrounds</div>
           <div class="lf-actions">
-            <div class="lf-fmts"><span class="fc" onclick="exportLogoSVG('primary')">SVG</span><span class="fc" onclick="toast('PNG export coming soon!')">PNG</span></div>
+            <div class="lf-fmts"><span class="fc" onclick="exportLogoSVG('primary')">SVG</span><span class="fc" onclick="exportLogoPNG('primary')">PNG</span></div>
             <button class="lf-imp" onclick="openImport('logo')">&#8593; Import</button>
           </div>
         </div>
@@ -619,7 +602,7 @@ body{font-family:var(--font);background:var(--bg2);color:var(--text);display:fle
           <div class="lf-row"><div class="lf-name">Wordmark — Light</div></div>
           <div style="font-size:10.5px;color:var(--text4);margin-bottom:8px">White, dark backgrounds</div>
           <div class="lf-actions">
-            <div class="lf-fmts"><span class="fc" onclick="exportLogoSVG('inverted')">SVG</span><span class="fc" onclick="toast('PNG export coming soon!')">PNG</span></div>
+            <div class="lf-fmts"><span class="fc" onclick="exportLogoSVG('inverted')">SVG</span><span class="fc" onclick="exportLogoPNG('inverted')">PNG</span></div>
             <button class="lf-imp" onclick="openImport('logo')">&#8593; Import</button>
           </div>
         </div>
@@ -634,7 +617,7 @@ body{font-family:var(--font);background:var(--bg2);color:var(--text);display:fle
           <div class="lf-row"><div class="lf-name">Wordmark — Dark</div></div>
           <div style="font-size:10.5px;color:var(--text4);margin-bottom:8px">Black, monochrome / print</div>
           <div class="lf-actions">
-            <div class="lf-fmts"><span class="fc" onclick="exportLogoSVG('dark')">SVG</span><span class="fc" onclick="toast('PNG export coming soon!')">PNG</span></div>
+            <div class="lf-fmts"><span class="fc" onclick="exportLogoSVG('dark')">SVG</span><span class="fc" onclick="exportLogoPNG('dark')">PNG</span></div>
             <button class="lf-imp" onclick="openImport('logo')">&#8593; Import</button>
           </div>
         </div>
