@@ -448,7 +448,7 @@ body{font-family:var(--font);background:var(--bg2);color:var(--text);display:fle
     </div>
     <div class="sa">
       <button class="sa-btn sa-imp" onclick="openImport('logo')">&#8593; Import</button>
-      <button class="sa-btn sa-exp" onclick="toast('Logo SVG package exported!')">&#8595; Export SVG</button>
+      <button class="sa-btn sa-exp" onclick="exportLogoPackage()">&#8595; Export SVG</button>
     </div>
 
     <!-- OFFICIAL LOGO DISPLAY -->
@@ -491,7 +491,7 @@ body{font-family:var(--font);background:var(--bg2);color:var(--text);display:fle
           <div class="lf-row"><div class="lf-name">Lockup — Primary</div></div>
           <div style="font-size:10.5px;color:var(--text4);margin-bottom:8px">For light backgrounds</div>
           <div class="lf-actions">
-            <div class="lf-fmts"><span class="fc" onclick="cp('#8B72D8','logo-primary')">SVG</span><span class="fc" onclick="toast('PNG!')">PNG</span><span class="fc" onclick="toast('PDF!')">PDF</span></div>
+            <div class="lf-fmts"><span class="fc" onclick="exportLogoSVG('primary')">SVG</span><span class="fc" onclick="toast('PNG export coming soon!')">PNG</span><span class="fc" onclick="toast('PDF export coming soon!')">PDF</span></div>
             <button class="lf-imp" onclick="openImport('logo')">&#8593; Import</button>
           </div>
         </div>
@@ -508,7 +508,7 @@ body{font-family:var(--font);background:var(--bg2);color:var(--text);display:fle
           <div class="lf-row"><div class="lf-name">Lockup — Inverted</div></div>
           <div style="font-size:10.5px;color:var(--text4);margin-bottom:8px">For dark backgrounds</div>
           <div class="lf-actions">
-            <div class="lf-fmts"><span class="fc" onclick="toast('SVG!')">SVG</span><span class="fc" onclick="toast('PNG!')">PNG</span><span class="fc" onclick="toast('PDF!')">PDF</span></div>
+            <div class="lf-fmts"><span class="fc" onclick="exportLogoSVG('inverted')">SVG</span><span class="fc" onclick="toast('PNG export coming soon!')">PNG</span><span class="fc" onclick="toast('PDF export coming soon!')">PDF</span></div>
             <button class="lf-imp" onclick="openImport('logo')">&#8593; Import</button>
           </div>
         </div>
@@ -525,7 +525,7 @@ body{font-family:var(--font);background:var(--bg2);color:var(--text);display:fle
           <div class="lf-row"><div class="lf-name">Lockup — Dark</div></div>
           <div style="font-size:10.5px;color:var(--text4);margin-bottom:8px">Monochrome / print</div>
           <div class="lf-actions">
-            <div class="lf-fmts"><span class="fc" onclick="toast('SVG!')">SVG</span><span class="fc" onclick="toast('PNG!')">PNG</span><span class="fc" onclick="toast('PDF!')">PDF</span></div>
+            <div class="lf-fmts"><span class="fc" onclick="exportLogoSVG('dark')">SVG</span><span class="fc" onclick="toast('PNG export coming soon!')">PNG</span><span class="fc" onclick="toast('PDF export coming soon!')">PDF</span></div>
             <button class="lf-imp" onclick="openImport('logo')">&#8593; Import</button>
           </div>
         </div>
@@ -548,7 +548,7 @@ body{font-family:var(--font);background:var(--bg2);color:var(--text);display:fle
           <div class="lf-row"><div class="lf-name">Logomark — Primary</div></div>
           <div style="font-size:10.5px;color:var(--text4);margin-bottom:8px">Full color, default usage</div>
           <div class="lf-actions">
-            <div class="lf-fmts"><span class="fc" onclick="toast('SVG!')">SVG</span><span class="fc" onclick="toast('PNG!')">PNG</span></div>
+            <div class="lf-fmts"><span class="fc" onclick="exportLogoSVG('icon')">SVG</span><span class="fc" onclick="toast('PNG export coming soon!')">PNG</span></div>
             <button class="lf-imp" onclick="openImport('logo')">&#8593; Import</button>
           </div>
         </div>
@@ -566,7 +566,7 @@ body{font-family:var(--font);background:var(--bg2);color:var(--text);display:fle
           <div class="lf-row"><div class="lf-name">Logomark — Monochrome</div></div>
           <div style="font-size:10.5px;color:var(--text4);margin-bottom:8px">Black, for light backgrounds</div>
           <div class="lf-actions">
-            <div class="lf-fmts"><span class="fc" onclick="toast('SVG!')">SVG</span><span class="fc" onclick="toast('PNG!')">PNG</span></div>
+            <div class="lf-fmts"><span class="fc" onclick="exportLogoSVG('dark')">SVG</span><span class="fc" onclick="toast('PNG export coming soon!')">PNG</span></div>
             <button class="lf-imp" onclick="openImport('logo')">&#8593; Import</button>
           </div>
         </div>
@@ -584,7 +584,7 @@ body{font-family:var(--font);background:var(--bg2);color:var(--text);display:fle
           <div class="lf-row"><div class="lf-name">Logomark — Inverted</div></div>
           <div style="font-size:10.5px;color:var(--text4);margin-bottom:8px">White, for dark surfaces</div>
           <div class="lf-actions">
-            <div class="lf-fmts"><span class="fc" onclick="toast('SVG!')">SVG</span><span class="fc" onclick="toast('PNG!')">PNG</span></div>
+            <div class="lf-fmts"><span class="fc" onclick="exportLogoSVG('inverted')">SVG</span><span class="fc" onclick="toast('PNG export coming soon!')">PNG</span></div>
             <button class="lf-imp" onclick="openImport('logo')">&#8593; Import</button>
           </div>
         </div>
@@ -604,7 +604,7 @@ body{font-family:var(--font);background:var(--bg2);color:var(--text);display:fle
           <div class="lf-row"><div class="lf-name">Wordmark — Primary</div></div>
           <div style="font-size:10.5px;color:var(--text4);margin-bottom:8px">Purple, light backgrounds</div>
           <div class="lf-actions">
-            <div class="lf-fmts"><span class="fc" onclick="toast('SVG!')">SVG</span><span class="fc" onclick="toast('PNG!')">PNG</span></div>
+            <div class="lf-fmts"><span class="fc" onclick="exportLogoSVG('primary')">SVG</span><span class="fc" onclick="toast('PNG export coming soon!')">PNG</span></div>
             <button class="lf-imp" onclick="openImport('logo')">&#8593; Import</button>
           </div>
         </div>
@@ -619,7 +619,7 @@ body{font-family:var(--font);background:var(--bg2);color:var(--text);display:fle
           <div class="lf-row"><div class="lf-name">Wordmark — Light</div></div>
           <div style="font-size:10.5px;color:var(--text4);margin-bottom:8px">White, dark backgrounds</div>
           <div class="lf-actions">
-            <div class="lf-fmts"><span class="fc" onclick="toast('SVG!')">SVG</span><span class="fc" onclick="toast('PNG!')">PNG</span></div>
+            <div class="lf-fmts"><span class="fc" onclick="exportLogoSVG('inverted')">SVG</span><span class="fc" onclick="toast('PNG export coming soon!')">PNG</span></div>
             <button class="lf-imp" onclick="openImport('logo')">&#8593; Import</button>
           </div>
         </div>
@@ -634,7 +634,7 @@ body{font-family:var(--font);background:var(--bg2);color:var(--text);display:fle
           <div class="lf-row"><div class="lf-name">Wordmark — Dark</div></div>
           <div style="font-size:10.5px;color:var(--text4);margin-bottom:8px">Black, monochrome / print</div>
           <div class="lf-actions">
-            <div class="lf-fmts"><span class="fc" onclick="toast('SVG!')">SVG</span><span class="fc" onclick="toast('PNG!')">PNG</span></div>
+            <div class="lf-fmts"><span class="fc" onclick="exportLogoSVG('dark')">SVG</span><span class="fc" onclick="toast('PNG export coming soon!')">PNG</span></div>
             <button class="lf-imp" onclick="openImport('logo')">&#8593; Import</button>
           </div>
         </div>
@@ -660,7 +660,7 @@ body{font-family:var(--font);background:var(--bg2);color:var(--text);display:fle
     </div>
     <div class="sa">
       <button class="sa-btn sa-imp" onclick="openImport('colors')">&#8593; Import</button>
-      <button class="sa-btn sa-exp" onclick="toast('Color tokens exported as CSS!')">&#8595; Export CSS</button>
+      <button class="sa-btn sa-exp" onclick="exportColors()">&#8595; Export CSS</button>
     </div>
     <div class="sl">Brand Colors</div>
     <div class="cg">
@@ -728,7 +728,7 @@ body{font-family:var(--font);background:var(--bg2);color:var(--text);display:fle
     </div>
     <div class="sa">
       <button class="sa-btn sa-imp" onclick="openImport('type')">&#8593; Import</button>
-      <button class="sa-btn sa-exp" onclick="toast('Typography tokens exported!')">&#8595; Export CSS</button>
+      <button class="sa-btn sa-exp" onclick="exportTypography()">&#8595; Export CSS</button>
     </div>
     <div class="sl">Font Families (from Figma)</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px">
@@ -781,7 +781,7 @@ body{font-family:var(--font);background:var(--bg2);color:var(--text);display:fle
   <!-- ═══ SCREENSHOTS ═══ -->
   <section class="sec" id="ss">
     <div class="ph"><div class="mt br">Branding</div><div class="ph-title">Screenshots</div><div class="ph-desc">Product screenshots with gradient frame treatment. 3px top bar: Dotzza Primary gradient.</div></div>
-    <div class="sa"><button class="sa-btn sa-imp" onclick="openImport('ss')">&#8593; Import</button><button class="sa-btn sa-exp" onclick="toast('Screenshots exported!')">&#8595; Export PNG</button></div>
+    <div class="sa"><button class="sa-btn sa-imp" onclick="openImport('ss')">&#8593; Import</button><button class="sa-btn sa-exp" onclick="exportScreenshots()">&#8595; Export PNG</button></div>
     <div class="sl">Web</div>
     <div class="tg">
       <div class="ssc"><div class="ssf" style="background:#F3F3F6"><div class="ssb" style="background:linear-gradient(135deg,#733BC6,#435ACD,#A5316F)"></div><div style="width:84%;height:78%;background:#fff;border-radius:7px;border:1px solid #E5E6EB;overflow:hidden"><div style="height:24px;background:#F9FAFB;border-bottom:1px solid #E5E6EB;display:flex;align-items:center;padding:0 8px;gap:3px"><div style="width:6px;height:6px;border-radius:50%;background:#F87171"></div><div style="width:6px;height:6px;border-radius:50%;background:#FCBB4D"></div><div style="width:6px;height:6px;border-radius:50%;background:#4ADE80"></div><div style="flex:1;height:8px;background:#E5E6EB;border-radius:4px;margin:0 7px"></div></div><div style="display:flex;height:calc(100% - 24px)"><div style="width:42px;background:#F9FAFB;border-right:1px solid #E5E6EB"></div><div style="flex:1;padding:7px;display:grid;grid-template-columns:1fr 1fr;gap:4px"><div style="background:#F3F3F6;border-radius:4px;border:1px solid #E5E6EB"></div><div style="background:#F3F3F6;border-radius:4px;border:1px solid #E5E6EB"></div><div style="background:#EEEBFC;border-radius:4px;border:1px solid #C9BDF5"></div><div style="background:#F3F3F6;border-radius:4px;border:1px solid #E5E6EB"></div></div></div></div></div><div class="ssft"><div><div class="lf-name">Dashboard — Light</div><div style="font-size:10.5px;color:var(--text4)">Main app, light mode</div></div><button class="dlb" onclick="toast('Downloaded!')">Download</button></div></div>
@@ -792,7 +792,7 @@ body{font-family:var(--font);background:var(--bg2);color:var(--text);display:fle
   <!-- ═══ ARTWORK ═══ -->
   <section class="sec" id="art">
     <div class="ph"><div class="mt br">Branding</div><div class="ph-title">Artwork &amp; Visual Style</div><div class="ph-desc">Background treatments, gradients, dot pattern, and visual language for Dotzza brand materials.</div></div>
-    <div class="sa"><button class="sa-btn sa-imp" onclick="openImport('art')">&#8593; Import</button><button class="sa-btn sa-exp" onclick="toast('Artwork exported as ZIP!')">&#8595; Export ZIP</button></div>
+    <div class="sa"><button class="sa-btn sa-imp" onclick="openImport('art')">&#8593; Import</button><button class="sa-btn sa-exp" onclick="exportArtwork()">&#8595; Export ZIP</button></div>
     <div class="sl">Background Styles</div>
     <div class="ag">
       <div class="ac" style="background:radial-gradient(ellipse at 20% 50%,rgba(139,114,216,.55),transparent 55%),radial-gradient(ellipse at 80% 20%,rgba(67,90,205,.4),transparent 50%),radial-gradient(ellipse at 55% 80%,rgba(165,49,111,.35),transparent 50%),#111427"><div class="al">Mesh Gradient — Dark</div></div>
@@ -807,7 +807,7 @@ body{font-family:var(--font);background:var(--bg2);color:var(--text);display:fle
   <!-- ═══ TEMPLATES ═══ -->
   <section class="sec" id="tpl">
     <div class="ph"><div class="mt br">Branding</div><div class="ph-title">Templates</div><div class="ph-desc">Ready-to-use templates for common Dotzza brand deliverables.</div></div>
-    <div class="sa"><button class="sa-btn sa-imp" onclick="openImport('tpl')">&#8593; Import</button><button class="sa-btn sa-exp" onclick="toast('Templates exported!')">&#8595; Export Figma</button></div>
+    <div class="sa"><button class="sa-btn sa-imp" onclick="openImport('tpl')">&#8593; Import</button><button class="sa-btn sa-exp" onclick="exportTemplates()">&#8595; Export Figma</button></div>
     <div class="sl">Social Media</div>
     <div class="tg">
       <div class="tc"><div class="tp2" style="background:linear-gradient(135deg,#733BC6,#435ACD,#A5316F)"><div style="text-align:center;padding:18px"><svg width="88" height="20" viewBox="0 0 88 20" fill="none" style="margin-bottom:8px"><circle cx="4" cy="7" r="3.5" fill="white"/><circle cx="4" cy="14.5" r="3.5" fill="white"/><text x="12" y="16" font-family="Nunito,sans-serif" font-size="14" font-weight="900" fill="white" letter-spacing=".5">DOTZZA</text></svg><div style="font-size:11px;color:rgba(255,255,255,.5);font-family:'Lato',sans-serif">Brand Hub · Made with Dotzza</div></div></div><div class="tf"><div class="tf-name">Instagram — Gradient</div><span class="tf-open" onclick="toast('Opening Figma…')">Open in Figma ↗</span></div></div>
@@ -823,7 +823,7 @@ body{font-family:var(--font);background:var(--bg2);color:var(--text);display:fle
   <!-- ═══ BRAND VOICE ═══ -->
   <section class="sec" id="voice">
     <div class="ph"><div class="mt br">Branding</div><div class="ph-title">Brand Voice</div><div class="ph-desc">Dotzza's tone, taglines, and copy guidelines for consistent communication.</div></div>
-    <div class="sa"><button class="sa-btn sa-imp" onclick="openImport('voice')">&#8593; Import</button><button class="sa-btn sa-exp" onclick="toast('Brand Voice PDF exported!')">&#8595; Export PDF</button></div>
+    <div class="sa"><button class="sa-btn sa-imp" onclick="openImport('voice')">&#8593; Import</button><button class="sa-btn sa-exp" onclick="exportBrandVoice('TXT')">&#8595; Export PDF</button></div>
     <div class="sl">Taglines</div>
     <div class="tlc"><span class="tln">01</span><span class="tlt">Connect every dot.</span><span class="tl-rec">Recommended</span></div>
     <div class="tlc"><span class="tln">02</span><span class="tlt">Brand at the speed of thought.</span></div>
@@ -849,7 +849,7 @@ body{font-family:var(--font);background:var(--bg2);color:var(--text);display:fle
   <!-- ═══ UI STYLE ═══ -->
   <section class="sec" id="ui">
     <div class="ph"><div class="mt en">Engineering</div><div class="ph-title">UI Design Style</div><div class="ph-desc">Exact values from Figma D. Spacing, E. Radius, F. Shadows.</div></div>
-    <div class="sa"><button class="sa-btn sa-imp" onclick="openImport('ui')">&#8593; Import</button><button class="sa-btn sa-exp" onclick="toast('UI tokens exported as CSS!')">&#8595; Export CSS</button></div>
+    <div class="sa"><button class="sa-btn sa-imp" onclick="openImport('ui')">&#8593; Import</button><button class="sa-btn sa-exp" onclick="exportCSS('UI tokens')">&#8595; Export CSS</button></div>
     <div class="sl">Buttons</div>
     <div class="dr"><button class="db db-p">Primary</button><button class="db db-s">Secondary</button><button class="db db-g">Ghost</button><button class="db db-d">Destructive</button></div>
     <div class="sl">Status Badges</div>
@@ -900,11 +900,11 @@ body{font-family:var(--font);background:var(--bg2);color:var(--text);display:fle
   <!-- ═══ TOKEN EXPORT ═══ -->
   <section class="sec" id="tokens">
     <div class="ph"><div class="mt en">Engineering</div><div class="ph-title">Token Export</div><div class="ph-desc">All 233 Dotzza design tokens from Figma. 6 collections.</div></div>
-    <div class="sa"><button class="sa-btn sa-imp" onclick="openImport('tokens')">&#8593; Import</button><button class="sa-btn sa-exp" onclick="toast('All tokens exported!')">&#8595; Export All</button></div>
+    <div class="sa"><button class="sa-btn sa-imp" onclick="openImport('tokens')">&#8593; Import</button><button class="sa-btn sa-exp" onclick="exportCSS('All tokens')">&#8595; Export All</button></div>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px">
-      <div class="tokc" onclick="toast('dotzza-tokens.css downloaded!')" onmouseover="this.style.borderColor='rgba(139,114,216,.4)'" onmouseout="this.style.borderColor='var(--bdrs)'"><div style="font-size:20px;margin-bottom:8px">CSS</div><div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px">CSS Custom Properties</div><div style="font-size:11.5px;color:var(--text4);margin-bottom:10px">--color-brand-primary with Light/Dark</div><div style="font-size:11px;font-family:var(--mono);color:#8B72D8">dotzza-tokens.css</div></div>
-      <div class="tokc" onclick="toast('dotzza-tokens.json downloaded!')" onmouseover="this.style.borderColor='rgba(139,114,216,.4)'" onmouseout="this.style.borderColor='var(--bdrs)'"><div style="font-size:20px;margin-bottom:8px">{ }</div><div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px">JSON Tokens</div><div style="font-size:11.5px;color:var(--text4);margin-bottom:10px">W3C Design Token format</div><div style="font-size:11px;font-family:var(--mono);color:#8B72D8">dotzza-tokens.json</div></div>
-      <div class="tokc" onclick="toast('Coming soon!')" onmouseover="this.style.borderColor='rgba(139,114,216,.4)'" onmouseout="this.style.borderColor='var(--bdrs)'"><div style="font-size:20px;margin-bottom:8px">TS</div><div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px">TypeScript Constants</div><div style="font-size:11.5px;color:var(--text4);margin-bottom:10px">Typed for React / Next.js</div><div style="font-size:11px;font-family:var(--mono);color:#8B72D8">dotzza-tokens.ts</div></div>
+      <div class="tokc" onclick="exportCSS('CSS tokens')" onmouseover="this.style.borderColor='rgba(139,114,216,.4)'" onmouseout="this.style.borderColor='var(--bdrs)'"><div style="font-size:20px;margin-bottom:8px">CSS</div><div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px">CSS Custom Properties</div><div style="font-size:11.5px;color:var(--text4);margin-bottom:10px">--color-brand-primary with Light/Dark</div><div style="font-size:11px;font-family:var(--mono);color:#8B72D8">dotzza-tokens.css</div></div>
+      <div class="tokc" onclick="exportJSON('JSON tokens')" onmouseover="this.style.borderColor='rgba(139,114,216,.4)'" onmouseout="this.style.borderColor='var(--bdrs)'"><div style="font-size:20px;margin-bottom:8px">{ }</div><div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px">JSON Tokens</div><div style="font-size:11.5px;color:var(--text4);margin-bottom:10px">W3C Design Token format</div><div style="font-size:11px;font-family:var(--mono);color:#8B72D8">dotzza-tokens.json</div></div>
+      <div class="tokc" onclick="exportTS()" onmouseover="this.style.borderColor='rgba(139,114,216,.4)'" onmouseout="this.style.borderColor='var(--bdrs)'"><div style="font-size:20px;margin-bottom:8px">TS</div><div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px">TypeScript Constants</div><div style="font-size:11.5px;color:var(--text4);margin-bottom:10px">Typed for React / Next.js</div><div style="font-size:11px;font-family:var(--mono);color:#8B72D8">dotzza-tokens.ts</div></div>
     </div>
     <div class="sl">Summary</div>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:9px">
@@ -920,7 +920,7 @@ body{font-family:var(--font);background:var(--bg2);color:var(--text);display:fle
   <!-- ═══ SUB BRANDS ═══ -->
   <section class="sec" id="subbrands">
     <div class="ph"><div class="mt br">Branding</div><div class="ph-title">Sub Brands</div><div class="ph-desc">Manage brand variants and sub-brand identities within the Dotzza system.</div></div>
-    <div class="sa"><button class="sa-btn sa-imp" onclick="openImport('logo')">&#8593; Import</button><button class="sa-btn sa-exp" onclick="toast('Sub brand exported!')">&#8595; Export</button></div>
+    <div class="sa"><button class="sa-btn sa-imp" onclick="openImport('logo')">&#8593; Import</button><button class="sa-btn sa-exp" onclick="exportSubBrands()">&#8595; Export</button></div>
     <div class="sl">Active Sub Brands</div>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px">
       <div style="background:var(--bg);border:2px solid rgba(139,114,216,.3);border-radius:var(--r16);padding:20px;text-align:center;cursor:pointer" onclick="toast('Opening Dotzza Main…')">
@@ -943,7 +943,7 @@ body{font-family:var(--font);background:var(--bg2);color:var(--text);display:fle
   <!-- ═══ EMAIL SIGNATURE ═══ -->
   <section class="sec" id="email">
     <div class="ph"><div class="mt br">Tools</div><div class="ph-title">Email Signature</div><div class="ph-desc">Generate on-brand email signatures for your team. Copy and paste directly into Gmail or Outlook.</div></div>
-    <div class="sa"><button class="sa-btn sa-imp" onclick="openImport('logo')">&#8593; Import logo</button><button class="sa-btn sa-exp" onclick="toast('Email signature copied to clipboard!')">&#8595; Copy HTML</button></div>
+    <div class="sa"><button class="sa-btn sa-imp" onclick="openImport('logo')">&#8593; Import logo</button><button class="sa-btn sa-exp" onclick="exportEmailSignature()">&#8595; Export HTML</button></div>
     <div class="sl">Preview</div>
     <div style="background:var(--bg);border:1px solid var(--bdrs);border-radius:var(--r12);padding:24px;margin-bottom:16px;max-width:480px">
       <div style="display:flex;align-items:center;gap:14px;padding-bottom:14px;border-bottom:2px solid #8B72D8;margin-bottom:14px">
@@ -969,13 +969,13 @@ body{font-family:var(--font);background:var(--bg2);color:var(--text);display:fle
       <div><div style="font-size:11px;color:var(--text4);margin-bottom:4px;font-weight:600">Email</div><input class="inp" style="width:100%" placeholder="hello@dotzza.com" type="email"></div>
       <div><div style="font-size:11px;color:var(--text4);margin-bottom:4px;font-weight:600">Phone (optional)</div><input class="inp" style="width:100%" placeholder="+1 000 000 0000" type="text"></div>
     </div>
-    <div style="margin-top:14px"><button class="btn btn-p" onclick="toast('Signature copied to clipboard!')">Copy signature HTML</button></div>
+    <div style="margin-top:14px"><button class="btn btn-p" onclick="copySignatureHTML()">Copy signature HTML</button></div>
   </section>
 
   <!-- ═══ NEW TEAM MEMBER ═══ -->
   <section class="sec" id="member">
     <div class="ph"><div class="mt br">Tools</div><div class="ph-title">New Team Member</div><div class="ph-desc">Onboard a new team member with all Dotzza brand assets and guidelines in one shareable link.</div></div>
-    <div class="sa"><button class="sa-btn sa-exp" onclick="toast('Onboarding kit exported!')">&#8595; Export Kit</button></div>
+    <div class="sa"><button class="sa-btn sa-imp" onclick="openImport('member')">&#8593; Import</button><button class="sa-btn sa-exp" onclick="exportOnboardingKit()">&#8595; Export Kit</button></div>
     <div class="sl">Onboarding kit includes</div>
     <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:20px">
       <div style="background:var(--bg);border:1px solid var(--bdrs);border-radius:var(--r12);padding:14px;display:flex;align-items:center;gap:10px"><div style="width:8px;height:8px;border-radius:50%;background:#4ADE80;flex-shrink:0"></div><div><div style="font-size:12px;font-weight:700;color:var(--text)">Logo Package</div><div style="font-size:11px;color:var(--text4)">All variants, SVG + PNG</div></div></div>
@@ -985,13 +985,14 @@ body{font-family:var(--font);background:var(--bg2);color:var(--text);display:fle
       <div style="background:var(--bg);border:1px solid var(--bdrs);border-radius:var(--r12);padding:14px;display:flex;align-items:center;gap:10px"><div style="width:8px;height:8px;border-radius:50%;background:#4ADE80;flex-shrink:0"></div><div><div style="font-size:12px;font-weight:700;color:var(--text)">Email Signature</div><div style="font-size:11px;color:var(--text4)">HTML template</div></div></div>
       <div style="background:var(--bg);border:1px solid var(--bdrs);border-radius:var(--r12);padding:14px;display:flex;align-items:center;gap:10px"><div style="width:8px;height:8px;border-radius:50%;background:#4ADE80;flex-shrink:0"></div><div><div style="font-size:12px;font-weight:700;color:var(--text)">Figma File Access</div><div style="font-size:11px;color:var(--text4)">Design system + components</div></div></div>
     </div>
-    <button class="btn btn-p" onclick="toast('Shareable link copied!')">Copy shareable link</button>
-    <button class="btn btn-o" style="margin-left:8px" onclick="toast('Kit downloaded as ZIP!')">Download ZIP</button>
+    <button class="btn btn-p" onclick="copyShareableLink()">Copy shareable link</button>
+    <button class="btn btn-o" style="margin-left:8px" onclick="exportOnboardingKit()">Download ZIP</button>
   </section>
 
   <!-- ═══ INSPIRATION ═══ -->
   <section class="sec" id="inspiration">
     <div class="ph"><div class="mt br">Resources</div><div class="ph-title">Inspiration</div><div class="ph-desc">Visual references and brand inspiration for Dotzza design work.</div></div>
+    <div class="sa"><button class="sa-btn sa-imp" onclick="openImport('inspiration')">&#8593; Import</button><button class="sa-btn sa-exp" onclick="exportInspiration()">&#8595; Export ZIP</button></div>
     <div class="sl">Brand Mood Board</div>
     <div class="ag" style="margin-bottom:14px">
       <div class="ac" style="background:linear-gradient(135deg,#733BC6,#435ACD,#A5316F)"><div class="al">Dotzza Primary</div></div>

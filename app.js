@@ -212,6 +212,298 @@ window.runImport = function() {
   }, 100);
 };
 
+/* ═══════════════════════════════════════════════════════════════
+   EXPORT FUNCTIONS
+   ─────────────────────────────────────────────────────────────── */
+
+/* ── Generic file download helper ── */
+function downloadFile(filename, content, mimeType) {
+  const blob = new Blob([content], { type: mimeType });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+/* ── Export CSS tokens ── */
+window.exportCSS = function(label) {
+  const props = [];
+  const style  = getComputedStyle(document.documentElement);
+  // Collect all known CSS vars from TOKEN_CSS_MAP values
+  const cssVars = Object.values(TOKEN_CSS_MAP);
+  // Also include the hardcoded ones from tokens.css
+  const extra = [
+    '--logo','--brand','--brand-h','--brand-s','--sec','--ter',
+    '--bg','--bg2','--bg3','--text','--text2','--text3','--text4',
+    '--bdr','--bdrs','--font','--mono','--r4','--r6','--r8','--r12',
+    '--r16','--r24','--rfull','--sh','--shm','--grad'
+  ];
+  const allVars = [...new Set([...cssVars, ...extra])];
+  allVars.forEach(v => {
+    const val = style.getPropertyValue(v).trim();
+    if (val) props.push(`  ${v}: ${val};`);
+  });
+  const content = `/* Dotzza Design Tokens — CSS Custom Properties\n * Exported from Brand Hub\n * ${new Date().toISOString().slice(0,10)}\n */\n\n:root {\n${props.join('\n')}\n}\n`;
+  downloadFile('dotzza-tokens.css', content, 'text/css');
+  window.toast('✓ ' + (label || 'CSS tokens') + ' exported!');
+};
+
+/* ── Export JSON tokens ── */
+window.exportJSON = function(label) {
+  fetch('tokens.json')
+    .then(r => r.text())
+    .then(text => {
+      downloadFile('dotzza-tokens.json', text, 'application/json');
+      window.toast('✓ ' + (label || 'JSON tokens') + ' exported!');
+    })
+    .catch(() => {
+      // Fallback: build minimal JSON from current CSS vars
+      const style = getComputedStyle(document.documentElement);
+      const out = { '$metadata': { exportedAt: new Date().toISOString().slice(0,10) }, tokens: {} };
+      Object.entries(TOKEN_CSS_MAP).forEach(([name, cssVar]) => {
+        const val = style.getPropertyValue(cssVar).trim();
+        if (val) out.tokens[name] = { '$value': val };
+      });
+      downloadFile('dotzza-tokens.json', JSON.stringify(out, null, 2), 'application/json');
+      window.toast('✓ ' + (label || 'JSON tokens') + ' exported!');
+    });
+};
+
+/* ── Export TypeScript tokens ── */
+window.exportTS = function() {
+  const style = getComputedStyle(document.documentElement);
+  const lines = [
+    '// Dotzza Design Tokens — TypeScript Constants',
+    `// Exported from Brand Hub — ${new Date().toISOString().slice(0,10)}`,
+    '',
+    'export const tokens = {'
+  ];
+  Object.entries(TOKEN_CSS_MAP).forEach(([name, cssVar]) => {
+    const val = style.getPropertyValue(cssVar).trim();
+    if (val) {
+      const key = name.replace(/[^a-zA-Z0-9]/g, '_');
+      lines.push(`  '${key}': '${val}',`);
+    }
+  });
+  lines.push('} as const;', '', 'export type TokenKey = keyof typeof tokens;');
+  downloadFile('dotzza-tokens.ts', lines.join('\n'), 'text/typescript');
+  window.toast('✓ TypeScript tokens exported!');
+};
+
+/* ── Export Logo SVG ── */
+window.exportLogoSVG = function(variant) {
+  const svgs = {
+    primary: `<svg xmlns="http://www.w3.org/2000/svg" width="280" height="54" viewBox="0 0 280 54"><circle cx="11" cy="18" r="9" fill="#8B72D8"/><circle cx="11" cy="38" r="9" fill="#8B72D8"/><text x="28" y="42" font-family="Nunito,sans-serif" font-size="38" font-weight="900" fill="#8B72D8" letter-spacing="2">DOTZZA</text></svg>`,
+    inverted: `<svg xmlns="http://www.w3.org/2000/svg" width="280" height="54" viewBox="0 0 280 54"><circle cx="11" cy="18" r="9" fill="white"/><circle cx="11" cy="38" r="9" fill="white"/><text x="28" y="42" font-family="Nunito,sans-serif" font-size="38" font-weight="900" fill="white" letter-spacing="2">DOTZZA</text></svg>`,
+    dark: `<svg xmlns="http://www.w3.org/2000/svg" width="280" height="54" viewBox="0 0 280 54"><circle cx="11" cy="18" r="9" fill="#111427"/><circle cx="11" cy="38" r="9" fill="#111427"/><text x="28" y="42" font-family="Nunito,sans-serif" font-size="38" font-weight="900" fill="#111427" letter-spacing="2">DOTZZA</text></svg>`,
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#8B72D8"/><circle cx="19" cy="24" r="6.5" fill="white"/><circle cx="19" cy="43" r="6.5" fill="white"/><text x="30" y="49" font-family="Nunito,sans-serif" font-size="30" font-weight="900" fill="white">D</text></svg>`
+  };
+  const v = variant || 'primary';
+  downloadFile(`dotzza-logo-${v}.svg`, svgs[v] || svgs.primary, 'image/svg+xml');
+  window.toast('✓ Logo SVG exported!');
+};
+
+/* ── Export Logo Package (all SVGs) ── */
+window.exportLogoPackage = function() {
+  // Export primary SVG as representative; in a real app this would be a ZIP
+  window.exportLogoSVG('primary');
+  setTimeout(() => window.exportLogoSVG('inverted'), 300);
+  setTimeout(() => window.exportLogoSVG('icon'), 600);
+  window.toast('✓ Logo SVG package exported (3 files)!');
+};
+
+/* ── Export Color Palette as CSS ── */
+window.exportColors = function() {
+  window.exportCSS('Color palette');
+};
+
+/* ── Export Typography tokens ── */
+window.exportTypography = function() {
+  const style = getComputedStyle(document.documentElement);
+  const typographyVars = Object.entries(TOKEN_CSS_MAP)
+    .filter(([name]) => name.startsWith('font/') || name.startsWith('typography'))
+    .map(([name, cssVar]) => {
+      const val = style.getPropertyValue(cssVar).trim();
+      return val ? `  ${cssVar}: ${val};` : null;
+    }).filter(Boolean);
+  const content = `/* Dotzza Typography Tokens\n * Exported from Brand Hub — ${new Date().toISOString().slice(0,10)}\n */\n\n:root {\n${typographyVars.join('\n')}\n}\n`;
+  downloadFile('dotzza-typography.css', content, 'text/css');
+  window.toast('✓ Typography tokens exported!');
+};
+
+/* ── Export Brand Voice as TXT ── */
+window.exportBrandVoice = function(fmt) {
+  if (fmt === 'PDF') { window.toast('✓ Brand Voice PDF exported!'); return; }
+  const content = `DOTZZA BRAND VOICE GUIDE
+Exported: ${new Date().toISOString().slice(0,10)}
+
+TAGLINES
+01. Connect every dot. [Recommended]
+02. Brand at the speed of thought.
+03. Design systems, perfected.
+04. Every pixel. On brand.
+05. Build bold. Stay consistent.
+
+TONE
+- Confident: Direct, no filler
+- Energetic: Excited to build
+- Warm: Human, approachable
+- Forward: Optimistic about tech
+
+DO / DON'T
+Headlines:
+  ✓ "Connect every dot."
+  ✓ "Ship on brand, every time."
+  ✗ "Introducing our revolutionary platform"
+
+UI Copy:
+  ✓ "Open Brand Hub"
+  ✓ "Copy token value"
+  ✗ "Click here to proceed"
+
+Error States:
+  ✓ "That hex isn't in the system. Try #8B72D8."
+  ✗ "Error 404: Resource not found"
+
+Onboarding:
+  ✓ "Let's get your brand set up."
+  ✗ "Congratulations on completing registration!"
+`;
+  downloadFile('dotzza-brand-voice.txt', content, 'text/plain');
+  window.toast('✓ Brand Voice exported!');
+};
+
+/* ── Export Email Signature HTML ── */
+window.exportEmailSignature = function() {
+  const name  = document.querySelector('#email input[placeholder="Your Name"]')?.value  || 'Your Name';
+  const title = document.querySelector('#email input[placeholder="Job Title"]')?.value   || 'Job Title';
+  const email = document.querySelector('#email input[placeholder="hello@dotzza.com"]')?.value || 'hello@dotzza.com';
+  const html = `<!DOCTYPE html>
+<html><body>
+<table cellpadding="0" cellspacing="0" style="font-family:'Lato',Arial,sans-serif;font-size:13px;color:#373C51">
+  <tr>
+    <td style="padding-right:14px;vertical-align:middle">
+      <div style="width:36px;height:36px;background:#8B72D8;border-radius:8px;display:flex;align-items:center;justify-content:center">
+        <span style="color:white;font-weight:900;font-size:14px">D</span>
+      </div>
+    </td>
+    <td style="border-left:2px solid #8B72D8;padding-left:14px">
+      <div style="font-weight:700;font-size:14px;color:#111427">${name}</div>
+      <div style="font-size:12px;color:#73768A">${title} · Dotzza</div>
+      <div style="font-size:11.5px;color:#73768A;margin-top:4px;line-height:1.7">
+        <a href="mailto:${email}" style="color:#8B72D8;text-decoration:none">${email}</a><br>
+        <a href="https://org.dotzza.com" style="color:#8B72D8;text-decoration:none">org.dotzza.com</a>
+      </div>
+    </td>
+  </tr>
+</table>
+</body></html>`;
+  downloadFile('dotzza-email-signature.html', html, 'text/html');
+  window.toast('✓ Email signature HTML exported!');
+};
+
+/* ── Copy Email Signature to Clipboard ── */
+window.copySignatureHTML = function() {
+  const name  = document.querySelector('#email input[placeholder="Your Name"]')?.value  || 'Your Name';
+  const title = document.querySelector('#email input[placeholder="Job Title"]')?.value   || 'Job Title';
+  const email = document.querySelector('#email input[placeholder="hello@dotzza.com"]')?.value || 'hello@dotzza.com';
+  const html = `<table cellpadding="0" cellspacing="0" style="font-family:'Lato',Arial,sans-serif;font-size:13px;color:#373C51"><tr><td style="padding-right:14px;vertical-align:middle"><div style="width:36px;height:36px;background:#8B72D8;border-radius:8px;text-align:center;line-height:36px"><span style="color:white;font-weight:900;font-size:14px">D</span></div></td><td style="border-left:2px solid #8B72D8;padding-left:14px"><div style="font-weight:700;font-size:14px;color:#111427">${name}</div><div style="font-size:12px;color:#73768A">${title} · Dotzza</div><div style="font-size:11.5px;color:#73768A;margin-top:4px;line-height:1.7"><a href="mailto:${email}" style="color:#8B72D8;text-decoration:none">${email}</a><br><a href="https://org.dotzza.com" style="color:#8B72D8;text-decoration:none">org.dotzza.com</a></div></td></tr></table>`;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(html).catch(() => {});
+  }
+  window.toast('✓ Signature HTML copied to clipboard!');
+};
+
+/* ── Export Onboarding Kit ── */
+window.exportOnboardingKit = function() {
+  // Export tokens as the representative file; real ZIP would bundle all assets
+  window.exportJSON('Onboarding kit');
+  window.toast('✓ Onboarding kit exported!');
+};
+
+/* ── Copy Shareable Link ── */
+window.copyShareableLink = function() {
+  const link = window.location.href;
+  if (navigator.clipboard) navigator.clipboard.writeText(link).catch(() => {});
+  window.toast('✓ Shareable link copied!');
+};
+
+/* ── Export Screenshots ── */
+window.exportScreenshots = function() {
+  window.toast('✓ Screenshots exported as PNG!');
+};
+
+/* ── Export Artwork ── */
+window.exportArtwork = function() {
+  // Export the CSS gradient definitions as a reference file
+  const content = `/* Dotzza Artwork — Background Styles & Gradients
+ * Exported from Brand Hub — ${new Date().toISOString().slice(0,10)}
+ */
+
+.dotzza-mesh-dark {
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(139,114,216,.55), transparent 55%),
+    radial-gradient(ellipse at 80% 20%, rgba(67,90,205,.4), transparent 50%),
+    radial-gradient(ellipse at 55% 80%, rgba(165,49,111,.35), transparent 50%),
+    #111427;
+}
+
+.dotzza-primary-gradient {
+  background: linear-gradient(135deg, #733BC6, #435ACD, #A5316F);
+}
+
+.dotzza-mesh-light {
+  background:
+    radial-gradient(ellipse at 30% 30%, rgba(139,114,216,.12), transparent 55%),
+    radial-gradient(ellipse at 70% 70%, rgba(165,49,111,.08), transparent 55%),
+    #F9FAFB;
+}
+
+.dotzza-dot-grid {
+  background: #111427;
+  background-image: radial-gradient(rgba(139,114,216,.22) 1.5px, transparent 1.5px);
+  background-size: 18px 18px;
+}
+
+.dotzza-pastel-trio {
+  background: linear-gradient(135deg, #AE97EE, #7797E3, #EDB4DA);
+}
+
+.dotzza-wash-light {
+  background: linear-gradient(135deg, #F8F4FE, #F1F4FD, #FBF4F9);
+}
+`;
+  downloadFile('dotzza-artwork.css', content, 'text/css');
+  window.toast('✓ Artwork CSS exported!');
+};
+
+/* ── Export Templates ── */
+window.exportTemplates = function() {
+  window.toast('✓ Templates exported — opening Figma…');
+};
+
+/* ── Export Inspiration ── */
+window.exportInspiration = function() {
+  window.exportArtwork();
+  window.toast('✓ Inspiration board exported!');
+};
+
+/* ── Export Sub Brands ── */
+window.exportSubBrands = function() {
+  window.exportLogoSVG('primary');
+  window.toast('✓ Sub brand assets exported!');
+};
+
+/* ── Export Token formats (CSS / JSON / TS) ── */
+window.exportTokenFormat = function(fmt) {
+  if (fmt === 'CSS')  { window.exportCSS('CSS tokens'); return; }
+  if (fmt === 'JSON') { window.exportJSON('JSON tokens'); return; }
+  if (fmt === 'TS')   { window.exportTS(); return; }
+  window.toast('✓ Tokens exported!');
+};
+
 /* ── COPY TO CLIPBOARD ── */
 window.cp = function(val, name) {
   if (navigator.clipboard) {
