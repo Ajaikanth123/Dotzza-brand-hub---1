@@ -1,0 +1,1612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dotzza — Brand Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --logo:#8B72D8;
+  --brand:#733BC6; --brand-h:#6031A6; --brand-s:#EEEBFC;
+  --sec:#435ACD; --ter:#A5316F;
+  --p300:#C9BDF5; --p400:#AE97EE; --p500:#9873E7; --p600:#834DDA; --p700:#733BC6; --p800:#6031A6; --p900:#502A88; --p950:#32195C;
+  --b300:#A3BBED; --b400:#7797E3; --b500:#4F6FD8; --b600:#435ACD; --b700:#3948BC; --b800:#343D99; --b950:#20244B;
+  --k300:#EDB4DA; --k400:#E086C0; --k500:#D361A7; --k600:#C04288; --k700:#A5316F; --k800:#892B5C; --k950:#45122C;
+  --g50:#F9FAFB; --g100:#F3F3F6; --g200:#E5E6EB; --g300:#D1D3DB; --g400:#9C9FAF; --g500:#73768A;
+  --g600:#4B5063; --g700:#373C51; --g800:#1F2437; --g900:#111427; --g950:#030412;
+  --gr50:#F0FDF5; --gr300:#86EFAD; --gr700:#15803C;
+  --or50:#FFF8EB; --or300:#FCBB4D; --or700:#B47409;
+  --rd50:#FEF2F2; --rd300:#FCA5A5; --rd700:#B91C1C;
+  --bg:#fff; --bg2:#F9FAFB; --bg3:#F3F3F6;
+  --text:#111427; --text2:#373C51; --text3:#73768A; --text4:#9C9FAF;
+  --bdr:#D1D3DB; --bdrs:#E5E6EB;
+  --font:'Lato',sans-serif; --mono:'DM Mono',monospace;
+  --r4:4px; --r6:6px; --r8:8px; --r12:12px; --r16:16px; --r24:24px; --rfull:9999px;
+  --sh:0 2px 8px rgba(17,20,39,.1); --shm:0 4px 16px rgba(17,20,39,.12);
+  --grad:linear-gradient(135deg,#733BC6,#435ACD,#A5316F);
+  --mesh:radial-gradient(ellipse at 18% 55%,rgba(115,59,198,.11) 0%,transparent 55%),
+         radial-gradient(ellipse at 82% 20%,rgba(67,90,205,.09) 0%,transparent 50%),
+         radial-gradient(ellipse at 55% 82%,rgba(165,49,111,.08) 0%,transparent 50%);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg2);color:var(--text);display:flex;height:100vh;font-size:14px;overflow:hidden}
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-thumb{background:var(--bdrs);border-radius:2px}
+
+/* ═══════════════ SIDEBAR ═══════════════ */
+.sb{width:228px;flex-shrink:0;background:var(--bg);border-right:1px solid var(--bdrs);display:flex;flex-direction:column;height:100vh;overflow-y:auto}
+.sb-top{padding:20px 16px 16px;border-bottom:1px solid var(--bdrs)}
+.sb-logo{margin-bottom:8px}
+.sb-badge{font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--text4);padding:2px 8px;background:var(--bg3);border-radius:var(--rfull);border:1px solid var(--bdrs);display:inline-block}
+.sb-section{padding:16px 10px 4px}
+.sb-lbl{font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text4);padding:0 6px;margin-bottom:4px;display:block}
+/* ── CLEAN NAV ITEMS — no emoji ── */
+.nv{
+  display:flex;align-items:center;gap:9px;
+  padding:7px 10px;border-radius:var(--r6);
+  margin:1px 0;cursor:pointer;color:var(--text3);
+  font-size:12.5px;font-weight:500;
+  transition:all .13s;border:none;background:transparent;
+  text-align:left;width:100%;
+}
+.nv:hover{background:var(--bg2);color:var(--text2)}
+.nv.on{background:rgba(139,114,216,.1);color:var(--logo);font-weight:700}
+.nv-dot{width:4px;height:4px;border-radius:50%;background:currentColor;flex-shrink:0;opacity:.5}
+.nv.on .nv-dot{opacity:1}
+.sb-foot{margin-top:auto;padding:14px 16px;border-top:1px solid var(--bdrs);font-size:11px;color:var(--text4);display:flex;align-items:center;gap:8px}
+
+/* ═══════════════ MAIN WRAPPER ═══════════════ */
+.mw{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+
+/* ── TOPBAR ── */
+.tb{
+  height:50px;background:var(--bg);border-bottom:1px solid var(--bdrs);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 28px;flex-shrink:0;position:sticky;top:0;z-index:10;
+}
+.tb-left{font-size:13px;font-weight:600;color:var(--text2);letter-spacing:-.1px}
+.tb-right{display:flex;align-items:center;gap:10px}
+.tb-hint{font-size:11.5px;color:var(--text4)}
+
+/* ── MODE SWITCHER — button style, no round ── */
+.sw{display:flex;background:var(--bg3);border:1px solid var(--bdrs);border-radius:var(--r6);overflow:hidden}
+.sw-btn{
+  padding:6px 18px;font-family:var(--font);font-size:12px;font-weight:600;
+  cursor:pointer;border:none;background:transparent;color:var(--text3);
+  transition:all .16s;line-height:1;
+}
+.sw-btn.ab{background:var(--logo);color:#fff}
+.sw-btn.ae{background:var(--g900,#111427);color:#fff}
+
+/* ═══════════════ SECTIONS ═══════════════ */
+.main{flex:1;overflow-y:auto;min-width:0}
+.sec{display:none;padding:36px 44px;max-width:960px;animation:fi .2s ease}
+.sec.on{display:block}
+@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.ph{margin-bottom:6px}
+.ph-title{font-size:21px;font-weight:700;color:var(--text);letter-spacing:-.3px;margin-bottom:5px}
+.ph-desc{font-size:13px;color:var(--text3);line-height:1.55}
+.sl{font-size:9.5px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--text4);margin:24px 0 12px}
+.divd{height:1px;background:var(--bdrs);margin:24px 0}
+
+/* ── MODE TAG ── */
+.mt{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:2px 9px;border-radius:var(--r4);margin-bottom:10px}
+.mt.br{background:rgba(139,114,216,.1);color:var(--logo);border:1px solid rgba(139,114,216,.2)}
+.mt.en{background:rgba(17,20,39,.06);color:var(--text2);border:1px solid var(--bdrs)}
+
+/* ── SECTION ACTION BAR ── */
+.sa{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-bottom:18px}
+.sa-btn{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:6px 13px;border-radius:var(--r6);font-family:var(--font);
+  font-size:11.5px;font-weight:600;cursor:pointer;transition:all .13s;
+}
+.sa-imp{background:var(--bg);color:var(--text2);border:1px solid var(--bdr)}
+.sa-imp:hover{background:var(--bg2);border-color:var(--logo);color:var(--logo)}
+.sa-exp{background:rgba(139,114,216,.1);color:var(--logo);border:1px solid rgba(139,114,216,.25)}
+.sa-exp:hover{background:rgba(139,114,216,.18)}
+
+/* ═══════════════ HOME ═══════════════ */
+.hero{background:var(--bg);border:1px solid var(--bdrs);border-radius:var(--r24);padding:44px;position:relative;overflow:hidden;margin-bottom:24px}
+.hero::before{content:'';position:absolute;inset:0;background:var(--mesh);pointer-events:none}
+.hcnt{position:relative;z-index:1;max-width:480px}
+.hcnt p{font-size:13.5px;color:var(--text3);line-height:1.65;margin:12px 0 22px}
+.hdots{position:absolute;right:44px;top:50%;transform:translateY(-50%);display:grid;grid-template-columns:repeat(5,1fr);gap:8px;opacity:.45}
+.hd{width:10px;height:10px;border-radius:50%}
+.qg{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.qc{background:var(--bg);border:1px solid var(--bdrs);border-radius:var(--r12);padding:16px;cursor:pointer;transition:all .17s}
+.qc:hover{border-color:rgba(139,114,216,.4);transform:translateY(-2px);box-shadow:var(--sh)}
+.qci{width:32px;height:32px;border-radius:var(--r8);display:flex;align-items:center;justify-content:center;margin-bottom:8px;font-size:14px}
+.qct{font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:2px}
+.qcd{font-size:11px;color:var(--text4);line-height:1.4}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:8px 16px;border-radius:var(--r6);font-family:var(--font);font-size:12.5px;font-weight:700;cursor:pointer;transition:all .14s;border:none;text-decoration:none}
+.btn-p{background:var(--grad);color:#fff;box-shadow:0 3px 12px rgba(115,59,198,.28)}
+.btn-p:hover{opacity:.88;transform:translateY(-1px)}
+.btn-o{background:transparent;color:var(--text3);border:1px solid var(--bdr)}
+.btn-o:hover{background:var(--bg2);color:var(--text2)}
+
+/* ═══════════════ LOGO SECTION ═══════════════ */
+.logo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.lc{border:1px solid var(--bdrs);border-radius:var(--r16);overflow:hidden;transition:border-color .15s}
+.lc:hover{border-color:rgba(139,114,216,.4)}
+.lp{height:140px;display:flex;align-items:center;justify-content:center}
+.lp-white{background:#fff}
+.lp-light{background:#F5F2FC}
+.lp-dark {background:#1A1025}
+.lp-mid  {background:#2B2050}
+.lf{background:var(--bg);border-top:1px solid var(--bdrs);padding:11px 14px}
+.lf-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:3px}
+.lf-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.lf-name{font-size:12px;font-weight:700;color:var(--text)}
+.lf-sub{font-size:10.5px;color:var(--text4)}
+
+/* ── Per-card import + format row ── */
+.lf-actions{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.lf-fmts{display:flex;gap:3px}
+.fc{font-size:9.5px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;padding:3px 8px;border-radius:3px;background:var(--bg3);color:var(--text4);cursor:pointer;border:1px solid var(--bdrs);font-family:var(--mono);transition:all .13s}
+.fc:hover{background:rgba(139,114,216,.1);color:var(--logo);border-color:rgba(139,114,216,.3)}
+.lf-imp{
+  font-size:10.5px;font-weight:700;color:var(--logo);cursor:pointer;
+  background:rgba(139,114,216,.08);border:1px solid rgba(139,114,216,.28);
+  padding:3px 10px;border-radius:var(--r4);transition:all .13s;font-family:var(--font);
+  display:inline-flex;align-items:center;gap:3px;white-space:nowrap;
+}
+.lf-imp:hover{background:rgba(139,114,216,.18);border-color:rgba(139,114,216,.5)}
+
+/* ═══════════════ COLORS ═══════════════ */
+.cg{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:9px}
+.cg6{grid-template-columns:repeat(6,1fr)}
+.cc{border-radius:var(--r12);overflow:hidden;cursor:pointer;border:1px solid var(--bdrs);transition:transform .13s}
+.cc:hover{transform:scale(1.025)}
+.cs{height:68px}
+.ci{background:var(--bg);padding:8px 11px}
+.cn{font-size:11.5px;font-weight:700;color:var(--text);margin-bottom:1px}
+.ch{font-size:10px;font-family:var(--mono);color:var(--text4)}
+.ramp{display:flex;gap:2px;border-radius:var(--r8);overflow:hidden;margin-bottom:10px}
+.rs{flex:1;height:32px;cursor:pointer;transition:transform .1s}
+.rs:hover{transform:scaleY(1.2);z-index:1}
+.gg{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.gc{height:100px;border-radius:var(--r12);border:1px solid var(--bdrs);position:relative;overflow:hidden;cursor:pointer;transition:transform .14s}
+.gc:hover{transform:scale(1.02)}
+.gl{position:absolute;bottom:8px;left:11px;font-size:10.5px;font-weight:600;color:rgba(255,255,255,.85)}
+
+/* ═══════════════ TYPOGRAPHY ═══════════════ */
+.fcard{background:var(--bg);border:1px solid var(--bdrs);border-radius:var(--r16);padding:22px;margin-bottom:10px}
+.fbadge{font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:2px 8px;border-radius:var(--rfull);background:rgba(139,114,216,.1);color:var(--logo);border:1px solid rgba(139,114,216,.22)}
+.ts{border:1px solid var(--bdrs);border-radius:var(--r12);padding:16px 20px;margin-bottom:7px;background:var(--bg)}
+.ts-m{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+.tt{font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--text4);padding:2px 7px;background:var(--bg3);border-radius:3px;font-family:var(--mono)}
+.tp{font-size:9px;color:var(--text4);padding:2px 7px;background:rgba(139,114,216,.06);border-radius:3px;font-family:var(--mono)}
+.cb{background:var(--bg3);border:1px solid var(--bdrs);border-radius:var(--r6);padding:9px 12px;font-family:var(--mono);font-size:11px;color:var(--text3);margin-top:9px;line-height:1.6}
+
+/* ═══════════════ UI COMPONENTS ═══════════════ */
+.db{display:inline-flex;align-items:center;gap:5px;padding:9px 18px;border-radius:var(--r6);font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;transition:all .14s;border:none}
+.db-p{background:var(--grad);color:#fff;box-shadow:0 3px 12px rgba(115,59,198,.28)}
+.db-p:hover{transform:translateY(-1px)}
+.db-s{background:rgba(139,114,216,.1);color:var(--logo);border:1px solid rgba(139,114,216,.26)}
+.db-g{background:transparent;color:var(--text3);border:1px solid var(--bdr)}
+.db-g:hover{background:var(--bg2);color:var(--text2)}
+.db-d{background:rgba(185,28,28,.08);color:#B91C1C;border:1px solid rgba(185,28,28,.2)}
+.dr{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-start;margin-bottom:20px}
+.bdg{font-size:11px;font-weight:700;padding:3px 10px;border-radius:var(--rfull)}
+.bdg-s{background:#F0FDF5;color:#15803C;border:1px solid #86EFAD}
+.bdg-w{background:#FFF8EB;color:#B47409;border:1px solid #FCBB4D}
+.bdg-e{background:#FEF2F2;color:#B91C1C;border:1px solid #FCA5A5}
+.bdg-i{background:#F1F4FD;color:#3948BC;border:1px solid #A3BBED}
+.bdg-b{background:rgba(139,114,216,.1);color:var(--logo);border:1px solid rgba(139,114,216,.26)}
+.bdg-n{background:var(--bg3);color:var(--text4);border:1px solid var(--bdrs)}
+.inp{background:var(--bg2);border:1.5px solid var(--bdr);border-radius:var(--r6);padding:9px 13px;font-family:var(--font);font-size:13px;color:var(--text);width:220px;outline:none;transition:all .14s}
+.inp:focus{border-color:var(--logo);background:var(--bg);box-shadow:0 0 0 3px rgba(139,114,216,.15)}
+.rg{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.ri{background:var(--bg);border:1px solid var(--bdrs);padding:14px;display:flex;flex-direction:column;align-items:center;gap:7px}
+.rb{width:42px;height:42px;background:rgba(139,114,216,.18);border:2px solid rgba(139,114,216,.45)}
+.rl{font-size:10px;font-family:var(--mono);color:var(--text4);text-align:center}
+.srow{display:flex;gap:5px;align-items:flex-end;background:var(--bg);border:1px solid var(--bdrs);border-radius:var(--r12);padding:14px;overflow-x:auto;margin-bottom:10px}
+.spi{display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0}
+.spb{background:rgba(139,114,216,.32);border-radius:2px;width:20px}
+.spv{font-size:9px;font-family:var(--mono);color:var(--text4)}
+.shg{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px}
+.shdemo{background:var(--bg);border-radius:var(--r8);height:54px;display:flex;align-items:center;justify-content:center;font-size:11px;font-family:var(--mono);color:var(--text4)}
+.mini{background:var(--g900);border:1px solid rgba(255,255,255,.07);border-radius:var(--r12);overflow:hidden}
+.mini-top{height:28px;background:#0B0C18;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;padding:0 10px;gap:4px}
+.dot{width:7px;height:7px;border-radius:50%}
+.mini-body{display:flex;height:120px}
+.mini-sb{width:60px;background:rgba(255,255,255,.03);border-right:1px solid rgba(255,255,255,.05);padding:6px 5px;display:flex;flex-direction:column;gap:3px}
+.mnv{height:6px;border-radius:3px;background:rgba(255,255,255,.07)}
+.mnv.on{background:rgba(139,114,216,.45)}
+.mini-c{flex:1;padding:8px;display:flex;flex-direction:column;gap:5px}
+.mc{background:rgba(255,255,255,.05);border-radius:4px;border:1px solid rgba(255,255,255,.05)}
+.mr{display:flex;gap:5px}
+.mr .mc{flex:1}
+
+/* ═══════════════ ARTWORK ═══════════════ */
+.ag{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.ac{aspect-ratio:1.1;border-radius:var(--r16);border:1px solid var(--bdrs);position:relative;overflow:hidden;cursor:pointer;transition:transform .15s}
+.ac:hover{transform:scale(1.02)}
+.al{position:absolute;bottom:8px;left:11px;font-size:10.5px;font-weight:600;color:rgba(255,255,255,.8)}
+
+/* ═══════════════ TEMPLATES / SS ═══════════════ */
+.tg{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.tc{border:1px solid var(--bdrs);border-radius:var(--r16);overflow:hidden;cursor:pointer;transition:all .16s}
+.tc:hover{border-color:rgba(139,114,216,.4);transform:translateY(-2px);box-shadow:var(--shm)}
+.tp2{height:144px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.tf{background:var(--bg);padding:10px 14px;border-top:1px solid var(--bdrs);display:flex;align-items:center;justify-content:space-between}
+.tf-name{font-size:12px;font-weight:700;color:var(--text)}
+.tf-open{font-size:11px;color:var(--text4);cursor:pointer;transition:color .13s}
+.tf-open:hover{color:var(--logo)}
+.ssc{border-radius:var(--r16);overflow:hidden;border:1px solid var(--bdrs)}
+.ssf{height:172px;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.ssb{position:absolute;top:0;left:0;right:0;height:3px}
+.ssft{background:var(--bg);padding:10px 14px;border-top:1px solid var(--bdrs);display:flex;align-items:center;justify-content:space-between}
+.dlb{font-size:11px;padding:4px 10px;background:transparent;border:1px solid var(--bdr);border-radius:var(--r4);cursor:pointer;color:var(--text3);font-family:var(--font);transition:all .13s}
+.dlb:hover{background:var(--bg2)}
+
+/* ═══════════════ VOICE ═══════════════ */
+.tlc{background:var(--bg);border:1px solid var(--bdrs);border-radius:var(--r12);padding:12px 16px;margin-bottom:7px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .13s}
+.tlc:hover{border-color:rgba(139,114,216,.3);background:var(--bg2)}
+.tln{font-size:11px;font-family:var(--mono);color:var(--text4);width:18px;flex-shrink:0}
+.tlt{font-size:16px;font-weight:700;color:var(--text)}
+.tl-rec{font-size:9.5px;font-weight:700;padding:2px 8px;border-radius:var(--rfull);background:rgba(139,114,216,.1);color:var(--logo);border:1px solid rgba(139,114,216,.2);margin-left:auto;white-space:nowrap}
+.vc{background:var(--bg);border:1px solid var(--bdrs);border-radius:var(--r12);padding:13px 15px}
+.vc-t{font-size:11.5px;font-weight:700;color:var(--text);margin-bottom:6px}
+.vdo{font-size:12px;color:#15803C;margin-bottom:3px}
+.vdn{font-size:12px;color:#B91C1C}
+
+/* ═══════════════ TOKEN EXPORT ═══════════════ */
+.tokc{background:var(--bg);border:1px solid var(--bdrs);border-radius:var(--r16);padding:18px;cursor:pointer;transition:all .14s}
+.tokc:hover{border-color:rgba(139,114,216,.4)}
+.tokn{font-size:24px;font-weight:900;color:var(--logo);margin-bottom:4px}
+
+/* ═══════════════ IMPORT MODAL ═══════════════ */
+.imo{position:fixed;inset:0;background:rgba(17,20,39,.55);z-index:200;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .18s}
+.imo.open{opacity:1;pointer-events:all}
+.imd{background:var(--bg);border:1px solid var(--bdrs);border-radius:var(--r16);padding:26px;width:400px;max-width:90vw;box-shadow:0 24px 60px rgba(17,20,39,.18);transform:translateY(10px);transition:transform .18s}
+.imo.open .imd{transform:translateY(0)}
+.im-t{font-size:16px;font-weight:700;color:var(--text);margin-bottom:4px}
+.im-d{font-size:12px;color:var(--text3);margin-bottom:16px;line-height:1.55}
+.im-zone{border:2px dashed var(--bdr);border-radius:var(--r12);padding:24px;text-align:center;cursor:pointer;transition:all .14s;margin-bottom:14px;background:var(--bg2)}
+.im-zone:hover{border-color:var(--logo);background:rgba(139,114,216,.04)}
+.im-zone-ico{font-size:26px;margin-bottom:7px}
+.im-zone-t{font-size:12.5px;font-weight:700;color:var(--text2);margin-bottom:2px}
+.im-zone-s{font-size:11px;color:var(--text4)}
+.im-types{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.imt{font-size:10px;font-weight:700;padding:3px 9px;border-radius:var(--rfull);background:var(--bg3);color:var(--text3);border:1px solid var(--bdrs);cursor:pointer;font-family:var(--mono);transition:all .13s}
+.imt:hover,.imt.sel{background:rgba(139,114,216,.1);color:var(--logo);border-color:rgba(139,114,216,.3)}
+.im-prog{display:none;margin-bottom:14px}
+.im-prog-row{display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-bottom:5px}
+.im-track{height:4px;background:var(--bdrs);border-radius:var(--rfull);overflow:hidden}
+.im-bar{height:100%;width:0%;background:var(--logo);border-radius:var(--rfull);transition:width .3s}
+.im-acts{display:flex;gap:8px;justify-content:flex-end}
+.im-cancel{padding:7px 15px;border-radius:var(--r6);font-family:var(--font);font-size:12px;font-weight:600;background:transparent;color:var(--text3);border:1px solid var(--bdr);cursor:pointer}
+.im-cancel:hover{background:var(--bg2)}
+.im-go{padding:7px 15px;border-radius:var(--r6);font-family:var(--font);font-size:12px;font-weight:700;background:var(--logo);color:#fff;border:none;cursor:pointer}
+.im-go:hover{background:var(--brand-h,#6031A6)}
+
+/* ═══════════════ TOAST ═══════════════ */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--g800);border:1px solid rgba(255,255,255,.12);border-radius:var(--r12);padding:9px 17px;font-size:12px;color:#E5E6EB;box-shadow:var(--shm);transition:transform .22s cubic-bezier(.34,1.56,.64,1);z-index:999;display:flex;align-items:center;gap:7px;pointer-events:none;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<!-- ══════════ SIDEBAR ══════════ -->
+<nav class="sb">
+  <div class="sb-top">
+    <!-- DOTZZA WORDMARK — exact from images -->
+    <div class="sb-logo">
+      <svg width="140" height="28" viewBox="0 0 140 28" fill="none">
+        <circle cx="8"  cy="10" r="6.5" fill="#8B72D8"/>
+        <circle cx="8"  cy="22" r="6.5" fill="#8B72D8"/>
+        <text x="20" y="22" font-family="Nunito,sans-serif" font-size="20" font-weight="900" fill="#8B72D8" letter-spacing="1">DOTZZA</text>
+      </svg>
+    </div>
+    <div class="sb-badge">Brand Hub &middot; Beta</div>
+  </div>
+
+  <!-- NAV — clean, no emoji -->
+  <div class="sb-section">
+    <span class="sb-lbl">Navigate</span>
+    <button class="nv on" data-mode="both" onclick="go('home',this)">
+      <span class="nv-dot"></span>Home
+    </button>
+  </div>
+
+  <!-- ── ASSETS ── always visible in branding, shared items in engineering -->
+  <div id="nav-assets">
+    <div class="sb-section">
+      <span class="sb-lbl">Assets</span>
+      <button class="nv" onclick="go('logo',this)"><span class="nv-dot"></span>Logo</button>
+      <button class="nv" onclick="go('colors',this)"><span class="nv-dot"></span>Colors &amp; Gradients</button>
+      <button class="nv" onclick="go('type',this)"><span class="nv-dot"></span>Typography</button>
+      <button class="nv" onclick="go('ss',this)"><span class="nv-dot"></span>Screenshots</button>
+      <button class="nv" onclick="go('art',this)"><span class="nv-dot"></span>Artwork</button>
+    </div>
+  </div>
+
+  <!-- ── SUB BRANDS ── branding mode only -->
+  <div id="nav-subbrands">
+    <div class="sb-section">
+      <span class="sb-lbl">Sub Brands</span>
+      <button class="nv" onclick="go('subbrands',this)"><span class="nv-dot"></span>Dotzza Main</button>
+      <button class="nv" onclick="toast('Coming soon — add sub brand')" style="opacity:.55;font-style:italic"><span class="nv-dot"></span>+ Add sub brand</button>
+    </div>
+  </div>
+
+  <!-- ── TOOLS ── branding mode only -->
+  <div id="nav-tools">
+    <div class="sb-section">
+      <span class="sb-lbl">Tools</span>
+      <button class="nv" onclick="go('email',this)"><span class="nv-dot"></span>Email Signature</button>
+      <button class="nv" onclick="go('member',this)"><span class="nv-dot"></span>New Team Member</button>
+    </div>
+  </div>
+
+  <!-- ── RESOURCES ── -->
+  <div id="nav-resources">
+    <div class="sb-section">
+      <span class="sb-lbl">Resources</span>
+      <button class="nv" onclick="go('tpl',this)"><span class="nv-dot"></span>Templates</button>
+      <button class="nv" onclick="go('voice',this)"><span class="nv-dot"></span>Brand Voice</button>
+      <button class="nv" onclick="go('inspiration',this)"><span class="nv-dot"></span>Inspiration</button>
+    </div>
+  </div>
+
+  <!-- ── ENGINEERING — shown only in engineering mode ── -->
+  <div id="nav-eng" style="display:none">
+    <div class="sb-section">
+      <span class="sb-lbl">Engineering</span>
+      <button class="nv" onclick="go('ui',this)"><span class="nv-dot"></span>UI Style</button>
+      <button class="nv" onclick="go('tokens',this)"><span class="nv-dot"></span>Token Export</button>
+    </div>
+  </div>
+
+  <div class="sb-foot">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+      <rect width="18" height="18" rx="4" fill="#8B72D8"/>
+      <circle cx="5.5" cy="6.5"  r="2" fill="white"/>
+      <circle cx="5.5" cy="12" r="2" fill="white"/>
+      <text x="9" y="13" font-family="Nunito,sans-serif" font-size="9" font-weight="900" fill="white">D</text>
+    </svg>
+    <span>233 tokens &middot; Figma</span>
+  </div>
+</nav>
+
+<!-- ══════════ MAIN WRAPPER ══════════ -->
+<div class="mw">
+
+  <!-- TOPBAR -->
+  <div class="tb">
+    <div class="tb-left" id="tb-title">Branding</div>
+    <div class="tb-right">
+      <!-- SYNC NOW BUTTON -->
+      <button id="sync-btn" onclick="triggerSync()" style="
+        display:inline-flex;align-items:center;gap:6px;
+        padding:6px 13px;border-radius:6px;
+        font-family:var(--font);font-size:11.5px;font-weight:600;
+        background:var(--bg3);color:var(--text3);
+        border:1px solid var(--bdrs);cursor:pointer;
+        transition:all .15s;
+      " onmouseover="this.style.borderColor='var(--logo)';this.style.color='var(--logo)'"
+         onmouseout="this.style.borderColor='var(--bdrs)';this.style.color='var(--text3)'">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+          <path d="M10 6A4 4 0 1 1 6 2M6 2L8.5 4.5M6 2L3.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Sync Figma
+      </button>
+      <span class="tb-hint">Mode</span>
+      <!-- SQUARE BUTTON SWITCHER — no round, no emoji -->
+      <div class="sw">
+        <button class="sw-btn ab" id="sw-br" onclick="setMode('br')">Branding</button>
+        <button class="sw-btn"    id="sw-en" onclick="setMode('en')">Engineering</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="main">
+
+  <!-- ═══ HOME ═══ -->
+  <section class="sec on" id="home">
+    <div class="hero">
+      <div class="hdots">
+        <div class="hd" style="background:#8B72D8"></div><div class="hd" style="background:#9B82E4"></div><div class="hd" style="background:#AE97EE"></div><div class="hd" style="background:#C9BDF5"></div><div class="hd" style="background:#E0DAFA"></div>
+        <div class="hd" style="background:#435ACD"></div><div class="hd" style="background:#4F6FD8"></div><div class="hd" style="background:#7797E3"></div><div class="hd" style="background:#A3BBED"></div><div class="hd" style="background:#C8D5F5"></div>
+        <div class="hd" style="background:#A5316F"></div><div class="hd" style="background:#C04288"></div><div class="hd" style="background:#D361A7"></div><div class="hd" style="background:#E086C0"></div><div class="hd" style="background:#EDB4DA"></div>
+      </div>
+      <div class="hcnt">
+        <svg width="200" height="40" viewBox="0 0 200 40" fill="none" style="margin-bottom:10px">
+          <circle cx="10" cy="13.5" r="9" fill="#8B72D8"/>
+          <circle cx="10" cy="29"   r="9" fill="#8B72D8"/>
+          <text x="25" y="31" font-family="Nunito,sans-serif" font-size="28" font-weight="900" fill="#8B72D8" letter-spacing="1">DOTZZA</text>
+        </svg>
+        <p>Every color, font, spacing value, and component — live from Figma. 233 tokens across 6 collections.</p>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-p" onclick="setMode('br');go('colors',null)">Explore Branding</button>
+          <button class="btn btn-o" onclick="setMode('en');go('tokens',null)">Engineering</button>
+        </div>
+      </div>
+    </div>
+    <div class="sl">Quick access</div>
+    <div class="qg">
+      <div class="qc" onclick="setMode('br');go('logo',null)"><div class="qci" style="background:rgba(139,114,216,.1)">◻</div><div class="qct">Logo</div><div class="qcd">Lockup, icon, wordmark</div></div>
+      <div class="qc" onclick="setMode('br');go('colors',null)"><div class="qci" style="background:rgba(67,90,205,.1)">◑</div><div class="qct">Colors & Gradients</div><div class="qcd">76 primitives + semantics</div></div>
+      <div class="qc" onclick="setMode('br');go('type',null)"><div class="qci" style="background:rgba(165,49,111,.1)">A</div><div class="qct">Typography</div><div class="qcd">Lato + Abril Fatface</div></div>
+      <div class="qc" onclick="setMode('en');go('ui',null)"><div class="qci" style="background:rgba(17,20,39,.06)">⊞</div><div class="qct">UI Style</div><div class="qcd">Components, radius, spacing</div></div>
+      <div class="qc" onclick="setMode('br');go('tpl',null)"><div class="qci" style="background:rgba(67,90,205,.08)">⊡</div><div class="qct">Templates</div><div class="qcd">Social, email, landing page</div></div>
+      <div class="qc" onclick="setMode('en');go('tokens',null)"><div class="qci" style="background:rgba(17,20,39,.06)">{ }</div><div class="qct">Token Export</div><div class="qcd">CSS, JSON, TypeScript</div></div>
+    </div>
+  </section>
+
+  <!-- ═══ LOGO ═══ -->
+  <section class="sec" id="logo">
+    <div class="ph">
+      <div class="mt br">Branding</div>
+      <div class="ph-title">Logo</div>
+      <div class="ph-desc">Download approved assets and follow usage guidelines. All variants sourced from org.dotzza.com and Figma.</div>
+    </div>
+    <div class="sa">
+      <button class="sa-btn sa-imp" onclick="openImport('logo')">&#8593; Import</button>
+      <button class="sa-btn sa-exp" onclick="toast('Logo SVG package exported!')">&#8595; Export SVG</button>
+    </div>
+
+    <!-- OFFICIAL LOGO DISPLAY -->
+    <div style="background:var(--bg);border:1px solid var(--bdrs);border-radius:var(--r16);padding:32px;text-align:center;margin-bottom:22px">
+      <div style="font-size:9.5px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--text4);margin-bottom:18px">Official mark — :DOTZZA</div>
+      <svg width="280" height="54" viewBox="0 0 280 54" fill="none" style="margin-bottom:16px">
+        <!-- Exact colon dots from image: two filled circles, same radius, vertically centered on cap-height -->
+        <circle cx="11" cy="18" r="9" fill="#8B72D8"/>
+        <circle cx="11" cy="38" r="9" fill="#8B72D8"/>
+        <!-- DOTZZA — Nunito 900, wide tracking, all-caps -->
+        <text x="28" y="42" font-family="Nunito,sans-serif" font-size="38" font-weight="900" fill="#8B72D8" letter-spacing="2">DOTZZA</text>
+      </svg>
+      <!-- App icon -->
+      <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+        <rect width="64" height="64" rx="14" fill="#8B72D8"/>
+        <circle cx="19" cy="24" r="6.5" fill="white"/>
+        <circle cx="19" cy="43" r="6.5" fill="white"/>
+        <text x="30" y="49" font-family="Nunito,sans-serif" font-size="30" font-weight="900" fill="white">D</text>
+      </svg>
+      <div style="display:flex;justify-content:center;gap:24px;margin-top:16px;flex-wrap:wrap">
+        <div style="font-size:11px;color:var(--text3)"><span style="color:var(--text4)">Color</span> #8B72D8</div>
+        <div style="font-size:11px;color:var(--text3)"><span style="color:var(--text4)">Typeface</span> Nunito 900</div>
+        <div style="font-size:11px;color:var(--text3)"><span style="color:var(--text4)">Prefix</span> 2× colon dots</div>
+        <div style="font-size:11px;color:var(--text3)"><span style="color:var(--text4)">Case</span> All-caps</div>
+      </div>
+    </div>
+
+    <!-- 1. LOCKUP -->
+    <div class="sl">1. Lockup <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:10px;color:var(--text4)">— Logo + text combined</span></div>
+    <div class="logo-grid">
+      <div class="lc">
+        <div class="lp lp-light">
+          <svg width="165" height="40" viewBox="0 0 165 40" fill="none">
+            <circle cx="9" cy="14" r="7.5" fill="#8B72D8"/>
+            <circle cx="9" cy="28" r="7.5" fill="#8B72D8"/>
+            <text x="22" y="31" font-family="Nunito,sans-serif" font-size="26" font-weight="900" fill="#8B72D8" letter-spacing="1.2">DOTZZA</text>
+          </svg>
+        </div>
+        <div class="lf">
+          <div class="lf-row"><div class="lf-name">Lockup — Primary</div></div>
+          <div style="font-size:10.5px;color:var(--text4);margin-bottom:8px">For light backgrounds</div>
+          <div class="lf-actions">
+            <div class="lf-fmts"><span class="fc" onclick="cp('#8B72D8','logo-primary')">SVG</span><span class="fc" onclick="toast('PNG!')">PNG</span><span class="fc" onclick="toast('PDF!')">PDF</span></div>
+            <button class="lf-imp" onclick="openImport('logo')">&#8593; Import</button>
+          </div>
+        </div>
+      </div>
+      <div class="lc">
+        <div class="lp lp-dark">
+          <svg width="165" height="40" viewBox="0 0 165 40" fill="none">
+            <circle cx="9" cy="14" r="7.5" fill="white"/>
+            <circle cx="9" cy="28" r="7.5" fill="white"/>
+            <text x="22" y="31" font-family="Nunito,sans-serif" font-size="26" font-weight="900" fill="white" letter-spacing="1.2">DOTZZA</text>
+          </svg>
+        </div>
+        <div class="lf">
+          <div class="lf-row"><div class="lf-name">Lockup — Inverted</div></div>
+          <div style="font-size:10.5px;color:var(--text4);margin-bottom:8px">For dark backgrounds</div>
+          <div class="lf-actions">
+            <div class="lf-fmts"><span class="fc" onclick="toast('SVG!')">SVG</span><span class="fc" onclick="toast('PNG!')">PNG</span><span class="fc" onclick="toast('PDF!')">PDF</span></div>
+            <button class="lf-imp" onclick="openImport('logo')">&#8593; Import</button>
+          </div>
+        </div>
+      </div>
+      <div class="lc">
+        <div class="lp lp-white" style="background:#F5F5F5">
+          <svg width="165" height="40" viewBox="0 0 165 40" fill="none">
+            <circle cx="9" cy="14" r="7.5" fill="#111427"/>
+            <circle cx="9" cy="28" r="7.5" fill="#111427"/>
+            <text x="22" y="31" font-family="Nunito,sans-serif" font-size="26" font-weight="900" fill="#111427" letter-spacing="1.2">DOTZZA</text>
+          </svg>
+        </div>
+        <div class="lf">
+          <div class="lf-row"><div class="lf-name">Lockup — Dark</div></div>
+          <div style="font-size:10.5px;color:var(--text4);margin-bottom:8px">Monochrome / print</div>
+          <div class="lf-actions">
+            <div class="lf-fmts"><span class="fc" onclick="toast('SVG!')">SVG</span><span class="fc" onclick="toast('PNG!')">PNG</span><span class="fc" onclick="toast('PDF!')">PDF</span></div>
+            <button class="lf-imp" onclick="openImport('logo')">&#8593; Import</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. LOGOMARK -->
+    <div class="sl">2. Logomark <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:10px;color:var(--text4)">— Icon / symbol only</span></div>
+    <div class="logo-grid">
+      <div class="lc">
+        <div class="lp lp-dark">
+          <svg width="72" height="72" viewBox="0 0 72 72" fill="none">
+            <rect width="72" height="72" rx="16" fill="#8B72D8"/>
+            <circle cx="21" cy="26" r="7" fill="white"/>
+            <circle cx="21" cy="47" r="7" fill="white"/>
+            <text x="33" y="52" font-family="Nunito,sans-serif" font-size="30" font-weight="900" fill="white">D</text>
+          </svg>
+        </div>
+        <div class="lf">
+          <div class="lf-row"><div class="lf-name">Logomark — Primary</div></div>
+          <div style="font-size:10.5px;color:var(--text4);margin-bottom:8px">Full color, default usage</div>
+          <div class="lf-actions">
+            <div class="lf-fmts"><span class="fc" onclick="toast('SVG!')">SVG</span><span class="fc" onclick="toast('PNG!')">PNG</span></div>
+            <button class="lf-imp" onclick="openImport('logo')">&#8593; Import</button>
+          </div>
+        </div>
+      </div>
+      <div class="lc">
+        <div class="lp lp-white">
+          <svg width="72" height="72" viewBox="0 0 72 72" fill="none">
+            <rect width="72" height="72" rx="16" fill="#111427"/>
+            <circle cx="21" cy="26" r="7" fill="white"/>
+            <circle cx="21" cy="47" r="7" fill="white"/>
+            <text x="33" y="52" font-family="Nunito,sans-serif" font-size="30" font-weight="900" fill="white">D</text>
+          </svg>
+        </div>
+        <div class="lf">
+          <div class="lf-row"><div class="lf-name">Logomark — Monochrome</div></div>
+          <div style="font-size:10.5px;color:var(--text4);margin-bottom:8px">Black, for light backgrounds</div>
+          <div class="lf-actions">
+            <div class="lf-fmts"><span class="fc" onclick="toast('SVG!')">SVG</span><span class="fc" onclick="toast('PNG!')">PNG</span></div>
+            <button class="lf-imp" onclick="openImport('logo')">&#8593; Import</button>
+          </div>
+        </div>
+      </div>
+      <div class="lc">
+        <div class="lp lp-mid">
+          <svg width="72" height="72" viewBox="0 0 72 72" fill="none">
+            <rect width="72" height="72" rx="16" fill="rgba(255,255,255,.08)"/>
+            <circle cx="21" cy="26" r="7" fill="white" opacity=".92"/>
+            <circle cx="21" cy="47" r="7" fill="white" opacity=".92"/>
+            <text x="33" y="52" font-family="Nunito,sans-serif" font-size="30" font-weight="900" fill="white">D</text>
+          </svg>
+        </div>
+        <div class="lf">
+          <div class="lf-row"><div class="lf-name">Logomark — Inverted</div></div>
+          <div style="font-size:10.5px;color:var(--text4);margin-bottom:8px">White, for dark surfaces</div>
+          <div class="lf-actions">
+            <div class="lf-fmts"><span class="fc" onclick="toast('SVG!')">SVG</span><span class="fc" onclick="toast('PNG!')">PNG</span></div>
+            <button class="lf-imp" onclick="openImport('logo')">&#8593; Import</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. WORDMARK -->
+    <div class="sl">3. Wordmark <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:10px;color:var(--text4)">— Text only</span></div>
+    <div class="logo-grid">
+      <div class="lc">
+        <div class="lp lp-light">
+          <svg width="160" height="30" viewBox="0 0 160 30" fill="none">
+            <text x="0" y="24" font-family="Nunito,sans-serif" font-size="26" font-weight="900" fill="#8B72D8" letter-spacing="2">DOTZZA</text>
+          </svg>
+        </div>
+        <div class="lf">
+          <div class="lf-row"><div class="lf-name">Wordmark — Primary</div></div>
+          <div style="font-size:10.5px;color:var(--text4);margin-bottom:8px">Purple, light backgrounds</div>
+          <div class="lf-actions">
+            <div class="lf-fmts"><span class="fc" onclick="toast('SVG!')">SVG</span><span class="fc" onclick="toast('PNG!')">PNG</span></div>
+            <button class="lf-imp" onclick="openImport('logo')">&#8593; Import</button>
+          </div>
+        </div>
+      </div>
+      <div class="lc">
+        <div class="lp lp-dark">
+          <svg width="160" height="30" viewBox="0 0 160 30" fill="none">
+            <text x="0" y="24" font-family="Nunito,sans-serif" font-size="26" font-weight="900" fill="white" letter-spacing="2">DOTZZA</text>
+          </svg>
+        </div>
+        <div class="lf">
+          <div class="lf-row"><div class="lf-name">Wordmark — Light</div></div>
+          <div style="font-size:10.5px;color:var(--text4);margin-bottom:8px">White, dark backgrounds</div>
+          <div class="lf-actions">
+            <div class="lf-fmts"><span class="fc" onclick="toast('SVG!')">SVG</span><span class="fc" onclick="toast('PNG!')">PNG</span></div>
+            <button class="lf-imp" onclick="openImport('logo')">&#8593; Import</button>
+          </div>
+        </div>
+      </div>
+      <div class="lc">
+        <div class="lp lp-white" style="background:#F5F5F5">
+          <svg width="160" height="30" viewBox="0 0 160 30" fill="none">
+            <text x="0" y="24" font-family="Nunito,sans-serif" font-size="26" font-weight="900" fill="#111427" letter-spacing="2">DOTZZA</text>
+          </svg>
+        </div>
+        <div class="lf">
+          <div class="lf-row"><div class="lf-name">Wordmark — Dark</div></div>
+          <div style="font-size:10.5px;color:var(--text4);margin-bottom:8px">Black, monochrome / print</div>
+          <div class="lf-actions">
+            <div class="lf-fmts"><span class="fc" onclick="toast('SVG!')">SVG</span><span class="fc" onclick="toast('PNG!')">PNG</span></div>
+            <button class="lf-imp" onclick="openImport('logo')">&#8593; Import</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divd"></div>
+    <!-- 4. CLEAR SPACE + USAGE -->
+    <div class="sl">4. Clear space &amp; minimum size</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+      <div style="background:var(--bg);border:1px solid var(--bdrs);border-radius:var(--r12);padding:14px"><div style="font-size:11.5px;font-weight:700;color:#15803C;margin-bottom:6px">Do</div><div style="font-size:12px;color:var(--text3);line-height:1.55">Keep clear space equal to the height of the colon dots on all four sides. Always use approved files.</div></div>
+      <div style="background:var(--bg);border:1px solid var(--bdrs);border-radius:var(--r12);padding:14px"><div style="font-size:11.5px;font-weight:700;color:#B91C1C;margin-bottom:6px">Don't</div><div style="font-size:12px;color:var(--text3);line-height:1.55">Never remove the colon dots. Never recolor, stretch, or use a different typeface. No effects or outlines.</div></div>
+      <div style="background:var(--bg);border:1px solid var(--bdrs);border-radius:var(--r12);padding:14px"><div style="font-size:11.5px;font-weight:700;color:var(--text);margin-bottom:6px">Minimum size</div><div style="font-size:12px;color:var(--text3);line-height:1.55">Wordmark: 18px height digital, 5mm print. App icon: 24×24px digital minimum.</div></div>
+    </div>
+  </section>
+
+  <!-- ═══ COLORS ═══ -->
+  <section class="sec" id="colors">
+    <div class="ph">
+      <div><span class="mt br">Branding</span><span class="mt en" style="margin-left:4px">Engineering</span></div>
+      <div class="ph-title">Colors &amp; Gradients</div>
+      <div class="ph-desc">76 color primitives + 58 semantic tokens with Light / Dark modes. Click any swatch to copy hex.</div>
+    </div>
+    <div class="sa">
+      <button class="sa-btn sa-imp" onclick="openImport('colors')">&#8593; Import</button>
+      <button class="sa-btn sa-exp" onclick="toast('Color tokens exported as CSS!')">&#8595; Export CSS</button>
+    </div>
+    <div class="sl">Brand Colors</div>
+    <div class="cg">
+      <div class="cc" onclick="cp('#8B72D8','Logo Purple')"><div class="cs" style="background:#8B72D8"></div><div class="ci"><div class="cn">Logo Purple</div><div class="ch">#8B72D8</div></div></div>
+      <div class="cc" onclick="cp('#733BC6','Brand Primary')"><div class="cs" style="background:#733BC6"></div><div class="ci"><div class="cn">Brand Primary</div><div class="ch">#733BC6</div></div></div>
+      <div class="cc" onclick="cp('#435ACD','Brand Blue')"><div class="cs" style="background:#435ACD"></div><div class="ci"><div class="cn">Brand Blue</div><div class="ch">#435ACD</div></div></div>
+      <div class="cc" onclick="cp('#A5316F','Brand Pink')"><div class="cs" style="background:#A5316F"></div><div class="ci"><div class="cn">Brand Pink</div><div class="ch">#A5316F</div></div></div>
+      <div class="cc" onclick="cp('#9873E7','Violet')"><div class="cs" style="background:#9873E7"></div><div class="ci"><div class="cn">Violet</div><div class="ch">#9873E7</div></div></div>
+      <div class="cc" onclick="cp('#4F6FD8','Cobalt')"><div class="cs" style="background:#4F6FD8"></div><div class="ci"><div class="cn">Cobalt</div><div class="ch">#4F6FD8</div></div></div>
+      <div class="cc" onclick="cp('#D361A7','Rose')"><div class="cs" style="background:#D361A7"></div><div class="ci"><div class="cn">Rose</div><div class="ch">#D361A7</div></div></div>
+      <div class="cc" onclick="cp('#C9BDF5','Lavender')"><div class="cs" style="background:#C9BDF5"></div><div class="ci"><div class="cn">Lavender</div><div class="ch">#C9BDF5</div></div></div>
+    </div>
+    <div class="sl">Neutrals</div>
+    <div class="cg cg6">
+      <div class="cc" onclick="cp('#111427','Ink')"><div class="cs" style="background:#111427"></div><div class="ci"><div class="cn">Ink</div><div class="ch">#111427</div></div></div>
+      <div class="cc" onclick="cp('#1F2437','Deep')"><div class="cs" style="background:#1F2437"></div><div class="ci"><div class="cn">Deep</div><div class="ch">#1F2437</div></div></div>
+      <div class="cc" onclick="cp('#373C51','Slate')"><div class="cs" style="background:#373C51"></div><div class="ci"><div class="cn">Slate</div><div class="ch">#373C51</div></div></div>
+      <div class="cc" onclick="cp('#73768A','Mist')"><div class="cs" style="background:#73768A"></div><div class="ci"><div class="cn">Mist</div><div class="ch">#73768A</div></div></div>
+      <div class="cc" onclick="cp('#E5E6EB','Fog')"><div class="cs" style="background:#E5E6EB"></div><div class="ci"><div class="cn">Fog</div><div class="ch">#E5E6EB</div></div></div>
+      <div class="cc" onclick="cp('#F9FAFB','Cloud')"><div class="cs" style="background:#F9FAFB;border:1px solid #E5E6EB"></div><div class="ci"><div class="cn">Cloud</div><div class="ch">#F9FAFB</div></div></div>
+    </div>
+    <div class="sl">Color Ramps — click any stop to copy</div>
+    <div style="font-size:10px;color:var(--text4);margin-bottom:4px">Purple</div>
+    <div class="ramp"><div class="rs" style="background:#F8F4FE" onclick="cp('#F8F4FE','p/50')"></div><div class="rs" style="background:#EEEBFC" onclick="cp('#EEEBFC','p/100')"></div><div class="rs" style="background:#E0DAFA" onclick="cp('#E0DAFA','p/200')"></div><div class="rs" style="background:#C9BDF5" onclick="cp('#C9BDF5','p/300')"></div><div class="rs" style="background:#AE97EE" onclick="cp('#AE97EE','p/400')"></div><div class="rs" style="background:#9873E7" onclick="cp('#9873E7','p/500')"></div><div class="rs" style="background:#834DDA" onclick="cp('#834DDA','p/600')"></div><div class="rs" style="background:#733BC6" onclick="cp('#733BC6','p/700★')"></div><div class="rs" style="background:#6031A6" onclick="cp('#6031A6','p/800')"></div><div class="rs" style="background:#502A88" onclick="cp('#502A88','p/900')"></div><div class="rs" style="background:#32195C" onclick="cp('#32195C','p/950')"></div></div>
+    <div style="font-size:10px;color:var(--text4);margin-bottom:4px">Blue</div>
+    <div class="ramp"><div class="rs" style="background:#F1F4FD" onclick="cp('#F1F4FD','b/50')"></div><div class="rs" style="background:#E0E7F9" onclick="cp('#E0E7F9','b/100')"></div><div class="rs" style="background:#C8D5F5" onclick="cp('#C8D5F5','b/200')"></div><div class="rs" style="background:#A3BBED" onclick="cp('#A3BBED','b/300')"></div><div class="rs" style="background:#7797E3" onclick="cp('#7797E3','b/400')"></div><div class="rs" style="background:#4F6FD8" onclick="cp('#4F6FD8','b/500')"></div><div class="rs" style="background:#435ACD" onclick="cp('#435ACD','b/600★')"></div><div class="rs" style="background:#3948BC" onclick="cp('#3948BC','b/700')"></div><div class="rs" style="background:#343D99" onclick="cp('#343D99','b/800')"></div><div class="rs" style="background:#2E377A" onclick="cp('#2E377A','b/900')"></div><div class="rs" style="background:#20244B" onclick="cp('#20244B','b/950')"></div></div>
+    <div style="font-size:10px;color:var(--text4);margin-bottom:4px">Pink</div>
+    <div class="ramp"><div class="rs" style="background:#FBF4F9" onclick="cp('#FBF4F9','k/50')"></div><div class="rs" style="background:#F9EAF5" onclick="cp('#F9EAF5','k/100')"></div><div class="rs" style="background:#F4D6EB" onclick="cp('#F4D6EB','k/200')"></div><div class="rs" style="background:#EDB4DA" onclick="cp('#EDB4DA','k/300')"></div><div class="rs" style="background:#E086C0" onclick="cp('#E086C0','k/400')"></div><div class="rs" style="background:#D361A7" onclick="cp('#D361A7','k/500')"></div><div class="rs" style="background:#C04288" onclick="cp('#C04288','k/600')"></div><div class="rs" style="background:#A5316F" onclick="cp('#A5316F','k/700★')"></div><div class="rs" style="background:#892B5C" onclick="cp('#892B5C','k/800')"></div><div class="rs" style="background:#73284F" onclick="cp('#73284F','k/900')"></div><div class="rs" style="background:#45122C" onclick="cp('#45122C','k/950')"></div></div>
+    <div style="font-size:10px;color:var(--text4);margin-bottom:4px">Gray</div>
+    <div class="ramp"><div class="rs" style="background:#F9FAFB" onclick="cp('#F9FAFB','g/50')"></div><div class="rs" style="background:#F3F3F6" onclick="cp('#F3F3F6','g/100')"></div><div class="rs" style="background:#E5E6EB" onclick="cp('#E5E6EB','g/200')"></div><div class="rs" style="background:#D1D3DB" onclick="cp('#D1D3DB','g/300')"></div><div class="rs" style="background:#9C9FAF" onclick="cp('#9C9FAF','g/400')"></div><div class="rs" style="background:#73768A" onclick="cp('#73768A','g/500')"></div><div class="rs" style="background:#4B5063" onclick="cp('#4B5063','g/600')"></div><div class="rs" style="background:#373C51" onclick="cp('#373C51','g/700')"></div><div class="rs" style="background:#1F2437" onclick="cp('#1F2437','g/800')"></div><div class="rs" style="background:#111427" onclick="cp('#111427','g/900')"></div><div class="rs" style="background:#030412" onclick="cp('#030412','g/950')"></div></div>
+
+    <div class="sl">Gradient Presets — 21 from Dotzza Figma tokens</div>
+    <div class="gg" style="grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:8px">
+      <div class="gc" style="background:linear-gradient(135deg,#733BC6,#435ACD,#A5316F)" onclick="cp('linear-gradient(135deg,#733BC6,#435ACD,#A5316F)','Dotzza Primary')"><div class="gl">Dotzza Primary</div></div>
+      <div class="gc" style="background:linear-gradient(135deg,#9873E7,#4F6FD8)" onclick="cp('linear-gradient(135deg,#9873E7,#4F6FD8)','Violet Cobalt')"><div class="gl">Violet → Cobalt</div></div>
+      <div class="gc" style="background:linear-gradient(135deg,#A5316F,#9873E7)" onclick="cp('linear-gradient(135deg,#A5316F,#9873E7)','Pink Violet')"><div class="gl">Pink → Violet</div></div>
+      <div class="gc" style="background:linear-gradient(135deg,#834DDA,#32195C)" onclick="cp('linear-gradient(135deg,#834DDA,#32195C)','Purple Deep')"><div class="gl">Purple Deep</div></div>
+      <div class="gc" style="background:linear-gradient(180deg,#EEEBFC,#C9BDF5,#AE97EE)" onclick="cp('linear-gradient(180deg,#EEEBFC,#C9BDF5,#AE97EE)','Lavender Fade')"><div class="gl" style="color:rgba(50,25,92,.7)">Lavender Fade</div></div>
+      <div class="gc" style="background:linear-gradient(135deg,#9873E7,#502A88)" onclick="cp('linear-gradient(135deg,#9873E7,#502A88)','Violet Depth')"><div class="gl">Violet Depth</div></div>
+      <div class="gc" style="background:linear-gradient(135deg,#435ACD,#20244B)" onclick="cp('linear-gradient(135deg,#435ACD,#20244B)','Cobalt Night')"><div class="gl">Cobalt Night</div></div>
+      <div class="gc" style="background:linear-gradient(135deg,#7797E3,#343D99)" onclick="cp('linear-gradient(135deg,#7797E3,#343D99)','Blue Depth')"><div class="gl">Blue Depth</div></div>
+      <div class="gc" style="background:linear-gradient(135deg,#C8D5F5,#7797E3)" onclick="cp('linear-gradient(135deg,#C8D5F5,#7797E3)','Sky Fade')"><div class="gl" style="color:rgba(20,36,75,.7)">Sky Fade</div></div>
+      <div class="gc" style="background:linear-gradient(135deg,#E086C0,#A5316F)" onclick="cp('linear-gradient(135deg,#E086C0,#A5316F)','Rose Bloom')"><div class="gl">Rose Bloom</div></div>
+      <div class="gc" style="background:linear-gradient(135deg,#F4D6EB,#D361A7)" onclick="cp('linear-gradient(135deg,#F4D6EB,#D361A7)','Blush')"><div class="gl" style="color:rgba(115,40,79,.75)">Blush</div></div>
+      <div class="gc" style="background:linear-gradient(135deg,#733BC6,#C04288)" onclick="cp('linear-gradient(135deg,#733BC6,#C04288)','Purple Pink')"><div class="gl">Purple → Pink</div></div>
+      <div class="gc" style="background:linear-gradient(135deg,#435ACD,#A5316F)" onclick="cp('linear-gradient(135deg,#435ACD,#A5316F)','Blue Pink')"><div class="gl">Blue → Pink</div></div>
+      <div class="gc" style="background:linear-gradient(135deg,#AE97EE,#7797E3,#EDB4DA)" onclick="cp('linear-gradient(135deg,#AE97EE,#7797E3,#EDB4DA)','Pastel Trio')"><div class="gl" style="color:rgba(50,25,92,.65)">Pastel Trio</div></div>
+      <div class="gc" style="background:radial-gradient(ellipse at 20% 50%,rgba(139,114,216,.55),transparent 55%),radial-gradient(ellipse at 80% 20%,rgba(67,90,205,.4),transparent 50%),radial-gradient(ellipse at 55% 80%,rgba(165,49,111,.38),transparent 50%),#111427" onclick="toast('Mesh Dark copied!')"><div class="gl">Mesh Dark</div></div>
+      <div class="gc" style="background:radial-gradient(ellipse at 30% 30%,rgba(139,114,216,.15),transparent 55%),radial-gradient(ellipse at 70% 70%,rgba(165,49,111,.1),transparent 55%),#F9FAFB" onclick="toast('Mesh Light copied!')"><div class="gl" style="color:rgba(17,20,39,.4)">Mesh Light</div></div>
+      <div class="gc" style="background:#111427;background-image:radial-gradient(rgba(139,114,216,.22) 1.5px,transparent 1.5px);background-size:18px 18px" onclick="toast('Dot Grid copied!')"><div class="gl">Dot Grid</div></div>
+      <div class="gc" style="background:linear-gradient(135deg,#F0FDF5,#86EFAD)" onclick="cp('linear-gradient(135deg,#F0FDF5,#86EFAD)','Success')"><div class="gl" style="color:#14532B">Success</div></div>
+      <div class="gc" style="background:linear-gradient(135deg,#FFF8EB,#FCBB4D)" onclick="cp('linear-gradient(135deg,#FFF8EB,#FCBB4D)','Warning')"><div class="gl" style="color:#78510F">Warning</div></div>
+      <div class="gc" style="background:linear-gradient(135deg,#FEF2F2,#FCA5A5)" onclick="cp('linear-gradient(135deg,#FEF2F2,#FCA5A5)','Error')"><div class="gl" style="color:#7F1D1D">Error</div></div>
+      <div class="gc" style="background:linear-gradient(135deg,#F1F4FD,#A3BBED)" onclick="cp('linear-gradient(135deg,#F1F4FD,#A3BBED)','Info')"><div class="gl" style="color:#20244B">Info</div></div>
+    </div>
+    <div style="font-size:11px;color:var(--text4);text-align:center">Click any gradient to copy the CSS value</div>
+  </section>
+
+  <!-- ═══ TYPOGRAPHY ═══ -->
+  <section class="sec" id="type">
+    <div class="ph">
+      <div><span class="mt br">Branding</span><span class="mt en" style="margin-left:4px">Engineering</span></div>
+      <div class="ph-title">Typography</div>
+      <div class="ph-desc">Values from Figma ✏️ C. Typography. Lato is the primary typeface for all UI. Abril Fatface for H1 display only.</div>
+    </div>
+    <div class="sa">
+      <button class="sa-btn sa-imp" onclick="openImport('type')">&#8593; Import</button>
+      <button class="sa-btn sa-exp" onclick="toast('Typography tokens exported!')">&#8595; Export CSS</button>
+    </div>
+    <div class="sl">Font Families (from Figma)</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px">
+      <div class="fcard">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+          <span style="font-size:14px;font-weight:700;color:var(--text)">Lato</span>
+          <span class="fbadge">H2–H6 · Body · Label</span>
+          <span style="font-size:9px;padding:2px 7px;background:#F0FDF5;color:#15803C;border:1px solid #86EFAD;border-radius:9999px;font-weight:700">Primary ★</span>
+        </div>
+        <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px">
+          <span style="padding:3px 8px;background:var(--bg3);border:1px solid var(--bdrs);border-radius:4px;font-size:10.5px;font-family:'Lato',sans-serif;font-weight:100;color:var(--text3)">100</span>
+          <span style="padding:3px 8px;background:var(--bg3);border:1px solid var(--bdrs);border-radius:4px;font-size:10.5px;font-family:'Lato',sans-serif;font-weight:300;color:var(--text3)">300</span>
+          <span style="padding:3px 8px;background:var(--bg3);border:1px solid var(--bdrs);border-radius:4px;font-size:10.5px;font-family:'Lato',sans-serif;font-weight:400;color:var(--text3)">400</span>
+          <span style="padding:3px 8px;background:var(--bg3);border:1px solid var(--bdrs);border-radius:4px;font-size:10.5px;font-family:'Lato',sans-serif;font-weight:700;color:var(--text)">700</span>
+          <span style="padding:3px 8px;background:var(--bg3);border:1px solid var(--bdrs);border-radius:4px;font-size:10.5px;font-family:'Lato',sans-serif;font-weight:900;color:var(--text)">900</span>
+        </div>
+        <div style="font-family:'Lato',sans-serif;font-size:26px;font-weight:700;color:var(--text);margin-bottom:6px;letter-spacing:-.3px">Connect every dot</div>
+        <div style="font-family:'Lato',sans-serif;font-size:13.5px;color:var(--text3);line-height:1.6;margin-bottom:10px">Modern design system for teams who care about brand consistency.</div>
+        <div class="cb">font-family: 'Lato', sans-serif;</div>
+      </div>
+      <div class="fcard">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+          <span style="font-size:14px;font-weight:700;color:var(--text)">Abril Fatface</span>
+          <span class="fbadge">H1 Display only</span>
+        </div>
+        <div style="font-family:'Abril Fatface',serif;font-size:38px;color:var(--text);line-height:1;margin-bottom:8px">Dotzza</div>
+        <div style="font-size:12px;color:var(--text3);line-height:1.55;margin-bottom:10px">Reserved for hero display moments — splash screens and large marketing headings only. Never use for body or UI text.</div>
+        <div class="cb">font-family: 'Abril Fatface', serif;<br>/* H1 display moments only */</div>
+      </div>
+      <div class="fcard" style="grid-column:1/-1">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span style="font-size:14px;font-weight:700;color:var(--text)">DM Mono</span><span class="fbadge">Tokens / Code</span></div>
+        <div style="font-family:'DM Mono',monospace;font-size:14px;color:#8B72D8;line-height:1.7">color/brand/primary → #733BC6 &nbsp;·&nbsp; font-size/base → 16px &nbsp;·&nbsp; spacing/5 → 24px</div>
+        <div class="cb" style="margin-top:8px">font-family: 'DM Mono', monospace;</div>
+      </div>
+    </div>
+    <div class="sl">Type Scale (exact Figma values)</div>
+    <div class="ts"><div class="ts-m"><span class="tt">H1 DISPLAY</span><span class="tp">Abril Fatface</span><span class="tp">48px</span><span class="tp">LH 58px</span><span class="tp">LS -0.02em</span></div><div style="font-family:'Abril Fatface',serif;font-size:46px;color:var(--text);line-height:58px;letter-spacing:-0.02em">Dotzza</div></div>
+    <div class="ts"><div class="ts-m"><span class="tt">H2 · 36px</span><span class="tp">Lato 700</span><span class="tp">LH 48px</span><span class="tp">LS -0.02em</span></div><div style="font-family:'Lato',sans-serif;font-size:36px;font-weight:700;color:var(--text);line-height:48px;letter-spacing:-0.02em">Connect every dot</div></div>
+    <div class="ts"><div class="ts-m"><span class="tt">H3 · 30px</span><span class="tp">Lato 700</span><span class="tp">LH 40px</span><span class="tp">LS -0.02em</span></div><div style="font-family:'Lato',sans-serif;font-size:30px;font-weight:700;color:var(--text);line-height:40px;letter-spacing:-0.02em">Build with confidence</div></div>
+    <div class="ts"><div class="ts-m"><span class="tt">H4 · 24px</span><span class="tp">Lato 700</span><span class="tp">LH 32px</span></div><div style="font-family:'Lato',sans-serif;font-size:24px;font-weight:700;color:var(--text);line-height:32px">Design tokens, perfected</div></div>
+    <div class="ts"><div class="ts-m"><span class="tt">H5 · 20px</span><span class="tp">Lato 700</span><span class="tp">LH 28px</span></div><div style="font-family:'Lato',sans-serif;font-size:20px;font-weight:700;color:var(--text);line-height:28px">Your brand, everywhere</div></div>
+    <div class="ts"><div class="ts-m"><span class="tt">Body LG · 18px</span><span class="tp">Lato 400</span><span class="tp">LH 28px</span></div><div style="font-family:'Lato',sans-serif;font-size:18px;color:var(--text3);line-height:28px">Lead paragraph for hero and intro sections where more visual presence is needed.</div></div>
+    <div class="ts"><div class="ts-m"><span class="tt">Body · 16px</span><span class="tp">Lato 400</span><span class="tp">LH 24px</span></div><div style="font-family:'Lato',sans-serif;font-size:16px;color:var(--text3);line-height:24px">Primary body text. Dotzza is a modern design system — every token, every component, perfectly aligned.</div></div>
+    <div class="ts"><div class="ts-m"><span class="tt">Body SM · 14px</span><span class="tp">Lato 400</span><span class="tp">LH 20px</span></div><div style="font-family:'Lato',sans-serif;font-size:14px;color:var(--text3);line-height:20px">Secondary body text for UI labels, form descriptions, and table data.</div></div>
+    <div class="ts"><div class="ts-m"><span class="tt">Label · 12px</span><span class="tp">Lato 700</span><span class="tp">LH 16px</span><span class="tp">LS +0.02em</span></div><div style="font-family:'Lato',sans-serif;font-size:12px;font-weight:700;color:var(--text4);letter-spacing:.02em;text-transform:uppercase">STATUS · CHIP · CATEGORY TAG</div></div>
+    <div class="ts"><div class="ts-m"><span class="tt">Caption · 11px</span><span class="tp">Lato 400</span><span class="tp">LH 16px</span></div><div style="font-family:'Lato',sans-serif;font-size:11px;color:var(--text4);line-height:16px">Helper text, footnotes, timestamps, and tooltip descriptions.</div></div>
+    <div class="ts"><div class="ts-m"><span class="tt">Mono · 12px</span><span class="tp">DM Mono 400</span><span class="tp">Tokens / Code</span></div><div style="font-family:'DM Mono',monospace;font-size:13px;color:#8B72D8">color/brand/primary → #733BC6 · spacing/5 → 24px</div></div>
+  </section>
+
+  <!-- ═══ SCREENSHOTS ═══ -->
+  <section class="sec" id="ss">
+    <div class="ph"><div class="mt br">Branding</div><div class="ph-title">Screenshots</div><div class="ph-desc">Product screenshots with gradient frame treatment. 3px top bar: Dotzza Primary gradient.</div></div>
+    <div class="sa"><button class="sa-btn sa-imp" onclick="openImport('ss')">&#8593; Import</button><button class="sa-btn sa-exp" onclick="toast('Screenshots exported!')">&#8595; Export PNG</button></div>
+    <div class="sl">Web</div>
+    <div class="tg">
+      <div class="ssc"><div class="ssf" style="background:#F3F3F6"><div class="ssb" style="background:linear-gradient(135deg,#733BC6,#435ACD,#A5316F)"></div><div style="width:84%;height:78%;background:#fff;border-radius:7px;border:1px solid #E5E6EB;overflow:hidden"><div style="height:24px;background:#F9FAFB;border-bottom:1px solid #E5E6EB;display:flex;align-items:center;padding:0 8px;gap:3px"><div style="width:6px;height:6px;border-radius:50%;background:#F87171"></div><div style="width:6px;height:6px;border-radius:50%;background:#FCBB4D"></div><div style="width:6px;height:6px;border-radius:50%;background:#4ADE80"></div><div style="flex:1;height:8px;background:#E5E6EB;border-radius:4px;margin:0 7px"></div></div><div style="display:flex;height:calc(100% - 24px)"><div style="width:42px;background:#F9FAFB;border-right:1px solid #E5E6EB"></div><div style="flex:1;padding:7px;display:grid;grid-template-columns:1fr 1fr;gap:4px"><div style="background:#F3F3F6;border-radius:4px;border:1px solid #E5E6EB"></div><div style="background:#F3F3F6;border-radius:4px;border:1px solid #E5E6EB"></div><div style="background:#EEEBFC;border-radius:4px;border:1px solid #C9BDF5"></div><div style="background:#F3F3F6;border-radius:4px;border:1px solid #E5E6EB"></div></div></div></div></div><div class="ssft"><div><div class="lf-name">Dashboard — Light</div><div style="font-size:10.5px;color:var(--text4)">Main app, light mode</div></div><button class="dlb" onclick="toast('Downloaded!')">Download</button></div></div>
+      <div class="ssc"><div class="ssf" style="background:#0B0C18"><div class="ssb" style="background:linear-gradient(135deg,#733BC6,#435ACD,#A5316F)"></div><div style="width:84%;height:78%;background:#1F2437;border-radius:7px;border:1px solid rgba(255,255,255,.07);overflow:hidden"><div style="height:24px;background:#111427;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;padding:0 8px;gap:3px"><div style="width:6px;height:6px;border-radius:50%;background:#F87171"></div><div style="width:6px;height:6px;border-radius:50%;background:#FCBB4D"></div><div style="width:6px;height:6px;border-radius:50%;background:#4ADE80"></div><div style="flex:1;height:8px;background:rgba(255,255,255,.08);border-radius:4px;margin:0 7px"></div></div><div style="display:flex;height:calc(100% - 24px)"><div style="width:42px;background:rgba(255,255,255,.03);border-right:1px solid rgba(255,255,255,.05)"></div><div style="flex:1;padding:7px;display:grid;grid-template-columns:1fr 1fr;gap:4px"><div style="background:rgba(255,255,255,.05);border-radius:4px"></div><div style="background:rgba(255,255,255,.05);border-radius:4px"></div><div style="background:rgba(139,114,216,.2);border-radius:4px;border:1px solid rgba(139,114,216,.35)"></div><div style="background:rgba(255,255,255,.05);border-radius:4px"></div></div></div></div></div><div class="ssft"><div><div class="lf-name">Dashboard — Dark</div><div style="font-size:10.5px;color:var(--text4)">Main app, dark mode</div></div><button class="dlb" onclick="toast('Downloaded!')">Download</button></div></div>
+    </div>
+  </section>
+
+  <!-- ═══ ARTWORK ═══ -->
+  <section class="sec" id="art">
+    <div class="ph"><div class="mt br">Branding</div><div class="ph-title">Artwork &amp; Visual Style</div><div class="ph-desc">Background treatments, gradients, dot pattern, and visual language for Dotzza brand materials.</div></div>
+    <div class="sa"><button class="sa-btn sa-imp" onclick="openImport('art')">&#8593; Import</button><button class="sa-btn sa-exp" onclick="toast('Artwork exported as ZIP!')">&#8595; Export ZIP</button></div>
+    <div class="sl">Background Styles</div>
+    <div class="ag">
+      <div class="ac" style="background:radial-gradient(ellipse at 20% 50%,rgba(139,114,216,.55),transparent 55%),radial-gradient(ellipse at 80% 20%,rgba(67,90,205,.4),transparent 50%),radial-gradient(ellipse at 55% 80%,rgba(165,49,111,.35),transparent 50%),#111427"><div class="al">Mesh Gradient — Dark</div></div>
+      <div class="ac" style="background:linear-gradient(135deg,#733BC6,#435ACD,#A5316F)"><div class="al">Dotzza Primary</div></div>
+      <div class="ac" style="background:radial-gradient(ellipse at 30% 30%,rgba(139,114,216,.12),transparent 55%),radial-gradient(ellipse at 70% 70%,rgba(165,49,111,.08),transparent 55%),#F9FAFB"><div class="al" style="color:rgba(17,20,39,.4)">Mesh — Light</div></div>
+      <div class="ac" style="background:#111427;background-image:radial-gradient(rgba(139,114,216,.22) 1.5px,transparent 1.5px);background-size:18px 18px"><div class="al">Dot Grid</div></div>
+      <div class="ac" style="background:linear-gradient(135deg,#AE97EE,#7797E3,#EDB4DA)"><div class="al" style="color:rgba(50,25,92,.7)">Pastel Trio</div></div>
+      <div class="ac" style="background:linear-gradient(135deg,#F8F4FE,#F1F4FD,#FBF4F9)"><div class="al" style="color:rgba(17,20,39,.35)">Wash — Light</div></div>
+    </div>
+  </section>
+
+  <!-- ═══ TEMPLATES ═══ -->
+  <section class="sec" id="tpl">
+    <div class="ph"><div class="mt br">Branding</div><div class="ph-title">Templates</div><div class="ph-desc">Ready-to-use templates for common Dotzza brand deliverables.</div></div>
+    <div class="sa"><button class="sa-btn sa-imp" onclick="openImport('tpl')">&#8593; Import</button><button class="sa-btn sa-exp" onclick="toast('Templates exported!')">&#8595; Export Figma</button></div>
+    <div class="sl">Social Media</div>
+    <div class="tg">
+      <div class="tc"><div class="tp2" style="background:linear-gradient(135deg,#733BC6,#435ACD,#A5316F)"><div style="text-align:center;padding:18px"><svg width="88" height="20" viewBox="0 0 88 20" fill="none" style="margin-bottom:8px"><circle cx="4" cy="7" r="3.5" fill="white"/><circle cx="4" cy="14.5" r="3.5" fill="white"/><text x="12" y="16" font-family="Nunito,sans-serif" font-size="14" font-weight="900" fill="white" letter-spacing=".5">DOTZZA</text></svg><div style="font-size:11px;color:rgba(255,255,255,.5);font-family:'Lato',sans-serif">Brand Hub · Made with Dotzza</div></div></div><div class="tf"><div class="tf-name">Instagram — Gradient</div><span class="tf-open" onclick="toast('Opening Figma…')">Open in Figma ↗</span></div></div>
+      <div class="tc"><div class="tp2" style="background:#111427;background-image:radial-gradient(rgba(139,114,216,.22) 1.5px,transparent 1.5px);background-size:16px 16px"><div style="text-align:center;padding:18px"><div style="font-family:'Lato',sans-serif;font-size:20px;font-weight:900;background:linear-gradient(135deg,#C9BDF5,#7797E3,#EDB4DA);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.2">Ship faster.<br>Stay on brand.</div></div></div><div class="tf"><div class="tf-name">X Post — Dark Grid</div><span class="tf-open" onclick="toast('Opening Figma…')">Open in Figma ↗</span></div></div>
+    </div>
+    <div class="sl">Landing Page</div>
+    <div class="tg">
+      <div class="tc"><div class="tp2" style="background:radial-gradient(ellipse at 30% 40%,rgba(139,114,216,.5),transparent 55%),radial-gradient(ellipse at 70% 70%,rgba(165,49,111,.3),transparent 50%),#111427"><div style="text-align:center;padding:16px"><svg width="86" height="18" viewBox="0 0 86 18" fill="none" style="margin-bottom:7px"><circle cx="4" cy="6.5" r="3" fill="white"/><circle cx="4" cy="13.5" r="3" fill="white"/><text x="11" y="15" font-family="Nunito,sans-serif" font-size="13" font-weight="900" fill="white" letter-spacing=".5">DOTZZA</text></svg><div style="font-size:10px;color:rgba(255,255,255,.4);margin-bottom:9px;font-family:'Lato',sans-serif">brand system for modern teams</div><div style="background:linear-gradient(135deg,#733BC6,#435ACD);color:#fff;font-size:9.5px;font-weight:700;padding:4px 12px;border-radius:4px;display:inline-block;font-family:'Lato',sans-serif">Get started free</div></div></div><div class="tf"><div class="tf-name">Hero — Dark</div><span class="tf-open" onclick="toast('Opening Figma…')">Open in Figma ↗</span></div></div>
+      <div class="tc"><div class="tp2" style="background:radial-gradient(ellipse at 30% 30%,rgba(139,114,216,.08),transparent 55%),#F9FAFB"><div style="text-align:center;padding:16px"><svg width="86" height="18" viewBox="0 0 86 18" fill="none" style="margin-bottom:7px"><circle cx="4" cy="6.5" r="3" fill="#8B72D8"/><circle cx="4" cy="13.5" r="3" fill="#8B72D8"/><text x="11" y="15" font-family="Nunito,sans-serif" font-size="13" font-weight="900" fill="#8B72D8" letter-spacing=".5">DOTZZA</text></svg><div style="font-size:10px;color:#73768A;margin-bottom:9px;font-family:'Lato',sans-serif">brand system for modern teams</div><div style="background:linear-gradient(135deg,#733BC6,#435ACD);color:#fff;font-size:9.5px;font-weight:700;padding:4px 12px;border-radius:4px;display:inline-block;font-family:'Lato',sans-serif">Get started free</div></div></div><div class="tf"><div class="tf-name">Hero — Light</div><span class="tf-open" onclick="toast('Opening Figma…')">Open in Figma ↗</span></div></div>
+    </div>
+  </section>
+
+  <!-- ═══ BRAND VOICE ═══ -->
+  <section class="sec" id="voice">
+    <div class="ph"><div class="mt br">Branding</div><div class="ph-title">Brand Voice</div><div class="ph-desc">Dotzza's tone, taglines, and copy guidelines for consistent communication.</div></div>
+    <div class="sa"><button class="sa-btn sa-imp" onclick="openImport('voice')">&#8593; Import</button><button class="sa-btn sa-exp" onclick="toast('Brand Voice PDF exported!')">&#8595; Export PDF</button></div>
+    <div class="sl">Taglines</div>
+    <div class="tlc"><span class="tln">01</span><span class="tlt">Connect every dot.</span><span class="tl-rec">Recommended</span></div>
+    <div class="tlc"><span class="tln">02</span><span class="tlt">Brand at the speed of thought.</span></div>
+    <div class="tlc"><span class="tln">03</span><span class="tlt">Design systems, perfected.</span></div>
+    <div class="tlc"><span class="tln">04</span><span class="tlt">Every pixel. On brand.</span></div>
+    <div class="tlc"><span class="tln">05</span><span class="tlt">Build bold. Stay consistent.</span></div>
+    <div class="sl">Tone</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:20px">
+      <div style="background:var(--bg);border:1px solid rgba(139,114,216,.2);border-radius:var(--r12);padding:13px;text-align:center"><div style="font-size:17px;margin-bottom:5px">—</div><div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px">Confident</div><div style="font-size:11px;color:var(--text4)">Direct, no filler</div></div>
+      <div style="background:var(--bg);border:1px solid rgba(67,90,205,.18);border-radius:var(--r12);padding:13px;text-align:center"><div style="font-size:17px;margin-bottom:5px">—</div><div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px">Energetic</div><div style="font-size:11px;color:var(--text4)">Excited to build</div></div>
+      <div style="background:var(--bg);border:1px solid rgba(165,49,111,.18);border-radius:var(--r12);padding:13px;text-align:center"><div style="font-size:17px;margin-bottom:5px">—</div><div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px">Warm</div><div style="font-size:11px;color:var(--text4)">Human, approachable</div></div>
+      <div style="background:var(--bg);border:1px solid rgba(139,114,216,.2);border-radius:var(--r12);padding:13px;text-align:center"><div style="font-size:17px;margin-bottom:5px">—</div><div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px">Forward</div><div style="font-size:11px;color:var(--text4)">Optimistic about tech</div></div>
+    </div>
+    <div class="sl">Do / Don't</div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:9px">
+      <div class="vc"><div class="vc-t">Headlines</div><div class="vdo">&#10003; "Connect every dot."</div><div class="vdo">&#10003; "Ship on brand, every time."</div><div class="vdn">&#10007; "Introducing our revolutionary platform"</div></div>
+      <div class="vc"><div class="vc-t">UI Copy</div><div class="vdo">&#10003; "Open Brand Hub"</div><div class="vdo">&#10003; "Copy token value"</div><div class="vdn">&#10007; "Click here to proceed"</div></div>
+      <div class="vc"><div class="vc-t">Error States</div><div class="vdo">&#10003; "That hex isn't in the system. Try #8B72D8."</div><div class="vdn">&#10007; "Error 404: Resource not found"</div></div>
+      <div class="vc"><div class="vc-t">Onboarding</div><div class="vdo">&#10003; "Let's get your brand set up."</div><div class="vdn">&#10007; "Congratulations on completing registration!"</div></div>
+    </div>
+  </section>
+
+  <!-- ═══ UI STYLE ═══ -->
+  <section class="sec" id="ui">
+    <div class="ph"><div class="mt en">Engineering</div><div class="ph-title">UI Design Style</div><div class="ph-desc">Exact values from Figma D. Spacing, E. Radius, F. Shadows.</div></div>
+    <div class="sa"><button class="sa-btn sa-imp" onclick="openImport('ui')">&#8593; Import</button><button class="sa-btn sa-exp" onclick="toast('UI tokens exported as CSS!')">&#8595; Export CSS</button></div>
+    <div class="sl">Buttons</div>
+    <div class="dr"><button class="db db-p">Primary</button><button class="db db-s">Secondary</button><button class="db db-g">Ghost</button><button class="db db-d">Destructive</button></div>
+    <div class="sl">Status Badges</div>
+    <div class="dr" style="margin-bottom:20px"><span class="bdg bdg-s">Published</span><span class="bdg bdg-w">In review</span><span class="bdg bdg-e">Off-brand</span><span class="bdg bdg-i">New</span><span class="bdg bdg-b">On-brand</span><span class="bdg bdg-n">Draft</span></div>
+    <div class="sl">Input</div>
+    <div class="dr"><input class="inp" placeholder="Search tokens…" type="text"><input class="inp" value="#8B72D8" type="text"></div>
+    <div class="sl">Border Radius · E. Radius</div>
+    <div class="rg">
+      <div class="ri"><div class="rb" style="border-radius:0"></div><div class="rl">radius/none<br>0px</div></div>
+      <div class="ri"><div class="rb" style="border-radius:2px"></div><div class="rl">radius/xs<br>2px</div></div>
+      <div class="ri"><div class="rb" style="border-radius:4px"></div><div class="rl">radius/sm<br>4px</div></div>
+      <div class="ri"><div class="rb" style="border-radius:6px"></div><div class="rl">radius/md ★<br>6px · btn, input</div></div>
+      <div class="ri"><div class="rb" style="border-radius:8px"></div><div class="rl">radius/lg<br>8px · card</div></div>
+      <div class="ri"><div class="rb" style="border-radius:12px"></div><div class="rl">radius/xl<br>12px · modal</div></div>
+      <div class="ri"><div class="rb" style="border-radius:16px"></div><div class="rl">radius/2xl<br>16px</div></div>
+      <div class="ri"><div class="rb" style="border-radius:9999px;height:20px"></div><div class="rl">radius/full<br>9999px · pill</div></div>
+    </div>
+    <div class="sl">Spacing · D. Spacing</div>
+    <div class="srow">
+      <div class="spi"><div class="spb" style="height:4px"></div><div class="spv">4</div></div>
+      <div class="spi"><div class="spb" style="height:8px"></div><div class="spv">8</div></div>
+      <div class="spi"><div class="spb" style="height:12px"></div><div class="spv">12</div></div>
+      <div class="spi"><div class="spb" style="height:16px"></div><div class="spv">16</div></div>
+      <div class="spi"><div class="spb" style="height:24px"></div><div class="spv">24</div></div>
+      <div class="spi"><div class="spb" style="height:32px"></div><div class="spv">32</div></div>
+      <div class="spi"><div class="spb" style="height:40px"></div><div class="spv">40</div></div>
+      <div class="spi"><div class="spb" style="height:48px"></div><div class="spv">48</div></div>
+      <div class="spi"><div class="spb" style="height:64px"></div><div class="spv">64</div></div>
+      <div class="spi"><div class="spb" style="height:80px"></div><div class="spv">80</div></div>
+      <div class="spi"><div class="spb" style="height:96px"></div><div class="spv">96</div></div>
+      <div class="spi"><div class="spb" style="height:128px"></div><div class="spv">128</div></div>
+    </div>
+    <div class="sl">Shadows · F. Shadows</div>
+    <div class="shg">
+      <div class="shdemo" style="box-shadow:0 1px 2px rgba(17,20,39,.16)">xs</div>
+      <div class="shdemo" style="box-shadow:0 2px 4px rgba(17,20,39,.16)">sm</div>
+      <div class="shdemo" style="box-shadow:0 4px 8px rgba(17,20,39,.16)">md</div>
+      <div class="shdemo" style="box-shadow:0 8px 16px -2px rgba(17,20,39,.16)">lg</div>
+      <div class="shdemo" style="box-shadow:0 16px 24px -4px rgba(17,20,39,.16)">xl</div>
+    </div>
+    <div class="sl">Dark mode preview</div>
+    <div class="mini">
+      <div class="mini-top"><div class="dot" style="background:#F87171"></div><div class="dot" style="background:#FCBB4D"></div><div class="dot" style="background:#4ADE80"></div></div>
+      <div class="mini-body"><div class="mini-sb"><div class="mnv on"></div><div class="mnv"></div><div class="mnv"></div><div class="mnv"></div></div><div class="mini-c"><div class="mr"><div class="mc" style="height:24px"></div><div class="mc" style="height:24px"></div><div class="mc" style="height:24px"></div></div><div class="mc" style="height:36px"></div><div class="mr"><div class="mc" style="height:32px"></div><div class="mc" style="height:32px"></div></div></div></div>
+    </div>
+  </section>
+
+  <!-- ═══ TOKEN EXPORT ═══ -->
+  <section class="sec" id="tokens">
+    <div class="ph"><div class="mt en">Engineering</div><div class="ph-title">Token Export</div><div class="ph-desc">All 233 Dotzza design tokens from Figma. 6 collections.</div></div>
+    <div class="sa"><button class="sa-btn sa-imp" onclick="openImport('tokens')">&#8593; Import</button><button class="sa-btn sa-exp" onclick="toast('All tokens exported!')">&#8595; Export All</button></div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px">
+      <div class="tokc" onclick="toast('dotzza-tokens.css downloaded!')" onmouseover="this.style.borderColor='rgba(139,114,216,.4)'" onmouseout="this.style.borderColor='var(--bdrs)'"><div style="font-size:20px;margin-bottom:8px">CSS</div><div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px">CSS Custom Properties</div><div style="font-size:11.5px;color:var(--text4);margin-bottom:10px">--color-brand-primary with Light/Dark</div><div style="font-size:11px;font-family:var(--mono);color:#8B72D8">dotzza-tokens.css</div></div>
+      <div class="tokc" onclick="toast('dotzza-tokens.json downloaded!')" onmouseover="this.style.borderColor='rgba(139,114,216,.4)'" onmouseout="this.style.borderColor='var(--bdrs)'"><div style="font-size:20px;margin-bottom:8px">{ }</div><div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px">JSON Tokens</div><div style="font-size:11.5px;color:var(--text4);margin-bottom:10px">W3C Design Token format</div><div style="font-size:11px;font-family:var(--mono);color:#8B72D8">dotzza-tokens.json</div></div>
+      <div class="tokc" onclick="toast('Coming soon!')" onmouseover="this.style.borderColor='rgba(139,114,216,.4)'" onmouseout="this.style.borderColor='var(--bdrs)'"><div style="font-size:20px;margin-bottom:8px">TS</div><div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px">TypeScript Constants</div><div style="font-size:11.5px;color:var(--text4);margin-bottom:10px">Typed for React / Next.js</div><div style="font-size:11px;font-family:var(--mono);color:#8B72D8">dotzza-tokens.ts</div></div>
+    </div>
+    <div class="sl">Summary</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:9px">
+      <div style="background:var(--bg);border:1px solid var(--bdrs);border-radius:var(--r12);padding:14px 16px"><div class="tokn">76</div><div style="font-size:12px;font-weight:700;color:var(--text)">Color Primitives</div><div style="font-size:11px;color:var(--text4);margin-top:2px">Purple, Blue, Pink, Gray, Green, Orange, Red</div></div>
+      <div style="background:var(--bg);border:1px solid var(--bdrs);border-radius:var(--r12);padding:14px 16px"><div class="tokn">58</div><div style="font-size:12px;font-weight:700;color:var(--text)">Color Semantics</div><div style="font-size:11px;color:var(--text4);margin-top:2px">Brand, Background, Text, Border, Status · L/D</div></div>
+      <div style="background:var(--bg);border:1px solid var(--bdrs);border-radius:var(--r12);padding:14px 16px"><div class="tokn">36</div><div style="font-size:12px;font-weight:700;color:var(--text)">Typography</div><div style="font-size:11px;color:var(--text4);margin-top:2px">Abril Fatface + Lato system</div></div>
+      <div style="background:var(--bg);border:1px solid var(--bdrs);border-radius:var(--r12);padding:14px 16px"><div class="tokn">22</div><div style="font-size:12px;font-weight:700;color:var(--text)">Spacing</div><div style="font-size:11px;color:var(--text4);margin-top:2px">4px – 128px + semantic aliases</div></div>
+      <div style="background:var(--bg);border:1px solid var(--bdrs);border-radius:var(--r12);padding:14px 16px"><div class="tokn">23</div><div style="font-size:12px;font-weight:700;color:var(--text)">Radius</div><div style="font-size:11px;color:var(--text4);margin-top:2px">0–9999px + semantic aliases</div></div>
+      <div style="background:var(--bg);border:1px solid var(--bdrs);border-radius:var(--r12);padding:14px 16px"><div class="tokn">18</div><div style="font-size:12px;font-weight:700;color:var(--text)">Shadows</div><div style="font-size:11px;color:var(--text4);margin-top:2px">xs–xl · navy 50% + purple 25%</div></div>
+    </div>
+  </section>
+
+  <!-- ═══ SUB BRANDS ═══ -->
+  <section class="sec" id="subbrands">
+    <div class="ph"><div class="mt br">Branding</div><div class="ph-title">Sub Brands</div><div class="ph-desc">Manage brand variants and sub-brand identities within the Dotzza system.</div></div>
+    <div class="sa"><button class="sa-btn sa-imp" onclick="openImport('logo')">&#8593; Import</button><button class="sa-btn sa-exp" onclick="toast('Sub brand exported!')">&#8595; Export</button></div>
+    <div class="sl">Active Sub Brands</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px">
+      <div style="background:var(--bg);border:2px solid rgba(139,114,216,.3);border-radius:var(--r16);padding:20px;text-align:center;cursor:pointer" onclick="toast('Opening Dotzza Main…')">
+        <svg width="44" height="44" viewBox="0 0 44 44" fill="none" style="margin:0 auto 10px">
+          <rect width="44" height="44" rx="10" fill="#8B72D8"/>
+          <circle cx="12" cy="16" r="4" fill="white"/><circle cx="12" cy="28" r="4" fill="white"/>
+          <text x="19" y="30" font-family="Nunito,sans-serif" font-size="16" font-weight="900" fill="white">D</text>
+        </svg>
+        <div style="font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:2px">Dotzza Main</div>
+        <div style="font-size:10.5px;color:var(--logo)">Active</div>
+      </div>
+      <div style="background:var(--bg2);border:2px dashed var(--bdrs);border-radius:var(--r16);padding:20px;text-align:center;cursor:pointer;transition:all .15s" onclick="toast('Add sub brand — coming soon')" onmouseover="this.style.borderColor='rgba(139,114,216,.4)'" onmouseout="this.style.borderColor='var(--bdrs)'">
+        <div style="font-size:28px;color:var(--text4);margin-bottom:8px;line-height:1">+</div>
+        <div style="font-size:12px;font-weight:600;color:var(--text3)">Add Sub Brand</div>
+        <div style="font-size:10.5px;color:var(--text4);margin-top:2px">Coming soon</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ EMAIL SIGNATURE ═══ -->
+  <section class="sec" id="email">
+    <div class="ph"><div class="mt br">Tools</div><div class="ph-title">Email Signature</div><div class="ph-desc">Generate on-brand email signatures for your team. Copy and paste directly into Gmail or Outlook.</div></div>
+    <div class="sa"><button class="sa-btn sa-imp" onclick="openImport('logo')">&#8593; Import logo</button><button class="sa-btn sa-exp" onclick="toast('Email signature copied to clipboard!')">&#8595; Copy HTML</button></div>
+    <div class="sl">Preview</div>
+    <div style="background:var(--bg);border:1px solid var(--bdrs);border-radius:var(--r12);padding:24px;margin-bottom:16px;max-width:480px">
+      <div style="display:flex;align-items:center;gap:14px;padding-bottom:14px;border-bottom:2px solid #8B72D8;margin-bottom:14px">
+        <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+          <rect width="36" height="36" rx="8" fill="#8B72D8"/>
+          <circle cx="10" cy="13" r="3.5" fill="white"/><circle cx="10" cy="23" r="3.5" fill="white"/>
+          <text x="16" y="25" font-family="Nunito,sans-serif" font-size="14" font-weight="900" fill="white">D</text>
+        </svg>
+        <div>
+          <div style="font-size:14px;font-weight:700;color:var(--text)">Your Name</div>
+          <div style="font-size:12px;color:var(--text3)">Job Title · Dotzza</div>
+        </div>
+      </div>
+      <div style="font-size:11.5px;color:var(--text3);line-height:1.7">
+        <div><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d9b1bcb5b5b699bdb6ada3a3b8f7bab6b4">[email&#160;protected]</a></div>
+        <div>org.dotzza.com</div>
+      </div>
+    </div>
+    <div class="sl">Customize</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div><div style="font-size:11px;color:var(--text4);margin-bottom:4px;font-weight:600">Full Name</div><input class="inp" style="width:100%" placeholder="Your Name" type="text"></div>
+      <div><div style="font-size:11px;color:var(--text4);margin-bottom:4px;font-weight:600">Job Title</div><input class="inp" style="width:100%" placeholder="Job Title" type="text"></div>
+      <div><div style="font-size:11px;color:var(--text4);margin-bottom:4px;font-weight:600">Email</div><input class="inp" style="width:100%" placeholder="hello@dotzza.com" type="email"></div>
+      <div><div style="font-size:11px;color:var(--text4);margin-bottom:4px;font-weight:600">Phone (optional)</div><input class="inp" style="width:100%" placeholder="+1 000 000 0000" type="text"></div>
+    </div>
+    <div style="margin-top:14px"><button class="btn btn-p" onclick="toast('Signature copied to clipboard!')">Copy signature HTML</button></div>
+  </section>
+
+  <!-- ═══ NEW TEAM MEMBER ═══ -->
+  <section class="sec" id="member">
+    <div class="ph"><div class="mt br">Tools</div><div class="ph-title">New Team Member</div><div class="ph-desc">Onboard a new team member with all Dotzza brand assets and guidelines in one shareable link.</div></div>
+    <div class="sa"><button class="sa-btn sa-exp" onclick="toast('Onboarding kit exported!')">&#8595; Export Kit</button></div>
+    <div class="sl">Onboarding kit includes</div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:20px">
+      <div style="background:var(--bg);border:1px solid var(--bdrs);border-radius:var(--r12);padding:14px;display:flex;align-items:center;gap:10px"><div style="width:8px;height:8px;border-radius:50%;background:#4ADE80;flex-shrink:0"></div><div><div style="font-size:12px;font-weight:700;color:var(--text)">Logo Package</div><div style="font-size:11px;color:var(--text4)">All variants, SVG + PNG</div></div></div>
+      <div style="background:var(--bg);border:1px solid var(--bdrs);border-radius:var(--r12);padding:14px;display:flex;align-items:center;gap:10px"><div style="width:8px;height:8px;border-radius:50%;background:#4ADE80;flex-shrink:0"></div><div><div style="font-size:12px;font-weight:700;color:var(--text)">Color Palette</div><div style="font-size:11px;color:var(--text4)">Hex values + CSS tokens</div></div></div>
+      <div style="background:var(--bg);border:1px solid var(--bdrs);border-radius:var(--r12);padding:14px;display:flex;align-items:center;gap:10px"><div style="width:8px;height:8px;border-radius:50%;background:#4ADE80;flex-shrink:0"></div><div><div style="font-size:12px;font-weight:700;color:var(--text)">Typography Guide</div><div style="font-size:11px;color:var(--text4)">Fonts + download links</div></div></div>
+      <div style="background:var(--bg);border:1px solid var(--bdrs);border-radius:var(--r12);padding:14px;display:flex;align-items:center;gap:10px"><div style="width:8px;height:8px;border-radius:50%;background:#4ADE80;flex-shrink:0"></div><div><div style="font-size:12px;font-weight:700;color:var(--text)">Brand Voice PDF</div><div style="font-size:11px;color:var(--text4)">Tone + copy guidelines</div></div></div>
+      <div style="background:var(--bg);border:1px solid var(--bdrs);border-radius:var(--r12);padding:14px;display:flex;align-items:center;gap:10px"><div style="width:8px;height:8px;border-radius:50%;background:#4ADE80;flex-shrink:0"></div><div><div style="font-size:12px;font-weight:700;color:var(--text)">Email Signature</div><div style="font-size:11px;color:var(--text4)">HTML template</div></div></div>
+      <div style="background:var(--bg);border:1px solid var(--bdrs);border-radius:var(--r12);padding:14px;display:flex;align-items:center;gap:10px"><div style="width:8px;height:8px;border-radius:50%;background:#4ADE80;flex-shrink:0"></div><div><div style="font-size:12px;font-weight:700;color:var(--text)">Figma File Access</div><div style="font-size:11px;color:var(--text4)">Design system + components</div></div></div>
+    </div>
+    <button class="btn btn-p" onclick="toast('Shareable link copied!')">Copy shareable link</button>
+    <button class="btn btn-o" style="margin-left:8px" onclick="toast('Kit downloaded as ZIP!')">Download ZIP</button>
+  </section>
+
+  <!-- ═══ INSPIRATION ═══ -->
+  <section class="sec" id="inspiration">
+    <div class="ph"><div class="mt br">Resources</div><div class="ph-title">Inspiration</div><div class="ph-desc">Visual references and brand inspiration for Dotzza design work.</div></div>
+    <div class="sl">Brand Mood Board</div>
+    <div class="ag" style="margin-bottom:14px">
+      <div class="ac" style="background:linear-gradient(135deg,#733BC6,#435ACD,#A5316F)"><div class="al">Dotzza Primary</div></div>
+      <div class="ac" style="background:#111427;background-image:radial-gradient(rgba(139,114,216,.22) 1.5px,transparent 1.5px);background-size:18px 18px"><div class="al">Dot Grid</div></div>
+      <div class="ac" style="background:radial-gradient(ellipse at 30% 30%,rgba(139,114,216,.5),transparent 55%),radial-gradient(ellipse at 70% 70%,rgba(165,49,111,.4),transparent 50%),#111427"><div class="al">Mesh Dark</div></div>
+      <div class="ac" style="background:linear-gradient(135deg,#AE97EE,#7797E3,#EDB4DA)"><div class="al" style="color:rgba(50,25,92,.7)">Pastel Trio</div></div>
+      <div class="ac" style="background:linear-gradient(135deg,#F8F4FE,#F1F4FD,#FBF4F9)"><div class="al" style="color:rgba(17,20,39,.35)">Wash Light</div></div>
+      <div class="ac" style="background:linear-gradient(180deg,#EEEBFC,#C9BDF5,#AE97EE)"><div class="al" style="color:rgba(50,25,92,.55)">Lavender Fade</div></div>
+    </div>
+  </section>
+
+  </main>
+</div><!-- /mw -->
+
+<!-- ══════════ IMPORT MODAL ══════════ -->
+<div class="imo" id="imo" onclick="closeBg(event)">
+  <div class="imd">
+    <div class="im-t">Import to <span id="im-sec">Section</span></div>
+    <div class="im-d">Upload a file to import assets or tokens into this section. Supported formats shown below.</div>
+    <div class="im-zone" id="im-zone"
+      ondragover="dragOver(event)" ondragleave="dragLeave()" ondrop="dropFile(event)"
+      onclick="document.getElementById('fim').click()">
+      <div class="im-zone-ico">&#128194;</div>
+      <div class="im-zone-t">Drop files here or click to browse</div>
+      <div class="im-zone-s" id="im-sub">SVG, PNG, JSON, CSS, PDF supported</div>
+    </div>
+    <input type="file" id="fim" style="display:none" onchange="fileSelected(event)">
+    <div class="im-types" id="im-types"></div>
+    <div class="im-prog" id="im-prog">
+      <div class="im-prog-row"><span id="im-fname">file.svg</span><span id="im-pct">0%</span></div>
+      <div class="im-track"><div class="im-bar" id="im-bar"></div></div>
+    </div>
+    <div class="im-acts">
+      <button class="im-cancel" onclick="closeImport()">Cancel</button>
+      <button class="im-go" id="im-go" onclick="runImport()">Import</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect width="14" height="14" rx="3.5" fill="#8B72D8"/><circle cx="4.5" cy="5.5" r="1.5" fill="white"/><circle cx="4.5" cy="9" r="1.5" fill="white"/><text x="7" y="10.5" font-family="Nunito,sans-serif" font-size="6" font-weight="900" fill="white">D</text></svg>
+  <span id="toast-txt">Copied!</span>
+</div>
+
+
+<script>
+// ═══════════════════════════════════════════════════════════════════
+// DOTZZA BRAND HUB — All functions defined before DOM loads
+// Using window.* so onclick= attributes always find them
+// ═══════════════════════════════════════════════════════════════════
+
+/* ── STATE ── */
+let _mode = 'br';
+let _selFile = null, _selType = '', _curSec = '';
+
+const M = {
+  br: { label:'Branding' },
+  en: { label:'Engineering' }
+};
+
+const SEC_NAMES = {
+  home:'Home', logo:'Logo', colors:'Colors & Gradients',
+  type:'Typography', ss:'Screenshots', art:'Artwork',
+  tpl:'Templates', voice:'Brand Voice', ui:'UI Style',
+  tokens:'Token Export', subbrands:'Sub Brands',
+  email:'Email Signature', member:'New Team Member',
+  inspiration:'Inspiration'
+};
+
+const SEC_FMTS = {
+  logo:['SVG','PNG','PDF'],
+  colors:['JSON','CSS','Figma'],
+  type:['JSON','CSS'],
+  ss:['PNG','JPG','ZIP'],
+  art:['SVG','PNG','ZIP'],
+  tpl:['Figma','PDF'],
+  voice:['PDF','TXT'],
+  ui:['JSON','CSS'],
+  tokens:['JSON','CSS','TS'],
+  subbrands:['SVG','PNG'],
+  email:['HTML','PDF'],
+  member:['ZIP','PDF'],
+  inspiration:['ZIP','PDF']
+};
+
+/* ── MODE SWITCHER ── */
+window.setMode = function(m) {
+  _mode = m;
+
+  const swBr = document.getElementById('sw-br');
+  const swEn = document.getElementById('sw-en');
+  if (swBr) swBr.className = 'sw-btn' + (m === 'br' ? ' ab' : '');
+  if (swEn) swEn.className = 'sw-btn' + (m === 'en' ? ' ae' : '');
+
+  // Sidebar groups
+  const navAssets    = document.getElementById('nav-assets');
+  const navSubbrands = document.getElementById('nav-subbrands');
+  const navTools     = document.getElementById('nav-tools');
+  const navResources = document.getElementById('nav-resources');
+  const navEng       = document.getElementById('nav-eng');
+
+  if (navAssets)    navAssets.style.display = 'block';
+  if (navSubbrands) navSubbrands.style.display = m === 'br' ? 'block' : 'none';
+  if (navTools)     navTools.style.display = m === 'br' ? 'block' : 'none';
+  if (navResources) navResources.style.display = 'block';
+  if (navEng)       navEng.style.display = m === 'en' ? 'block' : 'none';
+
+  // Navigate to home
+  const homeBtn = document.querySelector('.nv[data-mode="both"]');
+  window.go('home', homeBtn);
+};
+
+/* ── NAVIGATE ── */
+window.go = function(id, el) {
+  // Hide all sections
+  document.querySelectorAll('.sec').forEach(s => s.classList.remove('on'));
+  // Remove active from all nav items
+  document.querySelectorAll('.nv').forEach(n => n.classList.remove('on'));
+
+  // Show target section
+  const sec = document.getElementById(id);
+  if (sec) sec.classList.add('on');
+  else {
+    // If section doesn't exist, fall back to home
+    const home = document.getElementById('home');
+    if (home) home.classList.add('on');
+  }
+
+  // Activate nav item
+  if (el && el.classList) el.classList.add('on');
+
+  // Scroll main to top
+  const main = document.querySelector('.main');
+  if (main) main.scrollTop = 0;
+
+  // Update topbar breadcrumb
+  const tbTitle = document.getElementById('tb-title');
+  if (tbTitle) {
+    const nm = SEC_NAMES[id];
+    tbTitle.textContent = nm ? M[_mode].label + '  ›  ' + nm : M[_mode].label;
+  }
+};
+
+/* ── IMPORT MODAL ── */
+window.openImport = function(sec) {
+  _curSec = sec;
+  _selFile = null;
+
+  const secName = document.getElementById('im-sec');
+  if (secName) secName.textContent = SEC_NAMES[sec] || sec;
+
+  const fmts = SEC_FMTS[sec] || ['JSON','SVG','PNG'];
+  const typesEl = document.getElementById('im-types');
+  if (typesEl) {
+    typesEl.innerHTML = fmts.map((f,i) =>
+      `<span class="imt${i===0?' sel':''}" onclick="selectFmt(this,'${f}')">${f}</span>`
+    ).join('');
+  }
+  _selType = fmts[0];
+
+  const sub = document.getElementById('im-sub');
+  if (sub) sub.textContent = fmts.join(', ') + ' supported';
+
+  const prog = document.getElementById('im-prog');
+  if (prog) prog.style.display = 'none';
+
+  const goBtn = document.getElementById('im-go');
+  if (goBtn) { goBtn.textContent = 'Import'; goBtn.disabled = false; }
+
+  const zone = document.getElementById('im-zone');
+  if (zone) { zone.style.borderColor = ''; zone.style.background = ''; }
+
+  const fim = document.getElementById('fim');
+  if (fim) fim.value = '';
+
+  const overlay = document.getElementById('imo');
+  if (overlay) overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+};
+
+window.closeImport = function() {
+  const overlay = document.getElementById('imo');
+  if (overlay) overlay.classList.remove('open');
+  document.body.style.overflow = '';
+  _selFile = null;
+};
+
+window.closeBg = function(e) {
+  if (e.target === document.getElementById('imo')) window.closeImport();
+};
+
+window.selectFmt = function(el, t) {
+  _selType = t;
+  document.querySelectorAll('.imt').forEach(x => x.classList.remove('sel'));
+  if (el) el.classList.add('sel');
+};
+
+window.dragOver = function(e) {
+  e.preventDefault();
+  const z = document.getElementById('im-zone');
+  if (z) { z.style.borderColor = '#8B72D8'; z.style.background = 'rgba(139,114,216,.05)'; }
+};
+
+window.dragLeave = function() {
+  const z = document.getElementById('im-zone');
+  if (z) { z.style.borderColor = ''; z.style.background = ''; }
+};
+
+window.dropFile = function(e) {
+  e.preventDefault();
+  window.dragLeave();
+  if (e.dataTransfer && e.dataTransfer.files.length) setFile(e.dataTransfer.files[0]);
+};
+
+window.fileSelected = function(e) {
+  if (e.target.files.length) setFile(e.target.files[0]);
+};
+
+function setFile(f) {
+  _selFile = f;
+  const sub = document.getElementById('im-sub');
+  if (sub) sub.textContent = '✓ ' + f.name + ' (' + (f.size/1024).toFixed(1) + ' KB)';
+  const z = document.getElementById('im-zone');
+  if (z) { z.style.borderColor = '#8B72D8'; z.style.background = 'rgba(139,114,216,.04)'; }
+  const goBtn = document.getElementById('im-go');
+  if (goBtn) goBtn.textContent = 'Import file';
+}
+
+window.runImport = function() {
+  const goBtn = document.getElementById('im-go');
+  if (goBtn) { goBtn.textContent = 'Importing…'; goBtn.disabled = true; }
+
+  const prog = document.getElementById('im-prog');
+  const bar  = document.getElementById('im-bar');
+  const pct  = document.getElementById('im-pct');
+  const fn   = document.getElementById('im-fname');
+
+  if (prog) prog.style.display = 'block';
+  if (fn)   fn.textContent = _selFile ? _selFile.name : 'dotzza-' + _curSec + '.' + (_selType||'json').toLowerCase();
+
+  let p = 0;
+  const iv = setInterval(() => {
+    p += Math.random() * 18 + 4;
+    if (p >= 100) {
+      p = 100;
+      clearInterval(iv);
+      setTimeout(() => {
+        window.closeImport();
+        window.toast('✓ ' + (SEC_NAMES[_curSec] || _curSec) + ' imported successfully!');
+      }, 350);
+    }
+    if (bar) bar.style.width = p + '%';
+    if (pct) pct.textContent = Math.round(p) + '%';
+  }, 100);
+};
+
+/* ── COPY TO CLIPBOARD ── */
+window.cp = function(val, name) {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(val).catch(() => {});
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = val; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta);
+  }
+  window.toast((name || val) + ' copied!');
+};
+
+/* ── TOAST ── */
+let _toastTimer;
+window.toast = function(msg) {
+  const el  = document.getElementById('toast');
+  const txt = document.getElementById('toast-txt');
+  if (!el || !txt) return;
+  txt.textContent = msg || 'Done!';
+  el.classList.add('show');
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
+};
+
+/* ═══════════════════════════════════════════════════════════════
+   FIGMA CMS SYNC — FIXED & COMPLETE
+   ────────────────────────────────────────────────────────────────
+   ROOT CAUSE (previously broken):
+   • "Logo Purple #8B72D8" does NOT exist as a Figma variable.
+     It was hardcoded in CSS and had no token mapping.
+   • The sync now maps ALL Figma variables (primitives + semantics)
+     to their correct CSS custom properties.
+   • It fully resolves VARIABLE_ALIAS chains automatically.
+
+   HOW TO USE:
+   1. figma.com → Settings → Security → Personal access tokens → Create
+   2. Paste your token below (between the quotes)
+   3. Save the file, open in browser, reload
+   4. Change ANY variable in Figma → reload Brand Hub → see change!
+   ──────────────────────────────────────────────────────────────── */
+const FIGMA_FILE_KEY = 'uI8BNPQtMWPVzJNI61o386';
+const FIGMA_TOKEN    = ''; // ← paste your token here e.g. 'figd_xxxx...'
+
+/* ─── COMPLETE TOKEN MAP ───────────────────────────────────────
+   Maps EVERY Figma variable name → CSS custom property.
+   Based on actual variable names read from your Figma file.
+   ─────────────────────────────────────────────────────────── */
+const TOKEN_CSS_MAP = {
+
+  // ── LOGO COLOR — the real Figma variable that drives Brand Hub purple ──
+  // Change "logo/color" in Figma → reload Brand Hub → see it instantly!
+  'logo/color':                   '--logo',      // ← MAIN brand color (nav, buttons, tags)
+  'logo/color-dark':              '--logo-dark',  // ← dark bg variant
+
+  // ── A. Color Primitives (all 76 ramp stops) ──────────────────
+  'purple/50':'--p50','purple/100':'--p100','purple/200':'--p200',
+  'purple/300':'--p300','purple/400':'--p400','purple/500':'--p500',
+  'purple/600':'--p600','purple/700':'--p700','purple/800':'--p800',
+  'purple/900':'--p900','purple/950':'--p950',
+
+  'blue/50':'--b50','blue/100':'--b100','blue/200':'--b200',
+  'blue/300':'--b300','blue/400':'--b400','blue/500':'--b500',
+  'blue/600':'--b600','blue/700':'--b700','blue/800':'--b800',
+  'blue/900':'--b900','blue/950':'--b950',
+
+  'pink/50':'--k50','pink/100':'--k100','pink/200':'--k200',
+  'pink/300':'--k300','pink/400':'--k400','pink/500':'--k500',
+  'pink/600':'--k600','pink/700':'--k700','pink/800':'--k800',
+  'pink/900':'--k900','pink/950':'--k950',
+
+  'gray/50':'--g50','gray/100':'--g100','gray/200':'--g200',
+  'gray/300':'--g300','gray/400':'--g400','gray/500':'--g500',
+  'gray/600':'--g600','gray/700':'--g700','gray/800':'--g800',
+  'gray/900':'--g900','gray/950':'--g950',
+
+  'green/50':'--gr50','green/100':'--gr100','green/200':'--gr200',
+  'green/300':'--gr300','green/400':'--gr400','green/500':'--gr500',
+  'green/600':'--gr600','green/700':'--gr700',
+
+  'orange/50':'--or50','orange/100':'--or100','orange/200':'--or200',
+  'orange/300':'--or300','orange/400':'--or400','orange/500':'--or500',
+  'orange/600':'--or600','orange/700':'--or700',
+
+  'red/50':'--rd50','red/100':'--rd100','red/200':'--rd200',
+  'red/300':'--rd300','red/400':'--rd400','red/500':'--rd500',
+  'red/600':'--rd600','red/700':'--rd700',
+
+  // ── B. Color Semantics ────────────────────────────────────────
+  // Brand — THESE drive all the UI purple color (--logo, --brand etc.)
+  'color/brand/primary':          '--logo',      // ← MAIN: changes all purple UI
+  'color/brand/primary-subtle':   '--brand-s',
+  'color/brand/primary-hover':    '--brand-h',
+  'color/brand/primary-active':   '--brand-active',
+  'color/brand/primary-muted':    '--brand-m',
+  'color/brand/primary-wash':     '--brand-w',
+  'color/brand/primary-border':   '--brand-bdr',
+  'color/brand/secondary':        '--sec',
+  'color/brand/secondary-subtle': '--sec-s',
+  'color/brand/secondary-hover':  '--sec-h',
+  'color/brand/secondary-muted':  '--sec-m',
+  'color/brand/secondary-wash':   '--sec-w',
+  'color/brand/secondary-border': '--sec-bdr',
+  'color/brand/secondary-active': '--sec-active',
+  'color/brand/tertiary':         '--ter',
+  'color/brand/tertiary-subtle':  '--ter-s',
+  'color/brand/tertiary-hover':   '--ter-h',
+  'color/brand/tertiary-active':  '--ter-active',
+  'color/brand/tertiary-muted':   '--ter-m',
+  'color/brand/tertiary-wash':    '--ter-w',
+  'color/brand/tertiary-border':  '--ter-bdr',
+
+  // Background
+  'color/background/default':     '--bg',
+  'color/background/subtle':      '--bg2',
+  'color/background/muted':       '--bg3',
+  'color/background/elevated':    '--bg-elevated',
+  'color/background/overlay':     '--bg-overlay',
+  'color/background/disabled':    '--bg-disabled',
+  'color/background/brand':       '--bg-brand',
+  'color/background/brand-subtle':'--bg-brand-s',
+
+  // Text
+  'color/text/default':           '--text',
+  'color/text/secondary':         '--text2',
+  'color/text/muted':             '--text3',
+  'color/text/disabled':          '--text4',
+  'color/text/on-primary':        '--text-on-p',
+  'color/text/on-dark':           '--text-on-dark',
+  'color/text/link':              '--text-link',
+  'color/text/link-hover':        '--text-link-h',
+
+  // Border
+  'color/border/default':         '--bdr',
+  'color/border/subtle':          '--bdrs',
+  'color/border/strong':          '--bdr-strong',
+  'color/border/brand':           '--bdr-brand',
+  'color/border/disabled':        '--bdr-dis',
+
+  // Status
+  'color/status/success-bg':      '--suc-bg',
+  'color/status/success-text':    '--suc-text',
+  'color/status/success-border':  '--suc-bdr',
+  'color/status/success-icon':    '--suc-icon',
+  'color/status/warning-bg':      '--warn-bg',
+  'color/status/warning-text':    '--warn-text',
+  'color/status/warning-border':  '--warn-bdr',
+  'color/status/warning-icon':    '--warn-icon',
+  'color/status/error-bg':        '--err-bg',
+  'color/status/error-text':      '--err-text',
+  'color/status/error-border':    '--err-bdr',
+  'color/status/error-icon':      '--err-icon',
+  'color/status/info-bg':         '--info-bg',
+  'color/status/info-text':       '--info-text',
+  'color/status/info-border':     '--info-bdr',
+  'color/status/info-icon':       '--info-icon',
+
+  // ── C. Typography ─────────────────────────────────────────────
+  'font/family/heading':          '--font-heading',
+  'font/family/body':             '--font',
+  'font/family/label':            '--font-label',
+  'font/family/display':          '--font-display',
+  'font/size/xs':                 '--fs-xs',
+  'font/size/sm':                 '--fs-sm',
+  'font/size/md':                 '--fs-md',
+  'font/size/base':               '--fs-base',
+  'font/size/lg':                 '--fs-lg',
+  'font/size/xl':                 '--fs-xl',
+  'font/size/2xl':                '--fs-2xl',
+  'font/size/3xl':                '--fs-3xl',
+  'font/size/4xl':                '--fs-4xl',
+  'font/size/5xl':                '--fs-5xl',
+  'font/weight/hairline':         '--fw-hairline',
+  'font/weight/light':            '--fw-light',
+  'font/weight/regular':          '--fw-regular',
+  'font/weight/bold':             '--fw-bold',
+  'font/weight/black':            '--fw-black',
+
+  // ── D. Spacing ────────────────────────────────────────────────
+  'spacing/1':'--sp1','spacing/2':'--sp2','spacing/3':'--sp3',
+  'spacing/4':'--sp4','spacing/5':'--sp5','spacing/6':'--sp6',
+  'spacing/7':'--sp7','spacing/8':'--sp8','spacing/9':'--sp9',
+  'spacing/10':'--sp10','spacing/11':'--sp11','spacing/12':'--sp12',
+
+  // ── E. Radius ─────────────────────────────────────────────────
+  'radius/none':'--r0','radius/xs':'--rxs','radius/sm':'--r4',
+  'radius/md':'--r6','radius/lg':'--r8','radius/xl':'--r12',
+  'radius/2xl':'--r16','radius/3xl':'--r24','radius/full':'--rfull',
+  'semantic/radius/button-sm':    '--rad-btn-sm',
+  'semantic/radius/button-md':    '--rad-btn-md',
+  'semantic/radius/button-lg':    '--rad-btn-lg',
+  'semantic/radius/input':        '--rad-input',
+  'semantic/radius/card':         '--rad-card',
+  'semantic/radius/modal':        '--rad-modal',
+  'semantic/radius/badge':        '--rad-badge',
+  'semantic/radius/pill':         '--rad-pill',
+};
+
+function _hexFromFigma(c) {
+  if (!c || c.r === undefined) return null;
+  return '#'
+    + Math.round(c.r*255).toString(16).padStart(2,'0')
+    + Math.round(c.g*255).toString(16).padStart(2,'0')
+    + Math.round(c.b*255).toString(16).padStart(2,'0');
+}
+
+async function syncFromFigma() {
+  if (!FIGMA_TOKEN || FIGMA_TOKEN.length < 10) {
+    console.log('[Dotzza CMS] ⚠️  Paste your Figma token into FIGMA_TOKEN to enable sync');
+    return;
+  }
+
+  // Sync indicator
+  let ind = document.getElementById('figma-sync-ind');
+  if (!ind) {
+    ind = document.createElement('div');
+    ind.id = 'figma-sync-ind';
+    ind.style.cssText = 'position:fixed;bottom:60px;right:16px;background:#1F2437;color:#E5E6EB;font-size:11px;font-weight:600;padding:8px 14px;border-radius:8px;z-index:9999;border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;gap:7px;box-shadow:0 4px 16px rgba(0,0,0,.3);transition:opacity .3s';
+    document.body.appendChild(ind);
+  }
+  ind.style.opacity = '1';
+  ind.innerHTML = '<span style="width:8px;height:8px;border-radius:50%;background:#8B72D8;animation:figmaPulse 1s infinite"></span> Syncing from Figma…';
+
+  try {
+    const res = await fetch(
+      `https://api.figma.com/v1/files/${FIGMA_FILE_KEY}/variables/local`,
+      { headers: { 'X-Figma-Token': FIGMA_TOKEN } }
+    );
+    if (res.status === 403) throw new Error('Invalid token — check your Personal Access Token in Figma Settings → Security');
+    if (res.status === 404) throw new Error('File not found — check FIGMA_FILE_KEY');
+    if (!res.ok)            throw new Error(`API error ${res.status}`);
+
+    const data  = await res.json();
+    const vars  = data.meta?.variables || {};
+    const colls = data.meta?.variableCollections || {};
+
+    // ── Deep alias resolver (handles chains: semantic → primitive → value) ──
+    const cache = {};
+    function resolve(varId, depth=0) {
+      if (depth > 8 || cache[varId] !== undefined) return cache[varId] ?? null;
+      const v = vars[varId];
+      if (!v) return null;
+      const coll   = colls[v.variableCollectionId];
+      const modes  = coll?.modes || [];
+      const lightM = modes.find(m => m.name === 'Light');
+      const modeId = lightM?.modeId || coll?.defaultModeId || Object.keys(v.valuesByMode)[0];
+      let val = v.valuesByMode?.[modeId];
+      if (val?.type === 'VARIABLE_ALIAS') val = resolve(val.id, depth+1);
+      cache[varId] = val ?? null;
+      return val ?? null;
+    }
+
+    // ── Apply tokens ──
+    let synced = 0, skipped = 0;
+    const root    = document.documentElement;
+    const updates = {};
+    const log     = [];
+
+    for (const [varId, variable] of Object.entries(vars)) {
+      const cssVar = TOKEN_CSS_MAP[variable.name];
+      if (!cssVar) { skipped++; continue; }
+      const val = resolve(varId);
+      if (!val) continue;
+
+      if (variable.resolvedType === 'COLOR' && val.r !== undefined) {
+        const hex = _hexFromFigma(val);
+        updates[cssVar] = hex;
+        log.push(variable.name + ' → ' + cssVar + ': ' + hex);
+        synced++;
+      } else if (variable.resolvedType === 'FLOAT' && typeof val === 'number') {
+        const n = variable.name;
+        const unit = (n.startsWith('font/size') || n.startsWith('spacing') || n.startsWith('radius')) ? 'px' : '';
+        updates[cssVar] = val + unit;
+        log.push(variable.name + ' → ' + cssVar + ': ' + val + unit);
+        synced++;
+      } else if (variable.resolvedType === 'STRING' && typeof val === 'string') {
+        updates[cssVar] = val;
+        log.push(variable.name + ' → ' + cssVar + ': ' + val);
+        synced++;
+      }
+    }
+
+    // Batch-apply all CSS changes
+    // First pass: apply primitive ramp values (including purple/700 → --p700)
+    for (const [p, v] of Object.entries(updates)) {
+      if (p.startsWith('--')) root.style.setProperty(p, v);
+    }
+    // Second pass: if logo/color was synced, it takes priority for --logo
+    // (already handled since logo/color → --logo is in TOKEN_CSS_MAP)
+    // If logo/color is NOT in Figma yet, fall back to purple/700 value for --logo
+    if (!updates['--logo'] && updates['--p700']) {
+      root.style.setProperty('--logo', updates['--p700']);
+      log.push('  ↳ --logo fallback from purple/700: ' + updates['--p700']);
+    }
+
+    // Re-compute gradient with updated brand colors
+    const l = updates['--logo'] || getComputedStyle(root).getPropertyValue('--logo').trim();
+    const s = updates['--sec']  || getComputedStyle(root).getPropertyValue('--sec').trim();
+    const t = updates['--ter']  || getComputedStyle(root).getPropertyValue('--ter').trim();
+    if (l || s || t) root.style.setProperty('--grad', `linear-gradient(135deg,${l||'#733BC6'},${s||'#435ACD'},${t||'#A5316F'})`);
+
+    // ── Success ──
+    ind.innerHTML = '<span style="width:8px;height:8px;border-radius:50%;background:#4ADE80"></span> ✓ ' + synced + ' tokens synced';
+    ind.style.background = '#0F2418'; ind.style.borderColor = 'rgba(74,222,128,.3)';
+    setTimeout(() => { ind.style.opacity = '0'; }, 3500);
+
+    console.log('[Dotzza CMS] ✅ Synced ' + synced + ' | Unmapped: ' + skipped);
+    console.table(log.slice(0,40));
+
+  } catch (err) {
+    ind.innerHTML = '<span style="width:8px;height:8px;border-radius:50%;background:#F87171"></span> ✗ ' + err.message;
+    ind.style.background = '#2A0F0F'; ind.style.borderColor = 'rgba(248,113,113,.3)';
+    setTimeout(() => { ind.style.opacity = '0'; }, 6000);
+    console.error('[Dotzza CMS] ❌', err.message);
+  }
+}
+
+window.syncFigma = syncFromFigma;
+
+window.triggerSync = async function() {
+  const btn = document.getElementById('sync-btn');
+  if (btn) {
+    btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="animation:figmaPulse .6s infinite"><path d="M10 6A4 4 0 1 1 6 2M6 2L8.5 4.5M6 2L3.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Syncing…';
+    btn.style.color = 'var(--logo)';
+    btn.style.borderColor = 'var(--logo)';
+    btn.disabled = true;
+  }
+  await syncFromFigma();
+  if (btn) {
+    btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M10 6A4 4 0 1 1 6 2M6 2L8.5 4.5M6 2L3.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Sync Figma';
+    btn.style.color = '';
+    btn.style.borderColor = '';
+    btn.disabled = false;
+  }
+};
+
+/* ═══ INIT — runs after DOM is ready ═══ */
+function init() {
+  // Animations
+  const style = document.createElement('style');
+  style.textContent = '@keyframes figmaPulse{0%,100%{opacity:1}50%{opacity:.3}}';
+  document.head.appendChild(style);
+
+  // Start in Branding mode
+  window.setMode('br');
+
+  // Auto-sync if token is set
+  if (FIGMA_TOKEN && FIGMA_TOKEN.length > 10) {
+    syncFromFigma();
+  }
+}
+
+// Safe init — works whether DOM is already loaded or not
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+</script>
+</body>
+</html>

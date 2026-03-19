@@ -1,0 +1,200 @@
+/* ============================================================
+   DOTZZA DESIGN TOKENS — CSS Custom Properties
+   ============================================================
+   Figma File : Dotzza-UI files (Copy)
+   File Key   : uI8BNPQtMWPVzJNI61o386
+   Tokens     : 233 across 6 collections
+   Exported   : 2026-03-19
+
+   HOW CMS SYNC WORKS:
+   The Brand Hub fetches fresh values from Figma on every load.
+   These are the fallback defaults used when Figma is offline.
+   To override: paste your Figma token into app.js → FIGMA_TOKEN
+   ============================================================ */
+
+:root {
+
+  /* ── LOGO COLOR (Figma: logo/color) ───────────────────────── */
+  --logo:          #8B72D8;   /* ← Change logo/color in Figma to update this */
+  --logo-dark:     #AE97EE;   /* ← Dark bg variant */
+
+  /* ── A. COLOR PRIMITIVES ──────────────────────────────────── */
+
+  /* Purple ramp — 11 stops */
+  --p50:  #F8F4FE;
+  --p100: #EEEBFC;
+  --p200: #E0DAFA;
+  --p300: #C9BDF5;
+  --p400: #AE97EE;
+  --p500: #9873E7;
+  --p600: #834DDA;
+  --p700: #733BC6;   /* Brand primary (Figma: color/brand/primary) */
+  --p800: #6031A6;
+  --p900: #502A88;
+  --p950: #32195C;
+
+  /* Blue ramp — 11 stops */
+  --b50:  #F1F4FD;
+  --b100: #E0E7F9;
+  --b200: #C8D5F5;
+  --b300: #A3BBED;
+  --b400: #7797E3;
+  --b500: #4F6FD8;
+  --b600: #435ACD;   /* Brand secondary */
+  --b700: #3948BC;
+  --b800: #343D99;
+  --b900: #2E377A;
+  --b950: #20244B;
+
+  /* Pink ramp — 11 stops */
+  --k50:  #FBF4F9;
+  --k100: #F9EAF5;
+  --k200: #F4D6EB;
+  --k300: #EDB4DA;
+  --k400: #E086C0;
+  --k500: #D361A7;
+  --k600: #C04288;
+  --k700: #A5316F;   /* Brand tertiary */
+  --k800: #892B5C;
+  --k900: #73284F;
+  --k950: #45122C;
+
+  /* Gray ramp — 11 stops */
+  --g50:  #F9FAFB;
+  --g100: #F3F3F6;
+  --g200: #E5E6EB;
+  --g300: #D1D3DB;
+  --g400: #9C9FAF;
+  --g500: #73768A;
+  --g600: #4B5063;
+  --g700: #373C51;
+  --g800: #1F2437;
+  --g900: #111427;
+  --g950: #030412;
+
+  /* Green ramp */
+  --gr50:  #F0FDF5;
+  --gr100: #DCFCE8;
+  --gr200: #BBF7D1;
+  --gr300: #86EFAD;
+  --gr400: #4ADE80;
+  --gr500: #22C55E;
+  --gr600: #16A34A;
+  --gr700: #15803C;
+
+  /* Orange ramp */
+  --or50:  #FFF8EB;
+  --or100: #FEEAC7;
+  --or200: #FDD28A;
+  --or300: #FCBB4D;
+  --or400: #FBAB24;
+  --or600: #D98B06;
+  --or700: #B47409;
+
+  /* Red ramp */
+  --rd50:  #FEF2F2;
+  --rd100: #FEE2E2;
+  --rd200: #FECACA;
+  --rd300: #FCA5A5;
+  --rd400: #F87171;
+  --rd500: #EF4444;
+  --rd600: #DC2626;
+  --rd700: #B91C1C;
+
+  /* ── B. COLOR SEMANTICS ────────────────────────────────────── */
+
+  /* Brand */
+  --brand:      var(--p700);   /* #733BC6 */
+  --brand-h:    var(--p800);
+  --brand-s:    var(--p100);
+  --sec:        var(--b600);   /* #435ACD */
+  --ter:        var(--k700);   /* #A5316F */
+
+  /* Backgrounds */
+  --bg:         #FFFFFF;
+  --bg2:        var(--g50);    /* #F9FAFB */
+  --bg3:        var(--g100);   /* #F3F3F6 */
+
+  /* Text */
+  --text:       var(--g900);   /* #111427 */
+  --text2:      var(--g700);   /* #373C51 */
+  --text3:      var(--g500);   /* #73768A */
+  --text4:      var(--g400);   /* #9C9FAF */
+
+  /* Borders */
+  --bdr:        var(--g300);   /* #D1D3DB */
+  --bdrs:       var(--g200);   /* #E5E6EB */
+
+  /* Status */
+  --suc-bg:     var(--gr50);
+  --suc-text:   var(--gr700);
+  --warn-bg:    var(--or50);
+  --warn-text:  var(--or700);
+  --err-bg:     var(--rd50);
+  --err-text:   var(--rd700);
+
+  /* ── C. TYPOGRAPHY ────────────────────────────────────────── */
+  --font:         'Lato', sans-serif;
+  --font-display: 'Abril Fatface', serif;
+  --mono:         'DM Mono', monospace;
+
+  --fs-xs:   11px;
+  --fs-sm:   12px;
+  --fs-base: 14px;
+  --fs-md:   16px;
+  --fs-lg:   18px;
+  --fs-xl:   20px;
+  --fs-2xl:  24px;
+  --fs-3xl:  30px;
+  --fs-4xl:  36px;
+  --fs-5xl:  48px;
+
+  --fw-hairline: 100;
+  --fw-light:    300;
+  --fw-regular:  400;
+  --fw-bold:     700;
+  --fw-black:    900;
+
+  /* ── D. SPACING ───────────────────────────────────────────── */
+  --sp1:  4px;
+  --sp2:  8px;
+  --sp3:  12px;
+  --sp4:  16px;
+  --sp5:  24px;
+  --sp6:  32px;
+  --sp7:  40px;
+  --sp8:  48px;
+  --sp9:  64px;
+  --sp10: 80px;
+  --sp11: 96px;
+  --sp12: 128px;
+
+  /* ── E. RADIUS ────────────────────────────────────────────── */
+  --r0:    0px;
+  --rxs:   2px;
+  --r4:    4px;
+  --r6:    6px;    /* Default — buttons, inputs */
+  --r8:    8px;    /* Cards */
+  --r12:   12px;   /* Modals */
+  --r16:   16px;
+  --r24:   24px;
+  --rfull: 9999px; /* Pills, badges */
+
+  /* ── F. SHADOWS ───────────────────────────────────────────── */
+  --sh:     0 2px 8px  rgba(17,20,39,.10);
+  --shm:    0 4px 16px rgba(17,20,39,.12);
+  --sh-xs:  0 1px 2px  rgba(17,20,39,.16);
+  --sh-sm:  0 2px 4px  rgba(17,20,39,.16);
+  --sh-md:  0 4px 8px  rgba(17,20,39,.16);
+  --sh-lg:  0 8px 16px rgba(17,20,39,.16);
+  --sh-xl:  0 16px 24px rgba(17,20,39,.16);
+  --sh-brand: 0 0 0 3px rgba(139,114,216,.25);
+
+  /* ── GRADIENTS ────────────────────────────────────────────── */
+  --grad:  linear-gradient(135deg, var(--p700), var(--b600), var(--k700));
+  --grad-v: linear-gradient(135deg, var(--p500), var(--b500), var(--k500));
+  --mesh:
+    radial-gradient(ellipse at 18% 55%, rgba(115,59,198,.11) 0%, transparent 55%),
+    radial-gradient(ellipse at 82% 20%, rgba(67,90,205,.09)  0%, transparent 50%),
+    radial-gradient(ellipse at 55% 82%, rgba(165,49,111,.08) 0%, transparent 50%);
+}
