@@ -544,8 +544,10 @@ window.exportLogoPNG = function(variant, w, h) {
   }
 
   const scale  = 3; // 3× for crisp PNG
-  const width  = w || (variant === 'icon' ? 64  : 280);
-  const height = h || (variant === 'icon' ? 64  : 54);
+  const dimMap = { primary: [165,40], dark: [165,40], icon: [72,72], inverted: [72,72] };
+  const [dw, dh] = dimMap[variant] || [280, 54];
+  const width  = w || dw;
+  const height = h || dh;
 
   svgToPNG(svgStr, width * scale, height * scale, function(pngUrl) {
     const a = document.createElement('a');
@@ -561,10 +563,17 @@ function findLogoSVG(variant) {
   const logoSec = document.getElementById('logo');
   if (!logoSec) return null;
   const svgs = logoSec.querySelectorAll('svg');
-  // Pick by index based on variant order: primary=0, inverted=1, dark=2, icon=3
-  const map = { primary: 1, inverted: 2, dark: 3, icon: 4 };
-  const idx = map[variant] || 1;
-  return svgs[idx] || svgs[0] || null;
+  // DOM order inside #logo:
+  // 0 = official mark 280×54 (purple)
+  // 1 = app icon 64×64
+  // 2 = Lockup Primary 165×40 (purple)
+  // 3 = Lockup Dark 165×40 (dark)
+  // 4 = Logomark Primary 72×72 (purple)
+  // 5 = Logomark Monochrome 72×72 (dark)
+  // 6 = Logomark Inverted 72×72 (white)
+  const map = { primary: 2, dark: 3, icon: 4, inverted: 6 };
+  const idx = map[variant] !== undefined ? map[variant] : 2;
+  return svgs[idx] || svgs[2] || null;
 }
 
 /* ── Hardcoded fallback SVG strings ── */
