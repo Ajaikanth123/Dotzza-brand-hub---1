@@ -1457,7 +1457,7 @@ async function syncFromFigma() {
   try {
     const res = await fetch(
       `https://api.figma.com/v1/files/${FIGMA_FILE_KEY}/variables/local`,
-      { headers: { 'X-Figma-Token': FIGMA_TOKEN } }
+      { headers: { 'X-Figma-Token': token } }
     );
     if (res.status === 403) throw new Error('Invalid token — check your Personal Access Token in Figma Settings → Security');
     if (res.status === 404) throw new Error('File not found — check FIGMA_FILE_KEY');
