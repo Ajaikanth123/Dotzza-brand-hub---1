@@ -7,14 +7,166 @@
 // Using window.* so onclick= attributes always find them
 // ═══════════════════════════════════════════════════════════════════
 
+const SUPABASE_URL = 'https://hfxpnvdamcnzwapmczqp.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_UpdVFRwwf36H535EgKylaA_0FIDzlxR';
+let supabase = null;
+
+// Init Supabase — CDN script is now synchronous (no async attr), so this is safe
+function initSupabase() {
+  try {
+    if (window.supabase && window.supabase.createClient) {
+      supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      console.log('✓ Supabase connected');
+    } else {
+      console.warn('Supabase SDK not available — offline mode');
+    }
+  } catch(e) {
+    console.error('Supabase init failed:', e);
+  }
+}
+
+// Supabase data restoration (called when supabase becomes available)
+async function loadSupabaseData() {
+  try {
+    // Hide previously deleted cards
+    const { data } = await supabase.from('hidden_cards').select('element_class');
+    if (data) {
+      const hidden = new Set(data.map(d => d.element_class));
+      document.querySelectorAll('.lc, .cc, .gc, .ts, .ssc, .ac, .tc, .tlc, .fcard').forEach(card => {
+        if (hidden.has(card.textContent.trim())) card.remove();
+      });
+    }
+  } catch(e) {}
+  try { await restoreImportsFromDB(); } catch(e) {}
+  try { await restoreSubBrandsFromDB(); } catch(e) {}
+}
+
 /* ── STATE ── */
 let _mode = 'br';
 let _selFile = null, _selType = '', _curSec = '';
+let _subBrands = [
+  { name: 'Dotzza Main', color: '#8B72D8', logo: null, active: true }
+];
+let _asbFile = null;
 
 const M = {
   br: { label:'Branding' },
   en: { label:'Engineering' }
 };
+
+/* ═══════════════════════════════════════════════════════════════════
+   SUPABASE HELPER FUNCTIONS
+   ═══════════════════════════════════════════════════════════════════ */
+
+// Upload a file (blob/data-url) to Supabase Storage and return the public URL
+async function uploadToStorage(fileName, fileBlob) {
+  if (!supabase) return null;
+  const ts = Date.now();
+  const safeName = ts + '_' + fileName.replace(/[^a-zA-Z0-9._-]/g, '_');
+  const { data, error } = await supabase.storage.from('assets').upload(safeName, fileBlob, {
+    cacheControl: '3600',
+    upsert: false
+  });
+  if (error) { console.error('Storage upload error:', error); return null; }
+  const { data: urlData } = supabase.storage.from('assets').getPublicUrl(safeName);
+  return urlData ? urlData.publicUrl : null;
+}
+
+// Convert a data URL string into a Blob for upload
+function dataURLtoBlob(dataurl) {
+  const arr = dataurl.split(',');
+  const mime = arr[0].match(/:(.*?);/)[1];
+  const bstr = atob(arr[1]);
+  const u8arr = new Uint8Array(bstr.length);
+  for (let i = 0; i < bstr.length; i++) u8arr[i] = bstr.charCodeAt(i);
+  return new Blob([u8arr], { type: mime });
+}
+
+// Save an import record to the Supabase `imports` table
+async function saveImportToDB(sec, fileName, fileType, fileUrl, logoKind, content) {
+  if (!supabase) return;
+  // Delete existing row for this section first (upsert by section)
+  await supabase.from('imports').delete().eq('section', sec);
+  const { error } = await supabase.from('imports').insert([{
+    section: sec,
+    file_name: fileName,
+    file_type: fileType,
+    file_url: fileUrl || '',
+    logo_kind: logoKind || '',
+    content: content || ''
+  }]);
+  if (error) console.error('Import save error:', error);
+}
+
+// Restore all saved imports from Supabase on page load
+async function restoreImportsFromDB() {
+  if (!supabase) return;
+  const { data, error } = await supabase.from('imports').select('*').order('created_at', { ascending: true });
+  if (error || !data) return;
+  for (const row of data) {
+    const fakeFile = { name: row.file_name, size: 0 };
+    const isImage = ['png','jpg','jpeg','gif','webp','svg'].includes(row.file_type);
+    const result = isImage ? row.file_url : (row.content || '');
+    renderImport(row.section, fakeFile, result, row.logo_kind, true);
+  }
+}
+
+// Save a sub-brand to Supabase
+async function saveSubBrandToDB(name, color, logoUrl, active) {
+  if (!supabase) return;
+  const { error } = await supabase.from('sub_brands').insert([{
+    name, color, logo_url: logoUrl || '', active: active || false
+  }]);
+  if (error) console.error('Sub-brand save error:', error);
+}
+
+// Restore sub-brands from Supabase on page load
+async function restoreSubBrandsFromDB() {
+  if (!supabase) return;
+  const { data, error } = await supabase.from('sub_brands').select('*').order('created_at', { ascending: true });
+  if (error || !data || data.length === 0) return;
+  const existingNames = new Set(_subBrands.map(b => b.name));
+  for (const row of data) {
+    if (!existingNames.has(row.name)) {
+      _subBrands.push({
+        name: row.name,
+        color: row.color,
+        logo: row.logo_url || null,
+        active: row.active || false
+      });
+    }
+  }
+  renderSubBrands();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// PAGE LOAD — ADD DELETE BUTTONS (works without Supabase)
+// ═══════════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  const cards = Array.from(document.querySelectorAll('.lc, .cc, .gc, .ts, .ssc, .ac, .tc, .tlc, .fcard'));
+
+  cards.forEach(card => {
+    if(getComputedStyle(card).position === 'static') card.style.position = 'relative';
+    const del = document.createElement('div');
+    del.className = 'card-del';
+    del.innerHTML = '✕';
+    del.title = 'Delete this item';
+    del.onclick = async (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      if (confirm('Are you sure you want to delete this item?')) {
+        const cardId = card.textContent.trim();
+        card.style.transform = 'scale(0.95)';
+        card.style.opacity = '0';
+        setTimeout(() => { card.remove(); if (window.toast) window.toast('✓ Item deleted'); }, 150);
+        if (supabase) {
+          try { await supabase.from('hidden_cards').insert([{ element_class: cardId }]); } catch(e) {}
+        }
+      }
+    };
+    card.appendChild(del);
+  });
+});
 
 const SEC_NAMES = {
   home:'Home', logo:'Logo', colors:'Colors & Gradients',
@@ -100,7 +252,7 @@ window.go = function(id, el) {
 };
 
 /* ── IMPORT MODAL ── */
-window.openImport = function(sec) {
+window.openImport = function(sec, targetKind) {
   _curSec = sec;
   _selFile = null;
 
@@ -134,6 +286,18 @@ window.openImport = function(sec) {
   const overlay = document.getElementById('imo');
   if (overlay) overlay.classList.add('open');
   document.body.style.overflow = 'hidden';
+
+  // Handle Logo Kind visibility
+  const logoKindWrap = document.getElementById('im-logo-kind-wrap');
+  const logoKindInp  = document.getElementById('im-logo-kind');
+  if (logoKindWrap) {
+    if (sec === 'logo' && !targetKind) {
+      logoKindWrap.style.display = 'block';
+    } else {
+      logoKindWrap.style.display = 'none';
+    }
+  }
+  if (logoKindInp)  logoKindInp.value = targetKind || '';
 };
 
 window.closeImport = function() {
@@ -212,7 +376,7 @@ window.runImport = function() {
 
   const reader = new FileReader();
 
-  reader.onload = function(e) {
+  reader.onload = async function(e) {
     clearInterval(iv);
     if (bar) bar.style.width = '100%';
     if (pct) pct.textContent = '100%';
@@ -220,11 +384,35 @@ window.runImport = function() {
     const result = e.target.result;
     const file   = _selFile;
     const sec    = _curSec;
+    const ext    = file.name.split('.').pop().toLowerCase();
+
+    // Capture Logo Kind value
+    const logoKindInp = document.getElementById('im-logo-kind');
+    const logoKind    = logoKindInp ? logoKindInp.value : '';
+
+    // ── Save to Supabase ──
+    let fileUrl = '';
+    let textContent = '';
+    const isImage = ['png','jpg','jpeg','gif','webp','svg'].includes(ext);
+
+    try {
+      if (isImage) {
+        // Upload the binary file to Supabase Storage
+        const blob = dataURLtoBlob(result);
+        fileUrl = await uploadToStorage(file.name, blob) || '';
+      } else {
+        // For text files, store content directly in the DB
+        textContent = result;
+      }
+      await saveImportToDB(sec, file.name, ext, fileUrl, logoKind, textContent);
+    } catch(err) {
+      console.error('Supabase save error:', err);
+    }
 
     setTimeout(() => {
       window.closeImport();
-      renderImport(sec, file, result);
-      window.toast('✓ ' + (SEC_NAMES[sec] || sec) + ' imported!');
+      renderImport(sec, file, result, logoKind);
+      window.toast('✓ ' + (SEC_NAMES[sec] || sec) + ' imported & saved!');
     }, 300);
   };
 
@@ -244,9 +432,72 @@ window.runImport = function() {
 };
 
 /* ── Render imported file into the correct section ── */
-function renderImport(sec, file, result) {
+// isRestore = true when called from DB restore (result may be a URL rather than data URL)
+function renderImport(sec, file, result, logoKind, isRestore) {
   const ext  = file.name.split('.').pop().toLowerCase();
   const name = file.name;
+
+  // Specific logic for exact logo update
+  if (sec === 'logo' && logoKind) {
+    const names = document.querySelectorAll('.lf-name');
+    let targetCard = null;
+    for (let el of names) {
+      if (el.textContent.trim() === logoKind.trim()) {
+        targetCard = el.closest('.lc');
+        break;
+      }
+    }
+    
+    if (targetCard) {
+      const lp = targetCard.querySelector('.lp');
+      if (lp) {
+        if (ext === 'svg') {
+          if (result.startsWith('http')) {
+            fetch(result).then(r => r.text()).then(raw => {
+              const temp = document.createElement('div');
+              temp.innerHTML = raw;
+              const svgNode = temp.querySelector('svg');
+              if (svgNode) {
+                svgNode.setAttribute('width', '100%');
+                svgNode.setAttribute('height', '100%');
+                svgNode.style.cssText = 'max-width:100%; max-height:100%; object-fit:contain;';
+                lp.innerHTML = '';
+                lp.appendChild(svgNode);
+              } else {
+                lp.innerHTML = `<img src="${result}" style="max-width:100%;max-height:100%;object-fit:contain;display:block;">`;
+              }
+            }).catch(() => {
+              lp.innerHTML = `<img src="${result}" style="max-width:100%;max-height:100%;object-fit:contain;display:block;">`;
+            });
+          } else {
+            const temp = document.createElement('div');
+            try {
+              const b64 = result.split(',')[1];
+              const raw = decodeURIComponent(escape(atob(b64)));
+              temp.innerHTML = raw;
+              const svgNode = temp.querySelector('svg');
+              if (svgNode) {
+                svgNode.setAttribute('width', '100%');
+                svgNode.setAttribute('height', '100%');
+                svgNode.style.cssText = 'max-width:100%; max-height:100%; object-fit:contain;';
+                lp.innerHTML = '';
+                lp.appendChild(svgNode);
+              } else {
+                lp.innerHTML = `<img src="${result}" style="max-width:100%;max-height:100%;object-fit:contain;display:block;">`;
+              }
+            } catch(e) {
+              lp.innerHTML = `<img src="${result}" style="max-width:100%;max-height:100%;object-fit:contain;display:block;">`;
+            }
+          }
+        } else if (['png','jpg','jpeg','webp','gif'].includes(ext)) {
+          lp.innerHTML = `<img src="${result}" style="max-width:100%;max-height:100%;object-fit:contain;display:block;">`;
+        }
+      }
+      const navBtn = document.querySelector(`.nv[onclick*="go('${sec}"]`);
+      if (navBtn) window.go(sec, navBtn);
+      return; 
+    }
+  }
 
   // Remove any existing preview for this section first
   removeImportPreview(sec);
@@ -259,8 +510,11 @@ function renderImport(sec, file, result) {
   // Header row
   const header = document.createElement('div');
   header.style.cssText = 'display:flex;align-items:center;justify-content:space-between;margin-bottom:10px';
+  
+  const displayTitle = (sec === 'logo' && logoKind) ? logoKind : '↑ Imported';
+  
   header.innerHTML = `
-    <span style="font-size:10px;font-weight:700;color:#8B72D8;text-transform:uppercase;letter-spacing:.6px">↑ Imported</span>
+    <span style="font-size:10px;font-weight:700;color:#8B72D8;text-transform:uppercase;letter-spacing:.6px">${displayTitle}</span>
     <span style="font-size:10px;color:#9C9FAF;font-family:monospace">${name}</span>
     <button onclick="removeImportPreview('${sec}')" style="background:none;border:none;cursor:pointer;color:#9C9FAF;font-size:16px;line-height:1;padding:0 2px">✕</button>
   `;
@@ -286,17 +540,28 @@ function renderImport(sec, file, result) {
       const btnSVG = document.createElement('button');
       btnSVG.textContent = '↓ Save SVG';
       btnSVG.style.cssText = 'font-size:11px;font-weight:700;padding:5px 12px;border-radius:6px;border:1px solid rgba(139,114,216,.4);background:rgba(139,114,216,.08);color:#8B72D8;cursor:pointer;font-family:inherit';
-      btnSVG.onclick = function() {
-        // result is a data URL — convert back to blob and download
-        const byteStr = atob(result.split(',')[1]);
-        const arr = new Uint8Array(byteStr.length);
-        for (let i = 0; i < byteStr.length; i++) arr[i] = byteStr.charCodeAt(i);
-        const blob = new Blob([arr], { type: 'image/svg+xml' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a'); a.href = url; a.download = name;
-        document.body.appendChild(a); a.click(); document.body.removeChild(a);
-        setTimeout(() => URL.revokeObjectURL(url), 1000);
-        window.toast('✓ SVG saved!');
+      btnSVG.onclick = async function() {
+        if (result.startsWith('http')) {
+          try {
+            const r = await fetch(result);
+            const blob = await r.blob();
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href = url; a.download = name;
+            document.body.appendChild(a); a.click(); document.body.removeChild(a);
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+            window.toast('✓ SVG saved!');
+          } catch(e) { window.open(result, '_blank'); }
+        } else {
+          const byteStr = atob(result.split(',')[1]);
+          const arr = new Uint8Array(byteStr.length);
+          for (let i = 0; i < byteStr.length; i++) arr[i] = byteStr.charCodeAt(i);
+          const blob = new Blob([arr], { type: 'image/svg+xml' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a'); a.href = url; a.download = name;
+          document.body.appendChild(a); a.click(); document.body.removeChild(a);
+          setTimeout(() => URL.revokeObjectURL(url), 1000);
+          window.toast('✓ SVG saved!');
+        }
       };
       btnRow.appendChild(btnSVG);
     }
@@ -308,6 +573,7 @@ function renderImport(sec, file, result) {
     btnPNG.onclick = function() {
       const canvas = document.createElement('canvas');
       const tempImg = new Image();
+      tempImg.crossOrigin = 'anonymous'; // Important for CORS external URLs
       tempImg.onload = function() {
         canvas.width  = tempImg.naturalWidth  || 800;
         canvas.height = tempImg.naturalHeight || 600;
@@ -318,7 +584,12 @@ function renderImport(sec, file, result) {
         document.body.appendChild(a); a.click(); document.body.removeChild(a);
         window.toast('✓ PNG saved!');
       };
-      tempImg.src = result;
+      // For cross-origin SVG to Canvas mapping
+      if (result.startsWith('http')) {
+        fetch(result).then(r=>r.blob()).then(b => { tempImg.src = URL.createObjectURL(b); });
+      } else {
+        tempImg.src = result;
+      }
     };
     btnRow.appendChild(btnPNG);
 
@@ -329,6 +600,7 @@ function renderImport(sec, file, result) {
     btnJPG.onclick = function() {
       const canvas = document.createElement('canvas');
       const tempImg = new Image();
+      tempImg.crossOrigin = 'anonymous'; // Important for CORS external URLs
       tempImg.onload = function() {
         canvas.width  = tempImg.naturalWidth  || 800;
         canvas.height = tempImg.naturalHeight || 600;
@@ -342,7 +614,11 @@ function renderImport(sec, file, result) {
         document.body.appendChild(a); a.click(); document.body.removeChild(a);
         window.toast('✓ JPG saved!');
       };
-      tempImg.src = result;
+      if (result.startsWith('http')) {
+        fetch(result).then(r=>r.blob()).then(b => { tempImg.src = URL.createObjectURL(b); });
+      } else {
+        tempImg.src = result;
+      }
     };
     btnRow.appendChild(btnJPG);
 
@@ -399,11 +675,17 @@ function renderImport(sec, file, result) {
   }
 }
 
-window.removeImportPreview = function(sec) {
+window.removeImportPreview = async function(sec) {
   const existing = document.getElementById('import-preview-' + sec);
   if (existing) existing.remove();
   const injectedCSS = document.getElementById('imported-css-' + sec);
   if (injectedCSS) injectedCSS.remove();
+  // Also delete from Supabase
+  if (supabase) {
+    try {
+      await supabase.from('imports').delete().eq('section', sec);
+    } catch(e) { console.error('Import delete error:', e); }
+  }
 };
 
 function escapeHTML(str) {
@@ -424,6 +706,107 @@ function applyImportedTokens(json) {
     }
   }
   walk(json, '');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SUB BRAND MANAGEMENT
+   ─────────────────────────────────────────────────────────────── */
+window.openAddSubBrand = function() {
+  const modal = document.getElementById('asb');
+  if (modal) modal.classList.add('open');
+  document.getElementById('asb-name').value = '';
+  document.getElementById('asb-color').value = '#8B72D8';
+  document.getElementById('asb-preview').style.background = '#8B72D8';
+  document.getElementById('asb-file-txt').textContent = 'SVG or PNG recommended';
+  _asbFile = null;
+};
+
+window.closeAddSubBrand = function() {
+  const modal = document.getElementById('asb');
+  if (modal) modal.classList.remove('open');
+};
+
+window.asbFileSelected = function(e) {
+  if (e.target.files.length) {
+    _asbFile = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+       _asbFile.data = ev.target.result;
+       document.getElementById('asb-file-txt').textContent = '✓ ' + _asbFile.name;
+    };
+    reader.readAsDataURL(_asbFile);
+  }
+};
+
+window.saveSubBrand = async function() {
+  const name = document.getElementById('asb-name').value;
+  const color = document.getElementById('asb-color').value;
+  if (!name) { window.toast('Please enter a name.'); return; }
+
+  let logoUrl = null;
+  if (_asbFile && _asbFile.data) {
+    try {
+      const blob = dataURLtoBlob(_asbFile.data);
+      logoUrl = await uploadToStorage(_asbFile.name, blob);
+    } catch(e) { console.error('Sub-brand logo upload error:', e); }
+  }
+
+  _subBrands.push({
+    name,
+    color,
+    logo: logoUrl || (_asbFile ? _asbFile.data : null),
+    active: false
+  });
+
+  // Persist to Supabase
+  try {
+    await saveSubBrandToDB(name, color, logoUrl, false);
+  } catch(e) { console.error('Sub-brand DB save error:', e); }
+
+  renderSubBrands();
+  window.closeAddSubBrand();
+  window.toast('✓ Sub Brand "' + name + '" saved!');
+};
+
+function renderSubBrands() {
+  const navList = document.getElementById('sb-nav-list');
+  const grid = document.getElementById('subbrands-grid');
+  if (!navList || !grid) return;
+
+  // Render Sidebar
+  navList.innerHTML = _subBrands.map(b => 
+    `<button class="nv" onclick="go('subbrands',this)"><span class="nv-dot"></span>${b.name}</button>`
+  ).join('');
+
+  // Render Grid (preserving the "Add" card)
+  const addCard = grid.lastElementChild;
+  grid.innerHTML = '';
+  _subBrands.forEach(b => {
+    const card = document.createElement('div');
+    card.style.cssText = 'background:var(--bg);border:2px solid ' + (b.active ? 'rgba(139,114,216,.3)' : 'var(--bdrs)') + ';border-radius:var(--r16);padding:20px;text-align:center;cursor:pointer;transition:all .15s';
+    card.onclick = () => window.toast('Opening ' + b.name + '…');
+    
+    let logoHtml = '';
+    if (b.logo) {
+      logoHtml = `<img src="${b.logo}" style="width:44px;height:44px;object-fit:contain;margin:0 auto 10px;display:block;border-radius:8px">`;
+    } else {
+      logoHtml = `
+        <svg width="44" height="44" viewBox="0 0 44 44" fill="none" style="margin:0 auto 10px">
+          <rect width="44" height="44" rx="10" fill="${b.color}"/>
+          <circle cx="12" cy="16" r="4" fill="white"/><circle cx="12" cy="28" r="4" fill="white"/>
+          <text x="19" y="30" font-family="Nunito,sans-serif" font-size="16" font-weight="900" fill="white">${b.name.charAt(0)}</text>
+        </svg>
+      `;
+    }
+
+    card.innerHTML = `
+      ${logoHtml}
+      <div style="font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:2px">${b.name}</div>
+      <div style="font-size:10.5px;color:${b.active ? 'var(--logo)' : 'var(--text4)'}">${b.active ? 'Active' : 'Standby'}</div>
+    `;
+    grid.appendChild(card);
+  });
+  grid.appendChild(addCard);
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -605,6 +988,37 @@ function svgToPNG(svgStr, width, height, callback) {
   };
   img.src = 'data:image/svg+xml;base64,' + b64;
 }
+
+/* ── Export Logo PDF — print specific view ── */
+window.exportLogoPDF = function(variant) {
+  const svgEl = findLogoSVG(variant);
+  if (!svgEl) { window.toast('Logo not found.'); return; }
+  
+  const svgStr = new XMLSerializer().serializeToString(svgEl);
+  const win = window.open('', '_blank');
+  win.document.write(`
+    <html>
+      <head>
+        <title>Dotzza Logo - ${variant}</title>
+        <style>
+          body { display:flex; align-items:center; justify-content:center; height:100vh; margin:0; font-family:sans-serif; }
+          .container { text-align:center; }
+          .meta { margin-top:20px; color:#666; font-size:12px; }
+          @media print { .no-print { display:none; } }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          ${svgStr}
+          <div class="meta">Dotzza Brand Assets &middot; ${variant.toUpperCase()} Variant &middot; Exported PDF</div>
+          <button class="no-print" onclick="window.print()" style="margin-top:40px; padding:10px 20px; background:#8B72D8; color:white; border:none; border-radius:6px; cursor:pointer; font-weight:bold;">Print to PDF</button>
+        </div>
+      </body>
+    </html>
+  `);
+  win.document.close();
+  window.toast('✓ PDF preview opened!');
+};
 
 /* ── Export Logo Package (all SVGs) ── */
 window.exportLogoPackage = function() {
@@ -1011,8 +1425,12 @@ function _hexFromFigma(c) {
 }
 
 async function syncFromFigma() {
-  if (!FIGMA_TOKEN || FIGMA_TOKEN.length < 10) {
-    console.log('[Dotzza CMS] ⚠️  Paste your Figma token into FIGMA_TOKEN to enable sync');
+  const uiToken = document.getElementById('figma-token-inp')?.value;
+  const token = uiToken || FIGMA_TOKEN;
+
+  if (!token || token.length < 10) {
+    window.toast('Please enter a Figma Access Token first.');
+    if (document.getElementById('figma-token-inp')) document.getElementById('figma-token-inp').focus();
     return;
   }
 
@@ -1147,12 +1565,30 @@ function init() {
   style.textContent = '@keyframes figmaPulse{0%,100%{opacity:1}50%{opacity:.3}}';
   document.head.appendChild(style);
 
+  // Init Supabase (CDN is synchronous now, so this is safe here)
+  initSupabase();
+
   // Start in Branding mode
   window.setMode('br');
 
   // Auto-sync if token is set
   if (FIGMA_TOKEN && FIGMA_TOKEN.length > 10) {
     syncFromFigma();
+  }
+
+  // Hook up color preview for Add Sub Brand
+  const cpInp = document.getElementById('asb-color');
+  const cpPrv = document.getElementById('asb-preview');
+  if (cpInp && cpPrv) {
+    cpInp.oninput = () => cpPrv.style.background = cpInp.value;
+  }
+
+  // Initial render
+  renderSubBrands();
+
+  // Restore persisted data from Supabase
+  if (supabase) {
+    loadSupabaseData();
   }
 }
 

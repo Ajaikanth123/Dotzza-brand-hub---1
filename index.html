@@ -261,8 +261,8 @@ body{font-family:var(--font);background:var(--bg2);color:var(--text);display:fle
 .tokn{font-size:24px;font-weight:900;color:var(--logo);margin-bottom:4px}
 
 /* ═══════════════ IMPORT MODAL ═══════════════ */
-.imo{position:fixed;inset:0;background:rgba(17,20,39,.55);z-index:200;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .18s}
-.imo.open{opacity:1;pointer-events:all}
+.imo{position:fixed;inset:0;background:rgba(17,20,39,.55);z-index:-1;display:none;align-items:center;justify-content:center;opacity:0;transition:opacity .18s}
+.imo.open{display:flex;opacity:1;z-index:200}
 .imd{background:var(--bg);border:1px solid var(--bdrs);border-radius:var(--r16);padding:26px;width:400px;max-width:90vw;box-shadow:0 24px 60px rgba(17,20,39,.18);transform:translateY(10px);transition:transform .18s}
 .imo.open .imd{transform:translateY(0)}
 .im-t{font-size:16px;font-weight:700;color:var(--text);margin-bottom:4px}
@@ -288,6 +288,12 @@ body{font-family:var(--font);background:var(--bg2);color:var(--text);display:fle
 /* ═══════════════ TOAST ═══════════════ */
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--g800);border:1px solid rgba(255,255,255,.12);border-radius:var(--r12);padding:9px 17px;font-size:12px;color:#E5E6EB;box-shadow:var(--shm);transition:transform .22s cubic-bezier(.34,1.56,.64,1);z-index:999;display:flex;align-items:center;gap:7px;pointer-events:none;white-space:nowrap}
 .toast.show{transform:translateX(-50%) translateY(0)}
+
+/* ═══════════════ CARD DELETE ═══════════════ */
+.card-del{position:absolute;top:6px;right:6px;background:rgba(185,28,28,.1);color:#B91C1C;width:24px;height:24px;border-radius:var(--r6);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;cursor:pointer;opacity:0;transition:all .15s;border:1px solid rgba(185,28,28,.2);z-index:10}
+.card-del:hover{background:rgba(185,28,28,.2);border-color:rgba(185,28,28,.4);transform:scale(1.05)}
+.lc:hover .card-del, .cc:hover .card-del, .gc:hover .card-del, .ts:hover .card-del, .ssc:hover .card-del, .ac:hover .card-del, .tc:hover .card-del, .tlc:hover .card-del, .fcard:hover .card-del {opacity:1}
+
 </style>
 </head>
 <body>
@@ -330,8 +336,11 @@ body{font-family:var(--font);background:var(--bg2);color:var(--text);display:fle
   <div id="nav-subbrands">
     <div class="sb-section">
       <span class="sb-lbl">Sub Brands</span>
-      <button class="nv" onclick="go('subbrands',this)"><span class="nv-dot"></span>Dotzza Main</button>
-      <button class="nv" onclick="toast('Coming soon — add sub brand')" style="opacity:.55;font-style:italic"><span class="nv-dot"></span>+ Add sub brand</button>
+      <!-- Dynamic list of sub-brands will be injected here -->
+      <div id="sb-nav-list">
+        <button class="nv" onclick="go('subbrands',this)"><span class="nv-dot"></span>Dotzza Main</button>
+      </div>
+      <button class="nv" onclick="openAddSubBrand()" style="opacity:.65;font-style:italic"><span class="nv-dot"></span>+ Add sub brand</button>
     </div>
   </div>
 
@@ -396,6 +405,8 @@ body{font-family:var(--font);background:var(--bg2);color:var(--text);display:fle
         </svg>
         Sync Figma
       </button>
+      <span class="tb-hint">Figma Token</span>
+      <input type="password" id="figma-token-inp" class="inp" placeholder="figd_..." style="width:140px;height:28px;font-size:11px;padding:4px 8px;margin-right:4px">
       <span class="tb-hint">Mode</span>
       <!-- SQUARE BUTTON SWITCHER — no round, no emoji -->
       <div class="sw">
@@ -491,8 +502,12 @@ body{font-family:var(--font);background:var(--bg2);color:var(--text);display:fle
           <div class="lf-row"><div class="lf-name">Lockup — Primary</div></div>
           <div style="font-size:10.5px;color:var(--text4);margin-bottom:8px">For light backgrounds</div>
           <div class="lf-actions">
-            <div class="lf-fmts"><span class="fc" onclick="exportLogoSVG('primary')">SVG</span><span class="fc" onclick="exportLogoPNG('primary')">PNG</span><span class="fc" onclick="toast('PDF export coming soon!')">PDF</span></div>
-            <button class="lf-imp" onclick="openImport('logo')">&#8593; Import</button>
+            <div class="lf-fmts">
+              <span class="fc" onclick="exportLogoSVG('primary')">SVG</span>
+              <span class="fc" onclick="exportLogoPNG('primary')">PNG</span>
+              <span class="fc" onclick="exportLogoPDF('primary')">PDF</span>
+            </div>
+            <button class="lf-imp" onclick="openImport('logo', 'Lockup — Primary')">&#8593; Import</button>
           </div>
         </div>
       </div>
@@ -508,8 +523,12 @@ body{font-family:var(--font);background:var(--bg2);color:var(--text);display:fle
           <div class="lf-row"><div class="lf-name">Lockup — Dark</div></div>
           <div style="font-size:10.5px;color:var(--text4);margin-bottom:8px">Monochrome / print</div>
           <div class="lf-actions">
-            <div class="lf-fmts"><span class="fc" onclick="exportLogoSVG('dark')">SVG</span><span class="fc" onclick="exportLogoPNG('dark')">PNG</span><span class="fc" onclick="toast('PDF export coming soon!')">PDF</span></div>
-            <button class="lf-imp" onclick="openImport('logo')">&#8593; Import</button>
+            <div class="lf-fmts">
+              <span class="fc" onclick="exportLogoSVG('dark')">SVG</span>
+              <span class="fc" onclick="exportLogoPNG('dark')">PNG</span>
+              <span class="fc" onclick="exportLogoPDF('dark')">PDF</span>
+            </div>
+            <button class="lf-imp" onclick="openImport('logo', 'Lockup — Dark')">&#8593; Import</button>
           </div>
         </div>
       </div>
@@ -532,7 +551,7 @@ body{font-family:var(--font);background:var(--bg2);color:var(--text);display:fle
           <div style="font-size:10.5px;color:var(--text4);margin-bottom:8px">Full color, default usage</div>
           <div class="lf-actions">
             <div class="lf-fmts"><span class="fc" onclick="exportLogoSVG('icon')">SVG</span><span class="fc" onclick="exportLogoPNG('icon')">PNG</span></div>
-            <button class="lf-imp" onclick="openImport('logo')">&#8593; Import</button>
+            <button class="lf-imp" onclick="openImport('logo', 'Logomark — Primary')">&#8593; Import</button>
           </div>
         </div>
       </div>
@@ -550,7 +569,7 @@ body{font-family:var(--font);background:var(--bg2);color:var(--text);display:fle
           <div style="font-size:10.5px;color:var(--text4);margin-bottom:8px">Black, for light backgrounds</div>
           <div class="lf-actions">
             <div class="lf-fmts"><span class="fc" onclick="exportLogoSVG('dark')">SVG</span><span class="fc" onclick="exportLogoPNG('dark')">PNG</span></div>
-            <button class="lf-imp" onclick="openImport('logo')">&#8593; Import</button>
+            <button class="lf-imp" onclick="openImport('logo', 'Logomark — Monochrome')">&#8593; Import</button>
           </div>
         </div>
       </div>
@@ -568,7 +587,7 @@ body{font-family:var(--font);background:var(--bg2);color:var(--text);display:fle
           <div style="font-size:10.5px;color:var(--text4);margin-bottom:8px">White, for dark surfaces</div>
           <div class="lf-actions">
             <div class="lf-fmts"><span class="fc" onclick="exportLogoSVG('inverted')">SVG</span><span class="fc" onclick="exportLogoPNG('inverted')">PNG</span></div>
-            <button class="lf-imp" onclick="openImport('logo')">&#8593; Import</button>
+            <button class="lf-imp" onclick="openImport('logo', 'Logomark — Inverted')">&#8593; Import</button>
           </div>
         </div>
       </div>
@@ -588,7 +607,7 @@ body{font-family:var(--font);background:var(--bg2);color:var(--text);display:fle
           <div style="font-size:10.5px;color:var(--text4);margin-bottom:8px">Purple, light backgrounds</div>
           <div class="lf-actions">
             <div class="lf-fmts"><span class="fc" onclick="exportLogoSVG('primary')">SVG</span><span class="fc" onclick="exportLogoPNG('primary')">PNG</span></div>
-            <button class="lf-imp" onclick="openImport('logo')">&#8593; Import</button>
+            <button class="lf-imp" onclick="openImport('logo', 'Wordmark — Primary')">&#8593; Import</button>
           </div>
         </div>
       </div>
@@ -603,7 +622,7 @@ body{font-family:var(--font);background:var(--bg2);color:var(--text);display:fle
           <div style="font-size:10.5px;color:var(--text4);margin-bottom:8px">White, dark backgrounds</div>
           <div class="lf-actions">
             <div class="lf-fmts"><span class="fc" onclick="exportLogoSVG('inverted')">SVG</span><span class="fc" onclick="exportLogoPNG('inverted')">PNG</span></div>
-            <button class="lf-imp" onclick="openImport('logo')">&#8593; Import</button>
+            <button class="lf-imp" onclick="openImport('logo', 'Wordmark — Light')">&#8593; Import</button>
           </div>
         </div>
       </div>
@@ -618,7 +637,7 @@ body{font-family:var(--font);background:var(--bg2);color:var(--text);display:fle
           <div style="font-size:10.5px;color:var(--text4);margin-bottom:8px">Black, monochrome / print</div>
           <div class="lf-actions">
             <div class="lf-fmts"><span class="fc" onclick="exportLogoSVG('dark')">SVG</span><span class="fc" onclick="exportLogoPNG('dark')">PNG</span></div>
-            <button class="lf-imp" onclick="openImport('logo')">&#8593; Import</button>
+            <button class="lf-imp" onclick="openImport('logo', 'Wordmark — Dark')">&#8593; Import</button>
           </div>
         </div>
       </div>
@@ -905,20 +924,12 @@ body{font-family:var(--font);background:var(--bg2);color:var(--text);display:fle
     <div class="ph"><div class="mt br">Branding</div><div class="ph-title">Sub Brands</div><div class="ph-desc">Manage brand variants and sub-brand identities within the Dotzza system.</div></div>
     <div class="sa"><button class="sa-btn sa-imp" onclick="openImport('logo')">&#8593; Import</button><button class="sa-btn sa-exp" onclick="exportSubBrands()">&#8595; Export</button></div>
     <div class="sl">Active Sub Brands</div>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px">
-      <div style="background:var(--bg);border:2px solid rgba(139,114,216,.3);border-radius:var(--r16);padding:20px;text-align:center;cursor:pointer" onclick="toast('Opening Dotzza Main…')">
-        <svg width="44" height="44" viewBox="0 0 44 44" fill="none" style="margin:0 auto 10px">
-          <rect width="44" height="44" rx="10" fill="#8B72D8"/>
-          <circle cx="12" cy="16" r="4" fill="white"/><circle cx="12" cy="28" r="4" fill="white"/>
-          <text x="19" y="30" font-family="Nunito,sans-serif" font-size="16" font-weight="900" fill="white">D</text>
-        </svg>
-        <div style="font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:2px">Dotzza Main</div>
-        <div style="font-size:10.5px;color:var(--logo)">Active</div>
-      </div>
-      <div style="background:var(--bg2);border:2px dashed var(--bdrs);border-radius:var(--r16);padding:20px;text-align:center;cursor:pointer;transition:all .15s" onclick="toast('Add sub brand — coming soon')" onmouseover="this.style.borderColor='rgba(139,114,216,.4)'" onmouseout="this.style.borderColor='var(--bdrs)'">
+    <div id="subbrands-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px">
+      <!-- Dynamic list of sub-brands will be injected here -->
+      <div style="background:var(--bg2);border:2px dashed var(--bdrs);border-radius:var(--r16);padding:20px;text-align:center;cursor:pointer;transition:all .15s" onclick="openAddSubBrand()" onmouseover="this.style.borderColor='var(--logo)';this.style.background='rgba(139,114,216,.03)'" onmouseout="this.style.borderColor='var(--bdrs)';this.style.background='var(--bg2)'">
         <div style="font-size:28px;color:var(--text4);margin-bottom:8px;line-height:1">+</div>
         <div style="font-size:12px;font-weight:600;color:var(--text3)">Add Sub Brand</div>
-        <div style="font-size:10.5px;color:var(--text4);margin-top:2px">Coming soon</div>
+        <div style="font-size:10.5px;color:var(--text4);margin-top:2px">Manage variants</div>
       </div>
     </div>
   </section>
@@ -1004,6 +1015,12 @@ body{font-family:var(--font);background:var(--bg2);color:var(--text);display:fle
     </div>
     <input type="file" id="fim" style="display:none" onchange="fileSelected(event)">
     <div class="im-types" id="im-types"></div>
+    <!-- NEW: Logo Kind Section -->
+    <div id="im-logo-kind-wrap" style="display:none; margin-bottom: 14px;">
+      <div style="font-size:11px;color:var(--text4);margin-bottom:6px;font-weight:600">Which kind of logo is this?</div>
+      <input class="inp" id="im-logo-kind" style="width:100%" placeholder="e.g. Secondary Logo, Monochrome Icon" type="text">
+    </div>
+
     <div class="im-prog" id="im-prog">
       <div class="im-prog-row"><span id="im-fname">file.svg</span><span id="im-pct">0%</span></div>
       <div class="im-track"><div class="im-bar" id="im-bar"></div></div>
@@ -1022,6 +1039,39 @@ body{font-family:var(--font);background:var(--bg2);color:var(--text);display:fle
 </div>
 
 
+<!-- ══════════ ADD SUB BRAND MODAL ══════════ -->
+<div class="imo" id="asb" onclick="if(event.target===this)closeAddSubBrand()">
+  <div class="imd">
+    <div class="im-t">Add New Sub Brand</div>
+    <div class="im-d">Specify details for the new sub-brand identity.</div>
+    
+    <div style="margin-bottom:14px">
+      <div style="font-size:11px;color:var(--text4);margin-bottom:4px;font-weight:600">Sub Brand Name</div>
+      <input class="inp" id="asb-name" style="width:100%" placeholder="e.g. Dotzza Pay" type="text">
+    </div>
+
+    <div style="margin-bottom:14px">
+      <div style="font-size:11px;color:var(--text4);margin-bottom:4px;font-weight:600">Brand Color</div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input class="inp" id="asb-color" style="flex:1" value="#8B72D8" type="text">
+        <div id="asb-preview" style="width:36px;height:36px;border-radius:6px;background:#8B72D8;border:1px solid var(--bdrs)"></div>
+      </div>
+    </div>
+
+    <div class="im-zone" onclick="document.getElementById('asb-file').click()">
+      <div class="im-zone-ico">&#128194;</div>
+      <div class="im-zone-t">Upload Sub Brand Logo</div>
+      <div class="im-zone-s" id="asb-file-txt">SVG or PNG recommended</div>
+    </div>
+    <input type="file" id="asb-file" style="display:none" onchange="asbFileSelected(event)">
+
+    <div class="im-acts">
+      <button class="im-cancel" onclick="closeAddSubBrand()">Cancel</button>
+      <button class="im-go" onclick="saveSubBrand()">Add Brand</button>
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="app.js"></script>
 </body>
 </html>
