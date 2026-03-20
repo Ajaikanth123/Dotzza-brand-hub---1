@@ -28,15 +28,15 @@ function initSupabase() {
 // _sb data restoration (called when _sb becomes available)
 async function loadSupabaseData() {
   try {
-    // Hide previously deleted cards
+    // Hide previously deleted cards (matched by stable data-card-id)
     const { data } = await _sb.from('hidden_cards').select('element_class');
     if (data) {
       const hidden = new Set(data.map(d => d.element_class));
       document.querySelectorAll('.lc, .cc, .gc, .ts, .ssc, .ac, .tc, .tlc, .fcard').forEach(card => {
-        if (hidden.has(card.textContent.trim())) card.remove();
+        if (card.dataset.cardId && hidden.has(card.dataset.cardId)) card.remove();
       });
     }
-  } catch(e) {}
+  } catch(e) { console.error('hidden_cards restore error:', e); }
   try { await restoreImportsFromDB(); } catch(e) {}
   try { await restoreSubBrandsFromDB(); } catch(e) {}
 }
@@ -145,8 +145,16 @@ async function restoreSubBrandsFromDB() {
 document.addEventListener('DOMContentLoaded', () => {
   const cards = Array.from(document.querySelectorAll('.lc, .cc, .gc, .ts, .ssc, .ac, .tc, .tlc, .fcard'));
 
-  cards.forEach(card => {
-    if(getComputedStyle(card).position === 'static') card.style.position = 'relative';
+  // Assign stable data-card-id to every card so we can key deletes reliably
+  cards.forEach((card, i) => {
+    if (!card.dataset.cardId) {
+      // Use section id + index for a stable, unique key
+      const sec = card.closest('.sec');
+      const secId = sec ? sec.id : 'global';
+      card.dataset.cardId = secId + '_card_' + i;
+    }
+    if (getComputedStyle(card).position === 'static') card.style.position = 'relative';
+
     const del = document.createElement('div');
     del.className = 'card-del';
     del.innerHTML = '✕';
@@ -154,13 +162,14 @@ document.addEventListener('DOMContentLoaded', () => {
     del.onclick = async (e) => {
       e.stopPropagation();
       e.preventDefault();
-      if (confirm('Are you sure you want to delete this item?')) {
-        const cardId = card.textContent.trim();
+      if (confirm('Delete this item permanently?')) {
+        const cardId = card.dataset.cardId;
         card.style.transform = 'scale(0.95)';
         card.style.opacity = '0';
-        setTimeout(() => { card.remove(); if (window.toast) window.toast('✓ Item deleted'); }, 150);
+        setTimeout(() => { card.remove(); if (window.toast) window.toast('✓ Deleted'); }, 150);
+        // _sb may now be ready even if it wasn't at DOMContentLoaded
         if (_sb) {
-          try { await _sb.from('hidden_cards').insert([{ element_class: cardId }]); } catch(e) {}
+          try { await _sb.from('hidden_cards').insert([{ element_class: cardId }]); } catch(e) { console.error('Delete save error:', e); }
         }
       }
     };
