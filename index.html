@@ -1071,7 +1071,18 @@ body{font-family:var(--font);background:var(--bg2);color:var(--text);display:fle
     </div>
   </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// Load Supabase async — app.js init will wait for it via onSupabaseReady
+window._supabaseReady = false;
+window._supabaseReadyCbs = [];
+window.onSupabaseReady = function(cb) {
+  if (window._supabaseReady) cb();
+  else window._supabaseReadyCbs.push(cb);
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" async
+  onload="window._supabaseReady=true;window._supabaseReadyCbs.forEach(function(f){f()});window._supabaseReadyCbs=[];"
+  onerror="console.warn('Supabase CDN failed — offline mode');window._supabaseReady=true;window._supabaseReadyCbs.forEach(function(f){f()});window._supabaseReadyCbs=[];"></script>
 <script src="app.js"></script>
 </body>
 </html>

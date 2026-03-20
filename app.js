@@ -11,7 +11,7 @@ const SUPABASE_URL = 'https://hfxpnvdamcnzwapmczqp.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_UpdVFRwwf36H535EgKylaA_0FIDzlxR';
 let supabase = null;
 
-// Init Supabase — CDN script is now synchronous (no async attr), so this is safe
+// Init Supabase — called after CDN onload fires (async, non-blocking)
 function initSupabase() {
   try {
     if (window.supabase && window.supabase.createClient) {
@@ -1565,10 +1565,7 @@ function init() {
   style.textContent = '@keyframes figmaPulse{0%,100%{opacity:1}50%{opacity:.3}}';
   document.head.appendChild(style);
 
-  // Init Supabase (CDN is synchronous now, so this is safe here)
-  initSupabase();
-
-  // Start in Branding mode
+  // Start in Branding mode — runs immediately, no Supabase needed
   window.setMode('br');
 
   // Auto-sync if token is set
@@ -1586,10 +1583,11 @@ function init() {
   // Initial render
   renderSubBrands();
 
-  // Restore persisted data from Supabase
-  if (supabase) {
-    loadSupabaseData();
-  }
+  // Init Supabase after CDN loads (async, non-blocking — page works without it)
+  window.onSupabaseReady(function() {
+    initSupabase();
+    if (supabase) loadSupabaseData();
+  });
 }
 
 // Safe init — works whether DOM is already loaded or not
