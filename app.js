@@ -1459,7 +1459,7 @@ async function syncFromFigma() {
       `https://api.figma.com/v1/files/${FIGMA_FILE_KEY}/variables/local`,
       { headers: { 'X-Figma-Token': token } }
     );
-    if (res.status === 403) throw new Error('Invalid token — check your Personal Access Token in Figma Settings → Security');
+    if (res.status === 403) throw new Error('Variables API requires a Figma Enterprise plan. Use "Import" to load tokens manually.');
     if (res.status === 404) throw new Error('File not found — check FIGMA_FILE_KEY');
     if (!res.ok)            throw new Error(`API error ${res.status}`);
 
