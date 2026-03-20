@@ -9,27 +9,27 @@
 
 const SUPABASE_URL = 'https://hfxpnvdamcnzwapmczqp.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_UpdVFRwwf36H535EgKylaA_0FIDzlxR';
-let supabase = null;
+let _sb = null;
 
-// Init Supabase — called after CDN onload fires (async, non-blocking)
+// Init _sb — called after CDN onload fires (async, non-blocking)
 function initSupabase() {
   try {
     if (window.supabase && window.supabase.createClient) {
-      supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-      console.log('✓ Supabase connected');
+      _sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      console.log('✓ _sb connected');
     } else {
-      console.warn('Supabase SDK not available — offline mode');
+      console.warn('_sb SDK not available — offline mode');
     }
   } catch(e) {
-    console.error('Supabase init failed:', e);
+    console.error('_sb init failed:', e);
   }
 }
 
-// Supabase data restoration (called when supabase becomes available)
+// _sb data restoration (called when _sb becomes available)
 async function loadSupabaseData() {
   try {
     // Hide previously deleted cards
-    const { data } = await supabase.from('hidden_cards').select('element_class');
+    const { data } = await _sb.from('hidden_cards').select('element_class');
     if (data) {
       const hidden = new Set(data.map(d => d.element_class));
       document.querySelectorAll('.lc, .cc, .gc, .ts, .ssc, .ac, .tc, .tlc, .fcard').forEach(card => {
@@ -55,20 +55,20 @@ const M = {
 };
 
 /* ═══════════════════════════════════════════════════════════════════
-   SUPABASE HELPER FUNCTIONS
+   _sb HELPER FUNCTIONS
    ═══════════════════════════════════════════════════════════════════ */
 
-// Upload a file (blob/data-url) to Supabase Storage and return the public URL
+// Upload a file (blob/data-url) to _sb Storage and return the public URL
 async function uploadToStorage(fileName, fileBlob) {
-  if (!supabase) return null;
+  if (!_sb) return null;
   const ts = Date.now();
   const safeName = ts + '_' + fileName.replace(/[^a-zA-Z0-9._-]/g, '_');
-  const { data, error } = await supabase.storage.from('assets').upload(safeName, fileBlob, {
+  const { data, error } = await _sb.storage.from('assets').upload(safeName, fileBlob, {
     cacheControl: '3600',
     upsert: false
   });
   if (error) { console.error('Storage upload error:', error); return null; }
-  const { data: urlData } = supabase.storage.from('assets').getPublicUrl(safeName);
+  const { data: urlData } = _sb.storage.from('assets').getPublicUrl(safeName);
   return urlData ? urlData.publicUrl : null;
 }
 
@@ -82,12 +82,12 @@ function dataURLtoBlob(dataurl) {
   return new Blob([u8arr], { type: mime });
 }
 
-// Save an import record to the Supabase `imports` table
+// Save an import record to the _sb `imports` table
 async function saveImportToDB(sec, fileName, fileType, fileUrl, logoKind, content) {
-  if (!supabase) return;
+  if (!_sb) return;
   // Delete existing row for this section first (upsert by section)
-  await supabase.from('imports').delete().eq('section', sec);
-  const { error } = await supabase.from('imports').insert([{
+  await _sb.from('imports').delete().eq('section', sec);
+  const { error } = await _sb.from('imports').insert([{
     section: sec,
     file_name: fileName,
     file_type: fileType,
@@ -98,10 +98,10 @@ async function saveImportToDB(sec, fileName, fileType, fileUrl, logoKind, conten
   if (error) console.error('Import save error:', error);
 }
 
-// Restore all saved imports from Supabase on page load
+// Restore all saved imports from _sb on page load
 async function restoreImportsFromDB() {
-  if (!supabase) return;
-  const { data, error } = await supabase.from('imports').select('*').order('created_at', { ascending: true });
+  if (!_sb) return;
+  const { data, error } = await _sb.from('imports').select('*').order('created_at', { ascending: true });
   if (error || !data) return;
   for (const row of data) {
     const fakeFile = { name: row.file_name, size: 0 };
@@ -111,19 +111,19 @@ async function restoreImportsFromDB() {
   }
 }
 
-// Save a sub-brand to Supabase
+// Save a sub-brand to _sb
 async function saveSubBrandToDB(name, color, logoUrl, active) {
-  if (!supabase) return;
-  const { error } = await supabase.from('sub_brands').insert([{
+  if (!_sb) return;
+  const { error } = await _sb.from('sub_brands').insert([{
     name, color, logo_url: logoUrl || '', active: active || false
   }]);
   if (error) console.error('Sub-brand save error:', error);
 }
 
-// Restore sub-brands from Supabase on page load
+// Restore sub-brands from _sb on page load
 async function restoreSubBrandsFromDB() {
-  if (!supabase) return;
-  const { data, error } = await supabase.from('sub_brands').select('*').order('created_at', { ascending: true });
+  if (!_sb) return;
+  const { data, error } = await _sb.from('sub_brands').select('*').order('created_at', { ascending: true });
   if (error || !data || data.length === 0) return;
   const existingNames = new Set(_subBrands.map(b => b.name));
   for (const row of data) {
@@ -140,7 +140,7 @@ async function restoreSubBrandsFromDB() {
 }
 
 // ═══════════════════════════════════════════════════════════════════
-// PAGE LOAD — ADD DELETE BUTTONS (works without Supabase)
+// PAGE LOAD — ADD DELETE BUTTONS (works without _sb)
 // ═══════════════════════════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', () => {
   const cards = Array.from(document.querySelectorAll('.lc, .cc, .gc, .ts, .ssc, .ac, .tc, .tlc, .fcard'));
@@ -159,8 +159,8 @@ document.addEventListener('DOMContentLoaded', () => {
         card.style.transform = 'scale(0.95)';
         card.style.opacity = '0';
         setTimeout(() => { card.remove(); if (window.toast) window.toast('✓ Item deleted'); }, 150);
-        if (supabase) {
-          try { await supabase.from('hidden_cards').insert([{ element_class: cardId }]); } catch(e) {}
+        if (_sb) {
+          try { await _sb.from('hidden_cards').insert([{ element_class: cardId }]); } catch(e) {}
         }
       }
     };
@@ -390,14 +390,14 @@ window.runImport = function() {
     const logoKindInp = document.getElementById('im-logo-kind');
     const logoKind    = logoKindInp ? logoKindInp.value : '';
 
-    // ── Save to Supabase ──
+    // ── Save to _sb ──
     let fileUrl = '';
     let textContent = '';
     const isImage = ['png','jpg','jpeg','gif','webp','svg'].includes(ext);
 
     try {
       if (isImage) {
-        // Upload the binary file to Supabase Storage
+        // Upload the binary file to _sb Storage
         const blob = dataURLtoBlob(result);
         fileUrl = await uploadToStorage(file.name, blob) || '';
       } else {
@@ -406,7 +406,7 @@ window.runImport = function() {
       }
       await saveImportToDB(sec, file.name, ext, fileUrl, logoKind, textContent);
     } catch(err) {
-      console.error('Supabase save error:', err);
+      console.error('_sb save error:', err);
     }
 
     setTimeout(() => {
@@ -680,10 +680,10 @@ window.removeImportPreview = async function(sec) {
   if (existing) existing.remove();
   const injectedCSS = document.getElementById('imported-css-' + sec);
   if (injectedCSS) injectedCSS.remove();
-  // Also delete from Supabase
-  if (supabase) {
+  // Also delete from _sb
+  if (_sb) {
     try {
-      await supabase.from('imports').delete().eq('section', sec);
+      await _sb.from('imports').delete().eq('section', sec);
     } catch(e) { console.error('Import delete error:', e); }
   }
 };
@@ -758,7 +758,7 @@ window.saveSubBrand = async function() {
     active: false
   });
 
-  // Persist to Supabase
+  // Persist to _sb
   try {
     await saveSubBrandToDB(name, color, logoUrl, false);
   } catch(e) { console.error('Sub-brand DB save error:', e); }
@@ -1565,7 +1565,7 @@ function init() {
   style.textContent = '@keyframes figmaPulse{0%,100%{opacity:1}50%{opacity:.3}}';
   document.head.appendChild(style);
 
-  // Start in Branding mode — runs immediately, no Supabase needed
+  // Start in Branding mode — runs immediately, no _sb needed
   window.setMode('br');
 
   // Auto-sync if token is set
@@ -1583,10 +1583,10 @@ function init() {
   // Initial render
   renderSubBrands();
 
-  // Init Supabase after CDN loads (async, non-blocking — page works without it)
+  // Init _sb after CDN loads (async, non-blocking — page works without it)
   window.onSupabaseReady(function() {
     initSupabase();
-    if (supabase) loadSupabaseData();
+    if (_sb) loadSupabaseData();
   });
 }
 
